@@ -8,16 +8,29 @@ Base = declarative_base()
 class Node(Base):
 	__tablename__ = 'nodes'
 
-	id = Column(Integer, primary_key=True)
+	id = Column(String, primary_key=True)
 	name = Column(String)
+	description = Column(String)
+	species = Column(String)
+	source = Column(String)
+	appearance = Column(String)
+	constructed_by = Column(String)
 	artificial = Column(Boolean)
+
+class Link(Base):
+	__tablename__ = "links"
+
+	id = Column(Integer, primary_key=True)
+	character_id = Column(String)
+	link = Column(String)
+
 
 class Relation(Base):
 	__tablename__ = "relations"
 
 	id = Column(Integer, primary_key=True)
-	node_1 = Column(Integer)
-	node_2 = Column(Integer)
+	node_1 = Column(String)
+	node_2 = Column(String)
 	weight = Column(Integer)
 
 
