@@ -2,32 +2,47 @@ import requests
 from Database import Node, Relation, Link, new_session
 from sqlalchemy import select
 from sqlalchemy.sql.expression import exists
-import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 from tqdm import tqdm
 import re
 import numpy as np
 import secrets
 
 def get_alternative_links(link):
-	# get all the redirects(This assumes that the given link is the 
-	# "main" one)
-	params = {
+	"""
+	Wikimedia allows multiple urls to point to the same article. This function gets all alternative urls for an article.
+	The one provided does not have to be the main one
+	"""
+
+	response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params={
 		"action":"query",
 		"prop":"redirects",
 		"format":"json",
-		"titles":link.rsplit("/", 1)[-1]
-		}
-	response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params=params).json()
+		"titles":unquote(re.findall(r"(?:/wiki)/+(.*)", link)[-1]),
+		"redirects":True
+	}).json()
 	page = list(response["query"]["pages"].values())[0]
 
 	if "redirects" in page:
-		for redirect in page["redirects"]:
-			title = redirect["title"]
-		return [quote("/wiki/"+redirect["title"]) for redirect in page["redirects"]]
-	return []
+		alt_links = ["/wiki/"+redirect["title"].replace(" ", "_") for redirect in page["redirects"]]
+	else:
+		alt_links = []
+
+	# Get the title of the 'main' page that all other urls redirect to
+	response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params={
+		"action":"query",
+		"prop":"info",
+		"format":"json",
+		"pageids":page["pageid"],
+		"inprop":"displaytitle"
+	}).json()
+
+	main_title = response["query"]["pages"][str(page["pageid"])]["displaytitle"]
+	alt_links.append("/wiki/"+main_title)
+
+	return main_title, alt_links
 
 def getLinksOnPage(titles, plnamespace="*", filter=lambda x:True):
 	items = []
@@ -58,7 +73,6 @@ def getCharactersFromPagelist(items):
 	"""
 	Extracts all the Characters with some extra info from a list of links to the pages
 	"""
-	characters = []
 
 	progress = tqdm(total=len(items))
 	for item in items:
@@ -83,17 +97,58 @@ def getCharactersFromPagelist(items):
 
 							if link := fields[0].find("a"):
 								dest = link.get("href")
-								# Add the direct link
-								session.add(Link(character_id=character.id, link=dest))
+								# the RegEx filters red links(links to pages that dont exist)
+								if re.match("/wiki/(.*)", dest):
+									# Check for duplicate characters
+									if session.query(Link).filter(Link.link==dest).first():
+										continue
+		
+									main_title, alt_links = get_alternative_links(dest)
+									for alt_link in alt_links:
+										session.add(Link(character_id=character.id, link=alt_link))
 
-								# Wikimedia allows multiple urls to redirect to the same page so 
-								# those alternatives have to be saved as well
-								for alt_link  in get_alternative_links(dest):
-									session.add(Link(character_id=character.id, link=alt_link))
+									character.name = main_title
 
 		progress.update(1)
 		session.commit()
-	return characters
+
+def loadCharactersFromTable(url, field_values, num_fields):
+	response = requests.get(url)
+	soup = BeautifulSoup(response.text, 'html.parser')
+	tables = soup.find_all('table')
+
+	for table in tables:
+		if table:
+			for tr in tqdm(table.findAll("tr"), ascii=True):
+				if fields := tr.findAll("td"):
+					# Some characters dont have all fields set, nobody cares about them
+					if len(fields) == num_fields:
+						params = {
+							"id": secrets.token_urlsafe(32),
+						}
+						for key, value in field_values.items():
+							params[key] = fields[value[1]].text if value[0] else value[1]
+
+						character = Node(**params)
+
+						if link := fields[field_values["name"][1]].find("a"):
+							dest = link.get("href")
+							# the RegEx filters red links(links to pages that dont exist)
+							if re.match("/wiki/(.*)", dest):
+								# Check for duplicate characters
+								if session.query(Link).filter(Link.link==dest).first():
+									continue
+
+								# Register all the urls to the character
+								main_title, alt_links = get_alternative_links(dest)
+								for alt_link in alt_links:
+									session.add(Link(character_id=character.id, link=alt_link))
+
+								# If possible, use the main title as its more descriptive
+								character.name = main_title
+
+						session.add(character)
+	session.commit()
 
 def getMainCharacters(url):
 	"""
@@ -113,68 +168,58 @@ def getMainCharacters(url):
 					links = fields[1].find_all('a')
 					for link in links:
 						url = link.get("href")
-						print(session.query(Node).filter(Node.link == link.get("href")).first())
-						print(url)
-						input()
 
 						# If a character with that link exists in the database
-						if session.query(Node).filter(Node.link == url).first():
-							characters.append(url)
-							continue
-							
-						if alt_url := requests.get(url).url != url:
-							print(alt_url)
-							if session.query(Node).filter(Node.link == alt_url).first():
-								characters.append(alt_url)
-								continue
+						if row := session.query(Link).filter(Link.link == url).first():
+							characters.append(row.character_id)
 						else:
-							print(link.text, " -X-")
-
+							print(link.text, "does not exist in the database, (", url, ")")
+			
 
 	return characters
 
-
-def getArtificialCharacters(url):
-	pr_characters_artificial = []
-
-	response = requests.get(url)
-	soup = BeautifulSoup(response.text, 'html.parser')
-	tables = soup.find_all('table')
-
-	for table in tables:
-		if table:
-			for tr in table.findAll("tr"):
-				if fields := tr.findAll("td"):
-					# Some characters dont have all fields set, nobody cares about them
-					if len(fields) == 5:
-						character = {
-							"name": fields[0].text,
-							"species": "Kunstwesen",
-							"description": fields[3].text,
-							"source": fields[4].text,
-							"artificial":True,
-						}
-						if link := fields[0].find("a"):
-							character["link"] = link.get("href")
-						if not isinstance(fields[1], float):
-								character["appearance"] = fields[1].text
-						if not isinstance(fields[2], float):
-							character["constructed_by"] = fields[2].text
-						pr_characters_artificial.append(Node(**character))
-	return pr_characters_artificial
+def adjustRelations(characters):
+	"""
+	Expects a list of main characters from one PR Book
+	"""
+	for index, character_1 in enumerate(characters):
+		for character_2 in characters[index+1:]:
+			# sort the characters
+			node_1, node_2 = sorted([character_1, character_2])
+			if row := session.query(Relation).filter(Relation.node_1 == node_1, Relation.node_2 == node_2).first():
+				row.weight += 1
+			else:
+				session.add(Relation(node_1=node_1, node_2=node_2, weight=1))
 
 session = new_session()
-pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
-pr_characters_natural = getCharactersFromPagelist(pages)
-# pr_characters_artificial = getArtificialCharacters("https://www.perrypedia.de/wiki/K%C3%BCnstliche_Individuen")
-
-# session = new_session()
-# for character in pr_characters_artificial:
-	# session.add(character)
-# for character in pr_characters_natural:
-	# session.add(character)
+# pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
+# getCharactersFromPagelist(pages)
+# session.commit()
+# # print("now loading artificial characters")
+# loadCharactersFromTable("https://www.perrypedia.de/wiki/K%C3%BCnstliche_Individuen", {
+# 	"name": (True, 0),
+# 	"species": (False, "Kunstwesen"),
+# 	"description": (True, 3),
+# 	"source": (True, 4),
+# 	"artificial": (False, True),
+# 	"appearance": (True, 1),
+# 	"constructed_by": (True, 2)
+# }, num_fields=5)
+# loadCharactersFromTable("https://www.perrypedia.de/wiki/Entit%c3%a4ten", {
+# 	"name": (True, 0),
+# 	"species": (False, "Entität"),
+# 	"description": (True, 1),
+# 	"source": (True, 2)
+# }, num_fields=3)
 # session.commit()
 
-# pr_books = getLinksOnPage("Perry Rhodan-Heftromane", plnamespace="100")
-# print(getMainCharacters("https://www.perrypedia.de/wiki/"+pr_books[0]))
+
+pr_books = getLinksOnPage("Perry Rhodan-Heftromane", plnamespace="100")
+progress = tqdm(total=len(pr_books))
+for book in pr_books:
+	print(book)
+	adjustRelations(getMainCharacters(f"https://www.perrypedia.de/wiki/{book}"))
+	progress.update(1)
+
+
 session.commit()
