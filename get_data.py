@@ -10,28 +10,37 @@ import re
 import numpy as np
 import secrets
 
+# config variables
+api_endpoint = "https://www.perrypedia.de/mediawiki/api.php"
+
+def link_to_title(link):
+	return unquote(re.findall(r"(?:/wiki)/+(.*)", link)[-1])
+
+def title_to_link(title):
+	return "/wiki/" + title.replace(" ", "_")
+
 def get_alternative_links(link):
 	"""
 	Wikimedia allows multiple urls to point to the same article. This function gets all alternative urls for an article.
 	The one provided does not have to be the main one
 	"""
 
-	response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params={
+	response = requests.get(api_endpoint, params={
 		"action":"query",
 		"prop":"redirects",
 		"format":"json",
-		"titles":unquote(re.findall(r"(?:/wiki)/+(.*)", link)[-1]),
+		"titles":link_to_title(link),
 		"redirects":True
 	}).json()
 	page = list(response["query"]["pages"].values())[0]
 
 	if "redirects" in page:
-		alt_links = ["/wiki/"+redirect["title"].replace(" ", "_") for redirect in page["redirects"]]
+		alt_links = [title_to_link(redirect["title"]) for redirect in page["redirects"]]
 	else:
 		alt_links = []
 
 	# Get the title of the 'main' page that all other urls redirect to
-	response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params={
+	response = requests.get(api_endpoint, params={
 		"action":"query",
 		"prop":"info",
 		"format":"json",
@@ -40,9 +49,28 @@ def get_alternative_links(link):
 	}).json()
 
 	main_title = response["query"]["pages"][str(page["pageid"])]["displaytitle"]
-	alt_links.append("/wiki/"+main_title)
+	alt_links.append(title_to_link(main_title))
 
 	return main_title, alt_links
+
+def redirectsToFragment(link):
+	"""
+	Returns a Boolean that indicates whether or not a link redirects to a subsection of a page, eg. #history
+	"""
+	response = requests.get(api_endpoint, params={
+		"action":"query",
+		"prop":"info",
+		"inprop":"url",
+		"titles":link_to_title(link),
+		"format":"json",
+		"redirects":True
+	}).json()
+	if "redirects" in response["query"]:
+		if "tofragment" in response["query"]["redirects"][-1]:
+			print("from", response["query"]["redirects"][-1]["from"], "-->", response["query"]["redirects"][-1]["to"], "is fragment link")
+			return True
+	return False
+
 
 def getLinksOnPage(titles, plnamespace="*", filter=lambda x:True):
 	items = []
@@ -57,7 +85,7 @@ def getLinksOnPage(titles, plnamespace="*", filter=lambda x:True):
 	}
 
 	while True:
-		response = requests.get("https://www.perrypedia.de/mediawiki/api.php", params=params).json()
+		response = requests.get(api_endpoint, params=params).json()
 		links = response["query"]["pages"]
 		for k, v in links.items():
 			for l in v["links"]:
@@ -79,6 +107,7 @@ def getCharactersFromPagelist(items):
 		response = requests.get("https://www.perrypedia.de/wiki/"+quote(item))
 		soup = BeautifulSoup(response.text, 'html.parser')
 		tables = soup.find_all('table')
+		print(item)
 
 		for table in tables:
 			if table:
@@ -93,14 +122,14 @@ def getCharactersFromPagelist(items):
 								source=fields[3].text,
 								artificial=False,
 							)
-							session.add(character)
 
 							if link := fields[0].find("a"):
 								dest = link.get("href")
 								# the RegEx filters red links(links to pages that dont exist)
-								if re.match("/wiki/(.*)", dest):
+								if re.match("/wiki/(.*)", dest) and not redirectsToFragment(dest):
 									# Check for duplicate characters
 									if session.query(Link).filter(Link.link==dest).first():
+										print(dest, "is a duplicate")
 										continue
 		
 									main_title, alt_links = get_alternative_links(dest)
@@ -108,7 +137,7 @@ def getCharactersFromPagelist(items):
 										session.add(Link(character_id=character.id, link=alt_link))
 
 									character.name = main_title
-
+							session.add(character)
 		progress.update(1)
 		session.commit()
 
@@ -134,7 +163,7 @@ def loadCharactersFromTable(url, field_values, num_fields):
 						if link := fields[field_values["name"][1]].find("a"):
 							dest = link.get("href")
 							# the RegEx filters red links(links to pages that dont exist)
-							if re.match("/wiki/(.*)", dest):
+							if re.match("/wiki/(.*)", dest) and not redirectsToFragment(dest):
 								# Check for duplicate characters
 								if session.query(Link).filter(Link.link==dest).first():
 									continue
@@ -170,7 +199,7 @@ def getMainCharacters(url):
 						url = link.get("href")
 
 						# If a character with that link exists in the database
-						if row := session.query(Link).filter(Link.link == url).first():
+						if row := session.query(Link).filter(Link.link == unquote(url)).first():
 							characters.append(row.character_id)
 						else:
 							print(link.text, "does not exist in the database, (", url, ")")
@@ -195,7 +224,7 @@ session = new_session()
 # pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
 # getCharactersFromPagelist(pages)
 # session.commit()
-# # print("now loading artificial characters")
+# print("now loading artificial characters")
 # loadCharactersFromTable("https://www.perrypedia.de/wiki/K%C3%BCnstliche_Individuen", {
 # 	"name": (True, 0),
 # 	"species": (False, "Kunstwesen"),
@@ -205,6 +234,8 @@ session = new_session()
 # 	"appearance": (True, 1),
 # 	"constructed_by": (True, 2)
 # }, num_fields=5)
+# print("entitiy")
+# session.commit()
 # loadCharactersFromTable("https://www.perrypedia.de/wiki/Entit%c3%a4ten", {
 # 	"name": (True, 0),
 # 	"species": (False, "Entität"),
@@ -219,7 +250,7 @@ progress = tqdm(total=len(pr_books))
 for book in pr_books:
 	print(book)
 	adjustRelations(getMainCharacters(f"https://www.perrypedia.de/wiki/{book}"))
-	progress.update(1)
+	# progress.update(1)
 
 
 session.commit()
