@@ -1,36 +1,47 @@
 import networkx as nx
 from Database import Node, Relation, Link, new_session
+from sqlalchemy import desc
 import matplotlib.pyplot as plt
+import IPython
+import py4cytoscape as p4c
+import json
+
+# print(f'Loading Javascript client ... {p4c.get_browser_client_channel()} on {p4c.get_jupyter_bridge_url()}')
+# browser_client_js = p4c.get_browser_client_js()
+# IPython.display.Javascript(browser_client_js) # Start browser client
+
+# # Open Cytoscape session
+# p4c.sandbox_send_to("BasicDataVizDemo.cys")
+# p4c.open_session(file_location="BasicDataVizDemo.cys")
+
+# p4c.export_image(filename="BasicDataVizDemo.png")
+# p4c.sandbox_get_from("BasicDataVizDemo.png")
+# from IPython.display import Image
+# Image('BasicDataVizDemo.png')
+# assert False
 
 session = new_session()
 
 # Construct Network Graph
-G_weighted = nx.Graph()
+G = nx.Graph()
+
+# Add Nodes
+relations = session.query(Relation).order_by(desc(Relation.weight)).limit(50).all()
+nodes = session.query(Node).filter(Node.id.in_(set([r.node_1 for r in relations] + [r.node_2 for r in relations])))
+for node in nodes:
+	print(node.name)
+	G.add_node(node.id,
+		name=node.name, 
+		species=node.species,
+		description=node.description,
+		source=node.source, 
+		artificial=node.artificial, 
+		appearance=node.appearance)
 
 # Add Edges
-for edge in session.query(Relation).filter(Relation.weight > 40).all():
-	node_1 = session.query(Node).filter(Node.id==edge.node_1).first()
-	node_2 = session.query(Node).filter(Node.id==edge.node_2).first()
+for edge in relations:
+	G.add_edge(edge.node_1, edge.node_2, weight=edge.weight)
 
-	G_weighted.add_edge(node_1.name,  node_2.name, weight=edge.weight)
-
-eigenvector_centrality = nx.eigenvector_centrality(G_weighted)
-print(max(eigenvector_centrality, key=eigenvector_centrality.get))
-
-# Style edges based on their weight
-elarge = [(u, v) for (u, v, d) in G_weighted.edges(data=True) if d['weight'] > 60]
-esmall = [(u, v) for (u, v, d) in G_weighted.edges(data=True) if d['weight'] <= 60]
-
-# Display the Graph
-pos = nx.kamada_kawai_layout(G_weighted)  
-nx.draw_networkx_nodes(G_weighted, pos)
-nx.draw_networkx_edges(G_weighted, pos, edgelist=elarge, width=3)
-nx.draw_networkx_edges(G_weighted, pos, edgelist=esmall, width=2, style='dashed')
-nx.draw_networkx_labels(G_weighted, pos, font_size=10, font_family='sans-serif')
-
-plt.axis("off")
-plt.show()
-
-# Save stuff
-plt.savefig("graph.png")
-nx.write_graphml(G_weighted, "graph.gml") 
+# Save the data in json format for use in cytoscape.js
+with open("cytoscape_graph.json", "w") as outfile:
+	json.dump(nx.readwrite.json_graph.cytoscape_data(G), outfile)
