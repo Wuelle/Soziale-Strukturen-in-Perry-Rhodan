@@ -36,7 +36,7 @@ class Relation(Base):
 
 
 
-engine = create_engine("sqlite:///social_interactions.db")
+engine = create_engine("sqlite:///data/social_interactions.db")
 if not database_exists(engine.url):
 	create_database(engine.url)
 
