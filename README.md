@@ -1,3 +1,7 @@
+# Soziale Strukturen im Perryversum
+Dieses Repository enthält eine soziale Netzwerksanalyse der Charaktere nach Daten des ![Perrypedias](https://www.perrypedia.de)
+Derzeit experimentiere ich noch herum aber das Endziel ist es, einen Interaktiven Netzwerksgraphen auf ![meiner Website](https://wuelle.github.io/Soziale-Strukturen-in-Perry-Rhodan/) zu haben.
+Dieses Repository ist öffentlich damit ich die Seite mithilfe von Github hosten kann, ist aber noch nicht fertig.
 
 ## Disclaimer
 Aus offensichtlichen Gründen enthält dieses Repository Spoiler für die gesamte Perry-Rhodan Heftserie. Der Inhalt von
