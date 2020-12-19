@@ -1,4 +1,5 @@
 import networkx as nx
+import networkx.algorithms.community as nxcom
 from Database import Node, Relation, Link, new_session
 from sqlalchemy import desc
 import matplotlib.pyplot as plt
@@ -40,6 +41,10 @@ for node in nodes:
 # Add Edges
 for edge in relations:
 	G.add_edge(edge.node_1, edge.node_2, weight=edge.weight)
+
+# Detect Clusters
+communities = sorted(nxcom.greedy_modularity_communities(G), key=len, reverse=True)
+print(len(communities))
 
 # Save the data in json format for use in cytoscape.js
 with open("gh-pages/cytoscape_graph.json", "w") as outfile:

@@ -16,6 +16,10 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape-panzoom.min.js" 
 		integrity="sha512-coQmIYa/SKS8wyZw14FTLJhHmp5jqIO2WxyGhjAnLGdym6RsLX412wLO1hqnFifU0NacrJvlUukRJEwjRkm0Xg==" 
 		crossorigin="anonymous"></script>
+	<script 
+		src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" 
+		integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" 
+		crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape.js-panzoom.min.css" integrity="sha512-MJrzp+ZGajx6AWCCCmjBWo0rPFavM1aBghVUSVVa0uYv8THryrtEygjj5r2rUg/ms33SkEC5xJ3E4ycCmxWdrw==" crossorigin="anonymous" />
 
 	<script>
@@ -50,7 +54,7 @@
 				cy = cytoscape(data);
 				cy.panzoom();
 				// var a = $("#downloadgraph");
-				// var file = new Blob([cy.png({output: 'blob'})]);
+				var file = new Blob([cy.png({output: 'blob'})]);
 				// a.href = URL.createObjectURL(file);
 				// a.download = "Graph.png";
 				// a.click();
