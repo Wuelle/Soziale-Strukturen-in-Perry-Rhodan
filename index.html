@@ -32,6 +32,8 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" 
 		integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" 
 		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/webcola@3.3.8/WebCola/cola.min.js"></script>
+	<script src="https://unpkg.com/cytoscape-cola@2.2.3/cytoscape-cola.js"></script>
 
 	<script 
 		src="visualize.js"
@@ -39,7 +41,21 @@
 </head>
 <body>
 	<div id="cy"></div>
-	<a id="downloadgraph" style="display:none"> Download </a>
+	<div id="config">
+		<a id="downloadgraph"> Download </a>
+		<ul>
+			<li>
+				<input type="checkbox" id="toggleEdgeLabels">
+				<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
+			</li>
+
+			<li>
+				<input type="checkbox" id="toggleNodeLabels">
+				<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
+			</li>
+		</ul>
+		
+	</div>
 
 	<style>
     
