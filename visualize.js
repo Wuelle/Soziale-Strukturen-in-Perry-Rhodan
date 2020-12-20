@@ -71,3 +71,11 @@ $(document).ready(function() {
 		}
 	});
 });
+
+function downloadSVG(){
+	let a = document.createElement("a");
+	let blob = new Blob([cy.svg({full:true, bg:"#000000"})], {type: "image/svg"})
+	a.download = "RhodanGraph.svg";
+	a.href = window.URL.createObjectURL(blob);
+	a.click();
+}
