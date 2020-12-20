@@ -13,12 +13,12 @@ $(document).ready(function() {
 				}
 			},
 			{
-			  selector: 'node',
-			  style: {
+				selector: 'node',
+				style: {
 				'background-color': '#ddd',
 				'width': "mapData(importance, 0, 1, 5, 20)",
 				'height': 'mapData(importance, 0, 1, 5, 20)'
-			  }
+				}
 			},
 			{
 				selector: "edge.withLabel",
@@ -31,22 +31,26 @@ $(document).ready(function() {
 			},
 
 			{
-			  selector: 'edge',
-			  style: {
+				selector: 'edge',
+				style: {
 				'width': 1,
 				'line-color': '#30d5c8',
 				'curve-style': 'bezier'      
 				}
 			}
-		  ]
+			]
 		data.layout = {
-			name:"cose", 
+			name:"cola", 
 			animate:"true",
 			idealEdgeLength: function( edge ){ return 1; },
 		}
 		cy = cytoscape(data);
 		cy.panzoom();
 		var file = new Blob([cy.png({output: 'blob'})]);
+
+		// Browser might have saved previous checkbox states
+		$("#toggleNodeLabels").trigger("change");
+		$("#toggleEdgeLabels").trigger("change");
 
 	});
 
@@ -60,6 +64,7 @@ $(document).ready(function() {
 			}
 		}
 	});
+
 	$("#toggleNodeLabels").change(function(e){
 		for(node of cy.nodes()){
 			if(e.target.checked){

@@ -28,10 +28,6 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape-panzoom.min.js" 
 		integrity="sha512-coQmIYa/SKS8wyZw14FTLJhHmp5jqIO2WxyGhjAnLGdym6RsLX412wLO1hqnFifU0NacrJvlUukRJEwjRkm0Xg==" 
 		crossorigin="anonymous"></script>
-	<script 
-		src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" 
-		integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" 
-		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/cytoscape-svg@0.3.1/cytoscape-svg.min.js"></script>
 	<script src="https://unpkg.com/webcola@3.3.8/WebCola/cola.min.js"></script>
 	<script src="https://unpkg.com/cytoscape-cola@2.2.3/cytoscape-cola.js"></script>
@@ -52,6 +48,16 @@
 			<li>
 				<input type="checkbox" id="toggleNodeLabels">
 				<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
+			</li>
+
+			<li>
+				<input type="range" min="1" max="100" value="50" class="slider" id="edge_length">
+				<label for="edge_length">Kantenlänge</label>
+			</li>
+
+			<li>
+				<input type="range" min="1" max="100" value="50" class="slider" id="node_spacing">
+				<label for="node_spacing">Node Abstand</label>
 			</li>
 		</ul>
 		<button onclick="downloadSVG()">Graph als .svg Datei herunterladen</button>
