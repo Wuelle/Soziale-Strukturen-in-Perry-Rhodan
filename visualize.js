@@ -33,18 +33,22 @@ $(document).ready(function() {
 			{
 				selector: 'edge',
 				style: {
-				'width': 1,
-				'line-color': '#30d5c8',
-				'curve-style': 'bezier'      
+					"width": 0.5,
+					"line-color": '#30d5c8',
+					"line-opacity": "mapData(weight, 0, 100, 0.2, 1)",
+					'curve-style': 'bezier'      
 				}
 			}
 			]
 		data.layout = {
 			name:"cola", 
 			animate:"true",
-			idealEdgeLength: function( edge ){ return 1; },
 		}
 		cy = cytoscape(data);
+		// cy.ready((e) => {
+  // 			const bb = cy.bubbleSets();
+  // 			bb.addPath(cy.nodes(), cy.edges(), null);
+		// });
 		cy.panzoom();
 		var file = new Blob([cy.png({output: 'blob'})]);
 
@@ -83,4 +87,14 @@ function downloadSVG(){
 	a.download = "RhodanGraph.svg";
 	a.href = window.URL.createObjectURL(blob);
 	a.click();
+}
+
+function formClusters(){
+	let num_clusters = $("#numClusters").val();
+	let clusters = cy.elements().fuzzyCMeans({
+		k: numClusters,
+		attributes: [
+			function(node){ return edge.data('weight'); }
+		]
+	});
 }
