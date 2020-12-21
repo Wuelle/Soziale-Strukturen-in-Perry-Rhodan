@@ -28,6 +28,7 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape-panzoom.min.js" 
 		integrity="sha512-coQmIYa/SKS8wyZw14FTLJhHmp5jqIO2WxyGhjAnLGdym6RsLX412wLO1hqnFifU0NacrJvlUukRJEwjRkm0Xg==" 
 		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/cytoscape-bubblesets@3.0.0/build/index.umd.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/cytoscape-svg@0.3.1/cytoscape-svg.min.js"></script>
 	<script src="https://unpkg.com/webcola@3.3.8/WebCola/cola.min.js"></script>
 	<script src="https://unpkg.com/cytoscape-cola@2.2.3/cytoscape-cola.js"></script>
@@ -51,16 +52,20 @@
 			</li>
 
 			<li>
-				<input type="range" min="1" max="100" value="50" class="slider" id="edge_length">
-				<label for="edge_length">Kantenlänge</label>
+				<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
+				<label for="edge_length_slider">Kantenlänge</label>
 			</li>
 
 			<li>
-				<input type="range" min="1" max="100" value="50" class="slider" id="node_spacing">
-				<label for="node_spacing">Node Abstand</label>
+				<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
+				<label for="node_spacing_slider">Node Abstand</label>
 			</li>
 		</ul>
 		<button onclick="downloadSVG()">Graph als .svg Datei herunterladen</button>
+		Graph in 
+		<input type="number" min="1" max="5" id="numClusters"></input>
+		Cluster aufteilen
+		<button onclick="formClusters()"></button>
 		
 	</div>
 

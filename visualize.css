@@ -17,6 +17,9 @@ ul{
 	bottom: 0;
 	right: 20em;
 }
+#numClusters{
+	width: 2em;
+}
 .cy-panzoom{
 	position:absolut;
 	top: 50%;

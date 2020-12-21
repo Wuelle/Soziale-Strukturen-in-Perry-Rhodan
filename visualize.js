@@ -1,23 +1,24 @@
-$(document).ready(function() {
-	$.getJSON("data/cytoscape_graph.json", function(data){
-		data.container = $('#cy');
+var layout;
+$(document).ready(() => {
+	$.getJSON("data/cytoscape_graph.json", (data) =>{
+		data.container = $("#cy");
 		data.style = [ // the stylesheet for the graph
 			{
 				selector: "node.withLabel",
 				style: {
 					"text-halign":"right",
 					"text-valign":"bottom",
-					'label': 'data(name)',
+					"label": "data(name)",
 					"font-size": "mapData(importance, 0, 1, 3, 10)",
 					"color":"#fff"
 				}
 			},
 			{
-				selector: 'node',
+				selector: "node",
 				style: {
-				'background-color': '#ddd',
-				'width': "mapData(importance, 0, 1, 5, 20)",
-				'height': 'mapData(importance, 0, 1, 5, 20)'
+				"background-color": "#ddd",
+				"width": "mapData(importance, 0, 1, 5, 20)",
+				"height": "mapData(importance, 0, 1, 5, 20)"
 				}
 			},
 			{
@@ -31,34 +32,69 @@ $(document).ready(function() {
 			},
 
 			{
-				selector: 'edge',
+				selector: "edge",
 				style: {
 					"width": 0.5,
-					"line-color": '#30d5c8',
+					"line-color": "#30d5c8",
 					"line-opacity": "mapData(weight, 0, 100, 0.2, 1)",
-					'curve-style': 'bezier'      
+					"curve-style": "bezier"      
 				}
 			}
 			]
 		data.layout = {
-			name:"cola", 
-			animate:"true",
+			name:"random"
 		}
 		cy = cytoscape(data);
 		// cy.ready((e) => {
-  // 			const bb = cy.bubbleSets();
-  // 			bb.addPath(cy.nodes(), cy.edges(), null);
+	// 			const bb = cy.bubbleSets();
+	// 			bb.addPath(cy.nodes(), cy.edges(), null);
 		// });
 		cy.panzoom();
-		var file = new Blob([cy.png({output: 'blob'})]);
-
+ 
 		// Browser might have saved previous checkbox states
 		$("#toggleNodeLabels").trigger("change");
 		$("#toggleEdgeLabels").trigger("change");
 
+		// Create default parameters for Cola.js
+		var params = {
+			name: "cola",
+			nodeSpacing: $("#node_spacing_slider").val(),
+			edgeLengthVal: $("#edge_length_slider").val(),
+			animate: true,
+			randomize: false,
+			maxSimulationTime: 3000
+		};
+
+		// Run Cola Layout
+		var layout = makeLayout();
+		layout.run();
+
+		function makeLayout(opts){
+			// Overwrite parameters
+			for(var i in opts){
+				params[i] = opts[i];
+			}
+			params.edgeLength = function(e){ return params.edgeLengthVal / e.data("weight"); };
+
+			return cy.layout(params);
+		}
+
+		// The sliders modify nodeSpacing and edgeLengthVal params
+		$("#edge_length_slider").bind("change", {layout: layout}, function(e){
+			e.data.layout.stop();
+			var layout = makeLayout({edgeLengthVal: e.target.value});
+			layout.run();
+		});
+		$("#node_spacing_slider").bind("change", {layout: layout}, function(e){
+			e.data.layout.stop();
+			var layout = makeLayout({nodeSpacing: e.target.value});
+			layout.run();
+		});
+
+
 	});
 
-	$("#toggleEdgeLabels").change(function(e){
+	$("#toggleEdgeLabels").change((e) =>{
 		for(edge of cy.edges()){
 			if(e.target.checked){
 				edge.addClass("withLabel")
@@ -69,7 +105,7 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#toggleNodeLabels").change(function(e){
+	$("#toggleNodeLabels").change((e) =>{
 		for(node of cy.nodes()){
 			if(e.target.checked){
 				node.addClass("withLabel")
@@ -91,10 +127,13 @@ function downloadSVG(){
 
 function formClusters(){
 	let num_clusters = $("#numClusters").val();
-	let clusters = cy.elements().fuzzyCMeans({
+	console.log(num_clusters);
+	let clusters = cy.nodes().kMeans({
 		k: numClusters,
 		attributes: [
-			function(node){ return edge.data('weight'); }
+			function(node){ return edge.data("weight"); }
 		]
 	});
+	console.log(clusters);
 }
+
