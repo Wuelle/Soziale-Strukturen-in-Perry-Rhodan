@@ -7,6 +7,11 @@ body{
 	font-size: 14px;
 	font-family: Arial, "sans-serif";
 }
+a, a:active, a:visited, a:hover{
+	text-decoration: none;
+	color: blue;
+}
+
 ul{
 	list-style: none;
 }
@@ -20,10 +25,13 @@ ul{
 #numClusters{
 	width: 2em;
 }
-.cy-panzoom{
-	position:absolut;
+/*.cy-panzoom{
+	position:absolute;
 	top: 50%;
-}
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	vertical-align: middle;
+}*/
 #config{
 	position: absolute;
 	top: 0;
@@ -32,4 +40,11 @@ ul{
 	width: 20em;
 	background-color: #aaa;
 	box-sizing: border-box;
+}
+
+#credits{
+	position: absolute;
+	font-size: 10px;
+	bottom: 15px;
+	left: 15px;
 }
