@@ -40,33 +40,44 @@
 <body>
 	<div id="cy"></div>
 	<div id="config">
-		<ul>
-			<li>
-				<input type="checkbox" id="toggleEdgeLabels">
-				<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
-			</li>
+		<button type="button" class="toggle_collapsible">Ansicht</button>
+		<div class="content">
+			<ul>
+				<li>
+					<input type="checkbox" id="toggleEdgeLabels">
+					<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
+				</li>
 
-			<li>
-				<input type="checkbox" id="toggleNodeLabels">
-				<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
-			</li>
+				<li>
+					<input type="checkbox" id="toggleNodeLabels">
+					<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
+				</li>
 
-			<li>
-				<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
-				<label for="edge_length_slider">Kantenlänge</label>
-			</li>
+				<li>
+					<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
+					<label for="edge_length_slider">Kantenlänge</label>
+				</li>
 
-			<li>
-				<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
-				<label for="node_spacing_slider">Node Abstand</label>
-			</li>
-		</ul>
-		<br>
-		<button onclick="downloadSVG()">Graph als .svg Datei herunterladen</button><br>
-		Graph in 
-		<input type="number" min="1" max="5" id="numClusters"></input>
-		Cluster aufteilen
-		<button onclick="formClusters()"></button>
+				<li>
+					<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
+					<label for="node_spacing_slider">Node Abstand</label>
+				</li>
+			</ul>
+		</div>
+
+		<button type="button" class="toggle_collapsible">Download</button>
+		<div class="content">
+			<button onclick="downloadSVG()">Graph als .svg Datei herunterladen</button><br>	
+		</div>
+
+		<button type="button" class="toggle_collapsible">Analyse</button>
+			<div class="content">
+			Graph in 
+			<input type="number" min="1" max="5" id="numClusters"></input>
+			Cluster aufteilen
+			<button onclick="formClusters()"></button>
+		</div>
+		
 		<div id="credits">
 			Daten vom <a href="https://www.perrypedia.de">Perrypedia</a><br>
 			Visualisierung mit <a href="https://js.cytoscape.org">Cytoscape.js</a><br>

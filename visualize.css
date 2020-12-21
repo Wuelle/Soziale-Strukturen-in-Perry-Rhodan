@@ -25,13 +25,14 @@ ul{
 #numClusters{
 	width: 2em;
 }
-/*.cy-panzoom{
+.cy-panzoom{
+	display: inline;
 	position:absolute;
 	top: 50%;
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 	vertical-align: middle;
-}*/
+}
 #config{
 	position: absolute;
 	top: 0;
@@ -40,8 +41,14 @@ ul{
 	width: 20em;
 	background-color: #aaa;
 	box-sizing: border-box;
+	padding: 10px;
 }
-
+.toggle_collapsible{
+	width: 100%;
+}
+.content{
+	display: none;
+}
 #credits{
 	position: absolute;
 	font-size: 10px;
