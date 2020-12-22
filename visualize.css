@@ -34,20 +34,35 @@ ul{
 	vertical-align: middle;
 }
 #config{
+	color: white;
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	width: 20em;
-	background-color: #aaa;
+	background-color: #555;
 	box-sizing: border-box;
 	padding: 10px;
+	overflow: hidden;
 }
 .toggle_collapsible{
 	width: 100%;
+	outline: none;
+	text-align: left;
+	background-color: #333;
+	border: none;
+	color: white;
+	padding: 5px;
+	margin-bottom:5px;
+}
+.toggle_collapsible:hover{
+	background-color: #666;
 }
 .content{
 	display: none;
+}
+#startDownload, #pretty_select{
+	width: 100%;
 }
 #credits{
 	position: absolute;

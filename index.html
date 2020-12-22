@@ -67,17 +67,40 @@
 
 		<button type="button" class="toggle_collapsible">Download</button>
 		<div class="content">
-			<button onclick="downloadSVG()">Graph als .svg Datei herunterladen</button><br>	
+			<label for="fileType">Dateiformat:</label>
+			<select id="fileType" class="pretty_select">
+				<option value="svg" id="option_svg">
+					.svg (Vektorgrafik)
+				</option>
+				<option value="png" id="option_png">
+					.png
+				</option>
+				<option value="jpg" id="option_jpg">
+					.jpg
+				</option>
+
+			</select><br>
+			<input type="radio" name="graphview" value="full" id="option_full" checked>
+			<label for="option_full">Gesamter Graph</label><br>
+			<input type="radio" name="graphview" value="partial" id="option_partial">
+			<label for="option_partial">Derzeitige Ansicht</label><br>
+			<button onclick="downloadGraph()" id="startDownload">Download starten</button><br>	
 		</div>
 
 		<button type="button" class="toggle_collapsible">Analyse</button>
-			<div class="content">
-			Graph in 
+		<div class="content">
+			<p>
+				<em>
+					<u>Anmerkung:</u> Die visuelle Anordnung der Nodes hat keinen Einfluss auf die 
+					Bildung der Gruppen. Diese basiert auf der Anzahl der Interaktionen zwischen 
+					den Charakteren
+				</em>
+			</p>
 			<input type="number" min="1" max="5" id="numClusters"></input>
-			Cluster aufteilen
-			<button onclick="formClusters()"></button>
+			<label for="numClusters">Cluster</label>
+			<button onclick="formClusters()">fuzzyCMeans</button>
 		</div>
-		
+
 		<div id="credits">
 			Daten vom <a href="https://www.perrypedia.de">Perrypedia</a><br>
 			Visualisierung mit <a href="https://js.cytoscape.org">Cytoscape.js</a><br>

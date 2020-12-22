@@ -44,6 +44,7 @@ $(document).ready(() => {
 		data.layout = {
 			name:"random"
 		}
+		data.wheelSensitivity = 0.1;
 		cy = cytoscape(data);
 		// cy.ready((e) => {
 	// 			const bb = cy.bubbleSets();
@@ -132,23 +133,38 @@ $(document).ready(() => {
 	}
 });
 
-function downloadSVG(){
+function downloadGraph(){
+	let filetype = $("#fileType").val();
+	let mode = $("#option_full").is(":checked");
+	console.log(filetype)
+
+	if(filetype === "svg"){
+		var image = cy.svg({full:mode, bg:"#000000"});
+	}
+	else if(filetype === "png"){
+		var image = cy.png({full:mode, bg:"#000000", output: "blob"});
+	}
+	else if(filetype === "jpg"){
+		var image = cy.jpg({full:mode, bg:"#000000", output: "blob"});
+	}
 	let a = document.createElement("a");
-	let blob = new Blob([cy.svg({full:true, bg:"#000000"})], {type: "image/svg"})
-	a.download = "RhodanGraph.svg";
+	let blob = new Blob([image], {type: "image/"+filetype});
+	a.download = "RhodanGraph." + filetype;
 	a.href = window.URL.createObjectURL(blob);
 	a.click();
 }
 
 function formClusters(){
 	let num_clusters = $("#numClusters").val();
-	console.log(num_clusters);
 	let clusters = cy.nodes().kMeans({
 		k: numClusters,
 		attributes: [
-			function(node){ return edge.data("weight"); }
+			function(node){return edge.data("weight")}
 		]
 	});
-	console.log(clusters);
+	console.log(clusters, num_clusters)
+	for(var cluster of clusters){
+		console.log(cluster.length);
+	}
 }
 
