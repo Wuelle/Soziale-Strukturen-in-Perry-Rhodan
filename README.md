@@ -17,6 +17,7 @@ Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt u
 
 ## Important Links
 ![https://js.cytoscape.org/#style/mappers](https://js.cytoscape.org/#style/mappers) 
+http://www.aymerick.com/2014/07/22/jekyll-github-pages-bower-bootstrap.html
 
 ## Copyright
 Ich habe dieses Projekt mit guten Intentionen aber ohne Anwalt gestartet. Sämtliche benutzten Daten stammen

@@ -1,5 +1,5 @@
 import requests
-from Database import Node, Relation, Link, new_session
+from Database import Node, Relation, Link, Zyklus, new_session
 from sqlalchemy import select
 from sqlalchemy.sql.expression import exists
 import requests
@@ -220,6 +220,42 @@ def adjustRelations(characters):
 			else:
 				session.add(Relation(node_1=node_1, node_2=node_2, weight=1))
 
+def getSections(title):
+	"""
+	Prints a graphical overview of the sections of a given page. Should only be used to determine
+	the index parameter for other requests
+	"""
+	sections = requests.get(api_endpoint, params={
+		"action": "parse",
+		"prop": "sections",
+		"page": title,
+		"format": "json"
+	}).json()["parse"]["sections"]
+
+	for section in sections:
+		print("	" * (int(section["toclevel"]) - 1) + section["number"] + ": '" + section["line"] + "', index:"+section["index"])
+
+def getZyklen():
+	# section=2
+	response = requests.get(api_endpoint, params={
+		"action": "parse",
+		"section": 2,
+		"page": "Zyklen",
+		"prop": "text",
+		"format": "json"
+	}).json()["parse"]["text"]["*"]
+	soup = BeautifulSoup(response, "html.parser")
+
+	# response = requests.get("https://www.perrypedia.de/wiki/Zyklen#Perry_Rhodan-Heftserie")
+	# soup = BeautifulSoup(response.text, "html.parser")
+	table = soup.find_all("table")[0]
+
+	for tr in table.findAll("tr"):
+		fields = tr.findAll("td")
+		if len(fields) != 0:
+			session.add(Zyklus(name=fields[1].text, num_books=int(fields[6].text)))
+	session.commit()
+
 session = new_session()
 # pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
 # getCharactersFromPagelist(pages)
@@ -245,12 +281,14 @@ session = new_session()
 # session.commit()
 
 
-pr_books = getLinksOnPage("Perry Rhodan-Heftromane", plnamespace="100")
-progress = tqdm(total=len(pr_books))
-for book in pr_books:
-	print(book)
-	adjustRelations(getMainCharacters(f"https://www.perrypedia.de/wiki/{book}"))
-	# progress.update(1)
+# pr_books = getLinksOnPage("Perry Rhodan-Heftromane", plnamespace="100")
+# progress = tqdm(total=len(pr_books))
+# for book in pr_books:
+# 	print(book)
+# 	adjustRelations(getMainCharacters(f"https://www.perrypedia.de/wiki/{book}"))
+# 	# progress.update(1)
 
 
-session.commit()
+# session.commit()
+getZyklen()
+# getSections("Zyklen")

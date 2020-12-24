@@ -32,6 +32,14 @@ class Relation(Base):
 	node_1 = Column(String)
 	node_2 = Column(String)
 	weight = Column(Integer)
+	cycle = Column(Integer)
+
+class Zyklus(Base):
+ 	__tablename__ = "cycle"
+
+ 	id = Column(Integer, primary_key=True)
+ 	name = Column(String)
+ 	num_books = Column(Integer)
 
 engine = create_engine("sqlite:///data/social_interactions.db")
 if not database_exists(engine.url):
