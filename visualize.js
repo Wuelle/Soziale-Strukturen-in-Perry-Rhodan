@@ -1,4 +1,22 @@
 var layout;
+const species_colors = {
+	Terraner: "blue",
+	Arkoniden: "red",
+	Kunstwesen: "orange",
+	Entität: "green",
+	Ilts: "brown",
+	Haluter: "purple",
+	Plophoser: "pink",
+	Ertruser: "yellow",
+	Tefroder: "gray",
+	Siganesen: "magenta",
+	Kartanin: "light green",
+	Akonen: "dark blue",
+	Springer: "dark green",
+	Oxtorner: "light brown",
+	Andere: "light purple",
+	Unbekannt: "turquoise"
+}
 $(document).ready(() => {
 	$.getJSON("data/cytoscape_graph.json", (data) =>{
 		data.container = $("#cy");
@@ -14,11 +32,19 @@ $(document).ready(() => {
 				}
 			},
 			{
+				selector: "node.withBorder",
+				style: {
+					"border-width": "mapData(importance, 0, 1, 1, 4)",
+					"border-style": "solid",
+					"border-color": mapSpeciesColor
+				}
+			},
+			{
 				selector: "node",
 				style: {
-				"background-color": "#ddd",
-				"width": "mapData(importance, 0, 1, 5, 20)",
-				"height": "mapData(importance, 0, 1, 5, 20)"
+					"background-color": "#ddd",
+					"width": "mapData(importance, 0, 1, 5, 20)",
+					"height": "mapData(importance, 0, 1, 5, 20)"
 				}
 			},
 			{
@@ -26,8 +52,8 @@ $(document).ready(() => {
 				style: {
 					"label": "data(weight)",
 					"font-size": "mapData(weight, 0, 100, 3, 10)",
-					"text-rotation":"autorotate",
-					"color":"#fff"	
+					"text-rotation": "autorotate",
+					"color": "#fff"
 				}
 			},
 
@@ -42,14 +68,14 @@ $(document).ready(() => {
 			}
 			]
 		data.layout = {
-			name:"random"
+			name:"grid"
 		}
 		data.wheelSensitivity = 0.1;
 		cy = cytoscape(data);
-		// cy.ready((e) => {
-	// 			const bb = cy.bubbleSets();
-	// 			bb.addPath(cy.nodes(), cy.edges(), null);
-		// });
+		cy.ready((e) => {
+				const bb = cy.bubbleSets();
+				bb.addPath(cy.nodes(), cy.edges(), null);
+		});
 		cy.panzoom();
  
 		// Browser might have saved previous checkbox states
@@ -63,7 +89,7 @@ $(document).ready(() => {
 			edgeLengthVal: $("#edge_length_slider").val(),
 			animate: true,
 			randomize: false,
-			maxSimulationTime: 3000
+			maxSimulationTime: 5000
 		};
 
 		// Run Cola Layout
@@ -117,6 +143,17 @@ $(document).ready(() => {
 		}
 	});
 
+	$("#toggleBorder").change((e) =>{
+		for(node of cy.nodes()){
+			if(e.target.checked){
+				node.addClass("withBorder")
+			}
+			else{
+				node.removeClass("withBorder")
+			}
+		}
+	});
+
 	// Add Collapsible text to the sidebar
 	var coll = document.getElementsByClassName("toggle_collapsible");
 
@@ -156,15 +193,21 @@ function downloadGraph(){
 
 function formClusters(){
 	let num_clusters = $("#numClusters").val();
-	let clusters = cy.nodes().kMeans({
-		k: numClusters,
-		attributes: [
-			function(node){return edge.data("weight")}
-		]
-	});
-	console.log(clusters, num_clusters)
-	for(var cluster of clusters){
-		console.log(cluster.length);
+
+	// Doesnt really make sense to use importance here, rethink
+	let clusters = cy.elements().kMeans({k:2, attributes:[function(node){return node.data("importance")}]})
+	
+}
+function mapSpeciesColor(ele){
+	let species = ele.data().species.replace("\n", "");
+	if(species in species_colors){
+		return species_colors[species]
 	}
+	else if(species===""){
+		return species.Andere
+	}
+	console.log(species)
+	return species_colors.Unbekannt
+
 }
 

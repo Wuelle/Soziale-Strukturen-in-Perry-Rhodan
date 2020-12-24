@@ -15,11 +15,16 @@ a, a:active, a:visited, a:hover{
 ul{
 	list-style: none;
 }
+table{
+	font-size: 20px;
+	width: 100%;
+	color: white;
+}
 #cy{
 	position: absolute;
 	top: 0;
 	left: 0;
-	bottom: 0;
+	bottom: 15em;
 	right: 20em;
 }
 #numClusters{
@@ -32,6 +37,16 @@ ul{
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 	vertical-align: middle;
+}
+#info{
+	color: white;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 20em;
+	height: 15em;
+	background-color: #444;
+	box-sizing: border-box;
 }
 #config{
 	color: white;

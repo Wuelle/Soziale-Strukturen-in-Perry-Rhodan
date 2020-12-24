@@ -33,9 +33,6 @@ class Relation(Base):
 	node_2 = Column(String)
 	weight = Column(Integer)
 
-
-
-
 engine = create_engine("sqlite:///data/social_interactions.db")
 if not database_exists(engine.url):
 	create_database(engine.url)

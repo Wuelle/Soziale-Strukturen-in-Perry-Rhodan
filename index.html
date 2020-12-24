@@ -39,6 +39,39 @@
 </head>
 <body>
 	<div id="cy"></div>
+	<div id="info">
+		<h3>Legende:</h3>
+		<table>
+			<tr>
+				<td><span style="color:blue">◯</span><a href="https://www.perrypedia.de/wiki/Terraner">Terraner</a></td>
+				<td><span style="color:red">◯</span><a href="https://www.perrypedia.de/wiki/Arkoniden">Arkoniden</a></td>
+				<td><span style="color:orange">◯</span>Kunstwesen</td>
+				<td><span style="color:green">◯</span>Entitäten</td>
+				<td><span style="color:brown">◯</span><a href="https://www.perrypedia.de/wiki/Ilts">Ilts</a></td>
+			</tr>
+			<tr>
+				<td><span style="color:purple">◯</span><a href="https://www.perrypedia.de/wiki/Haluter">Haluter</a></td>
+				<td><span style="color:pink">◯</span><a href="https://www.perrypedia.de/wiki/Plophoser">Plophoser</a></td>
+				<td><span style="color:yellow">◯</span><a href="https://www.perrypedia.de/wiki/Ertruser">Ertruser</a></td>
+				<td><span style="color:gray">◯</span><a href="https://www.perrypedia.de/wiki/Tefroder">Tefroder</a></td>
+				<td><span style="color:magenta">◯</span><a href="https://www.perrypedia.de/wiki/Siganesen">Siganesen</a></td>
+			</tr>
+			<tr>
+				<td><span style="color:GITSNICHT">◯</span><a href="https://www.perrypedia.de/wiki/Kartanin">Kartanin</a></td>
+				<td><span style="color:green">◯</span><a href="https://www.perrypedia.de/wiki/Akonen">Akonen</a></td>
+				<td><span style="color:green">◯</span><a href="https://www.perrypedia.de/wiki/Mehandor">Springer</a></td>
+				<td><span style="color:green">◯</span>Oxtorner</td>
+				<td><span style="color:green">◯</span>Epsaler</td>
+			</tr>
+			<tr>
+				<td><span style="color:green">◯</span>Aras</td>
+				<td><span style="color:green">◯</span>Kranen</td>
+				<td><span style="color:green">◯</span>Lemurer</td>
+				<td><span style="color:turquoise">◯</span>Unbekannt</td>
+				<td><span style="color:green">◯</span>Andere</td>
+			</tr>
+		</table>
+	</div>
 	<div id="config">
 		<button type="button" class="toggle_collapsible">Ansicht</button>
 		<div class="content">
@@ -47,9 +80,13 @@
 					<input type="checkbox" id="toggleEdgeLabels">
 					<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
 				</li>
+				<li>
+					<input type="checkbox" id="toggleBorder">
+					<label for="toggleBorder">Charakterspezies anzeigen</label>
+				</li>
 
 				<li>
-					<input type="checkbox" id="toggleNodeLabels">
+					<input type="checkbox" id="toggleNodeLabels" checked>
 					<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
 				</li>
 
