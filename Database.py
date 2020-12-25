@@ -10,12 +10,7 @@ class Node(Base):
 
 	id = Column(String, primary_key=True)
 	name = Column(String)
-	description = Column(String)
 	species = Column(String)
-	source = Column(String)
-	appearance = Column(String)
-	constructed_by = Column(String)
-	artificial = Column(Boolean)
 
 class Link(Base):
 	__tablename__ = "links"
