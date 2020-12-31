@@ -8,17 +8,28 @@ import requests
 import secrets
 import re
 
+"""
+A-G leicht fehlerhaft, links mit redirects müssen nochmal gefiltert werden.
+H+ sollte ok sein.
+
+Da sind noch &nbsp Zeichen in den Namen(unwichtig) 
+"""
+
 # config variables
 api_endpoint = "https://www.perrypedia.de/mediawiki/api.php"
 html_filter = re.compile(r'<[^>]+>')
-wikilink_filter = re.compile(r"\[\[[^\|]*\|(?P<link>[^\]]*)\]\]")
+wikilink_filter_text = re.compile(r"\[\[([^|]*\|)?(?P<link>[^\]]*)\]\]")
+wikilink_filter_title = re.compile(r"\[\[(?P<title>[^|]*)(\|[^|]*)?\]\]")
 
 def wikilink_to_text(s):
 	"""
 	Expects a string containing one or more wikilinks(e.g. "[[URL|TEXT]]") and turns that string into a plain
 	text representation. Dont bother trying to understand the RegEx behind wikilink_filter
 	"""
-	return wikilink_filter.sub(r"\g<link>", s)
+	return wikilink_filter_text.sub(r"\g<link>", s)
+
+def wikilink_to_title(s):
+	return wikilink_filter_title.sub(r"\g<title>", s)
 
 def get_alternative_links(title):
 	"""
@@ -59,6 +70,25 @@ def redirectsToFragment(title):
 			print("from", response["query"]["redirects"][-1]["from"], "-->", response["query"]["redirects"][-1]["to"], "is fragment link")
 			return True
 	return False
+
+def redirectsTo(title):
+	"""
+	Returns the final destination of the Article
+	"""
+	response = requests.get(api_endpoint, params={
+		"action":"query",
+		"prop":"info",
+		"inprop":"url",
+		"titles":title,
+		"format":"json",
+		"redirects":True
+	}).json()
+	if "query" in response:
+		if "redirects" in response["query"]:
+			return response["query"]["redirects"][-1]["to"]
+	else:
+		print(response)
+	return title
 
 def getLinksOnPage(titles, plnamespace="*", filter=lambda x:True):
 	items = []
@@ -109,25 +139,25 @@ def getCharacters(title, fields):
 
 			character = Node(
 				id=secrets.token_urlsafe(32),
-				name=row[fields["name"][1]] if fields["name"][0] else fields["name"][1],
+				name=wikilink_to_text(row[fields["name"][1]]) if fields["name"][0] else fields["name"][1],
 				species=species
 			)
 
-			if re.match(r"\[\[(.*)\]\]", row[0]):
-				# Some Characters have multiple links in their name field, eg. '[[Akkarr-Ezibree]] / [[Akkarr-Hall]]'
-				wikilinks = wtp.parse(row[0]).wikilinks
-				for link in wikilinks:
-					if redirectsToFragment(link.title):
-						# Check for duplicate characters
-						if not session.query(Link).filter(Link.link == link.title).first():
-							main_title, alt_titles = get_alternative_links(link.title)
-							session.add(Link(character_id=character.id, link=main_title))
-							for alt_title in alt_titles:
+			# Characters who do not have their own article are not considered
+			if not redirectsToFragment(wikilink_to_title(row[fields["name"][1]])):
+				if re.match(r"\[\[(.*)\]\]", row[0]):
+					link = wtp.parse(row[0]).wikilinks[-1]
+					# Check for if that person does not already exist
+					if not session.query(Link).filter(Link.link == link.title).first():
+						main_title, alt_titles = get_alternative_links(link.title)
+						session.add(Link(character_id=character.id, link=main_title))
+						for alt_title in alt_titles:
+							if not redirectsToFragment(alt_title):
 								session.add(Link(character_id=character.id, link=alt_title))
-							character.name = main_title
+								character.name = main_title.replace("&nbsp", " ")
 
-			session.add(character)
-	session.commit()
+				print(character.name, character.species)
+				session.add(character)
 
 def getMainCharacters(book_index):
 	"""
@@ -140,19 +170,24 @@ def getMainCharacters(book_index):
 		"prop": "wikitext",
 		"redirects":"true",
 		"format": "json"
-	}).json()["parse"]["wikitext"]["*"]
-	t = wtp.parse(response).templates[0]
-	links = wtp.parse(t.get_arg("Hauptpersonen").value).wikilinks
+	}).json()
+	if "parse" in response:
+		response = response["parse"]["wikitext"]["*"]
+		t = wtp.parse(response).templates[0]
+		links = wtp.parse(t.get_arg("Hauptpersonen").value).wikilinks
 
-	characters = []
-	for link in links:
-		title = link.title.replace("&nbsp;", " ")
-		# If a character with that link exists in the database
-		if row := session.query(Link).filter(Link.link == title).first():
-			characters.append(row.character_id)
-		else:
-			print(link.text, "does not exist in the database, (", url, ")")
-	return characters
+		characters = []
+		for link in links:
+			title = redirectsTo(link.title).replace("&nbsp;", " ")
+			# If a character with that link exists in the database
+			if row := session.query(Link).filter(Link.link == title).first():
+				characters.append(row.character_id)
+			else:
+				print(title, "is unknown")
+		return characters
+	else:
+		print(response)
+		return []
 
 def adjustRelations(characters, cycle_id):
 	"""
@@ -199,34 +234,38 @@ def getZyklen():
 	for row in t.data()[1:]:
 		print(wtp.parse(row[1]).wikilinks[0].text)
 		num_books = int(html_filter.sub("", row[6]))
-		cycle = Zyklus(name=wtp.parse(row[1]).wikilinks[0].text, num_books=num_books)
-		session.add(cycle)
+		if not session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first():
+			cycle = Zyklus(name=wtp.parse(row[1]).wikilinks[0].text, num_books=num_books)
+			session.add(cycle)
+		else:
+			cycle = session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first()
 
 		for book_index_relative in range(num_books):
-			main_characters = getMainCharacters(book_index + book_index_relative)
-			adjustRelations(main_characters, cycle.id)
-			book_index += 1
+			print(book_index + book_index_relative)
+			if book_index + book_index_relative > 2533:
+				main_characters = getMainCharacters(book_index + book_index_relative)
+				adjustRelations(main_characters, cycle.id)
+		book_index += num_books
+		session.commit()
 		
-	session.commit()
-
 session = new_session()
-pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
-for page in pages:
-	getCharacters(page, {
-		"name": (True, 0),
-		"species": (True, 1)
-	})
-
-getCharacters("Künstliche Individuen", {
-	"name": (True, 0),
-	"species": (False, "Kunstwesen")
-})
-
-getCharacters("Entitäten", {
-	"name": (True, 0),
-	"species": (False, "Entität")
-})
-session.commit()
+# pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
+# for page in pages[21:]:
+# 	getCharacters(page, {
+# 		"name": (True, 0),
+# 		"species": (True, 1)
+# 	})
+# 	session.commit()
+# getCharacters("Künstliche Individuen", {
+# 	"name": (True, 0),
+# 	"species": (False, "Kunstwesen")
+# })
+# session.commit()
+# getCharacters("Entitäten", {
+# 	"name": (True, 0),
+# 	"species": (False, "Entität")
+# })
+# session.commit()
 
 
 # pr_books = getLinksOnPage("Perry Rhodan-Heftromane", plnamespace="100")
@@ -238,5 +277,6 @@ session.commit()
 
 
 # session.commit()
-# getZyklen()
+getZyklen()
+session.commit()
 # getSections("Quelle:PR1008")

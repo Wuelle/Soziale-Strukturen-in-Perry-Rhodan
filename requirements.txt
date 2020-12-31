@@ -5,5 +5,5 @@ networkx
 sqlalchemy
 tqdm
 numpy 
-bs4
-py4cytoscape # https://py4cytoscape.readthedocs.io/en/latest/install.html
+sqlalchemy_utils
+wikitextparser
