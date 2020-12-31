@@ -1,0 +1,9 @@
+body{
+	font-family: Arial, "sans-serif";
+	font-size: 14px;
+}
+
+a, a:active, a:visited, a:hover{
+	text-decoration: none;
+	color: blue;
+}

@@ -19,6 +19,11 @@ Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt u
 ![https://js.cytoscape.org/#style/mappers](https://js.cytoscape.org/#style/mappers) 
 http://www.aymerick.com/2014/07/22/jekyll-github-pages-bower-bootstrap.html
 
+## Konzept Graphen
+Eigenvektorzentralität einer Figuren während einem Zyklus und overall.
+
+Zusammenarbeit zweier Figuren während der Hefte
+
 ## Copyright
 Ich habe dieses Projekt mit guten Intentionen aber ohne Anwalt gestartet. Sämtliche benutzten Daten stammen
 vom ![Perrypedia](https://www.perrypedia.de) das eine Weiterverbreitung der enthaltenen Informationen

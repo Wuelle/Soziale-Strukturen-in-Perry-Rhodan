@@ -43,6 +43,4 @@ if not database_exists(engine.url):
 Base.metadata.create_all(engine)
  
 # Bind the sessionmaker to engine
-new_session = sessionmaker()
-new_session.configure(bind=engine)
-
+new_session = sessionmaker(bind=engine)

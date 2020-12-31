@@ -4,12 +4,6 @@ Styles for nodes etc are specified in visualize.js
 */
 body{
 	background-color: black;
-	font-size: 14px;
-	font-family: Arial, "sans-serif";
-}
-a, a:active, a:visited, a:hover{
-	text-decoration: none;
-	color: blue;
 }
 
 ul{
