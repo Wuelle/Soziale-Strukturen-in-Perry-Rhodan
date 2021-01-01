@@ -1,6 +1,6 @@
 import networkx as nx
 import networkx.algorithms.community as nxcom
-from Database import Node, Relation, Link, new_session
+from download.Database import Node, Relation, Link, Zyklus, new_session
 from sqlalchemy import desc
 import matplotlib.pyplot as plt
 import json
@@ -12,35 +12,34 @@ def eigenvector_centrality(id):
 	as well as an Array containing the ec for every single cycle that character appeared in
 	"""
 	session = new_session()
-	# Not implemented yet
-	return None, []
 
-# # Construct Network Graph
-# G = nx.Graph()
+	# Get all the Cycles
+	cycles = session.query(Zyklus).all()
+
+	centralities = []
+
+	for cycle in cycles:
+		relations = session.query(Relation).filter(Relation.cycle == cycle.id).all()
+		# The Database also contains the newest cycle, which doesnt contain characters yet
+		if len(relations) != 0:
+			edges = [(r.node_1, r.node_2, {"weight":r.weight}) for r in relations]
 
 
-# # Add Nodes
-# relations = session.query(Relation).order_by(desc(Relation.weight)).limit(50).all()
-# nodes = session.query(Node).filter(Node.id.in_([r.node_1 for r in relations] + [r.node_2 for r in relations])).distinct()
-# for node in nodes:
-# 	G.add_node(node.id,
-# 		name=node.name, 
-# 		species=node.species,
-# 		description=node.description,
-# 		source=node.source, 
-# 		artificial=node.artificial, 
-# 		appearance=node.appearance
-# 		)
+			G = nx.Graph()
+			G.add_edges_from(edges)
+			ec = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
 
-# # Add Edges
-# for edge in relations:
-# 	G.add_edge(edge.node_1, edge.node_2, weight=edge.weight)
+			if id in ec:
+				centralities.append(ec[id])
+			else:
+				centralities.append(0)
+		else:
+			centralities.append(0)
 
-# # Detect Clusters
-# # communities = sorted(nxcom.greedy_modularity_communities(G), key=len, reverse=True)
+	return centralities
 
-# # Add some more node attributes
-# nx.set_node_attributes(G, nx.eigenvector_centrality(G), "importance")
+# print(eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4"))
+
 
 # # Save the data in json format for use in cytoscape.js
 # with open("data/cytoscape_graph.json", "w") as outfile:

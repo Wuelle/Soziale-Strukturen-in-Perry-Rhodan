@@ -6,14 +6,22 @@ Statistiken
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-<script type="text/javascript" src="static/js/statistics.js"></script>
+
+<script type="text/javascript">{% include "static/js/statistics.js" %}</script>
 {% endblock %}
 
 
 {% block body %}
-<canvas id="eigenvector_centrality" style="display:none"></canvas>
-{% with id="select2_eigenvector_centrality", single=True%}
-	{% include "character_selector.html" %}
-{% endwith %}
-
+<div class="row">
+	<h3>Eigenvektorzentralität</h3>
+	<div style="width:10em">
+		{% with id="select2_eigenvector_centrality", single=True%}
+			{% include "character_selector.html" %}
+		{% endwith %}
+	</div>
+	<canvas id="eigenvector_centrality" class="pretty_canvas"></canvas>
+<div>
+<div class="row">
+	<h3>Verhältnisse über Zeit</h3>
+</div>
 {% endblock %}

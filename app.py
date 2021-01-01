@@ -1,4 +1,5 @@
 from download.Database import Node, Relation, Link, Zyklus, new_session
+import download.analyse
 from flask_sqlalchemy_session import flask_scoped_session
 from flask import Flask, render_template, url_for, jsonify, request
 import config
@@ -29,9 +30,11 @@ def search():
 def visualization():
 	return render_template("visualize.html")
 
-@app.route("/statistics")
+@app.route("/statistics", methods=["GET", "POST"])
 def statistics():
-	return render_template("stats.html")
+	cycles = [cycle.name for cycle in session.query(Zyklus).all()]
+
+	return render_template("stats.html", labels=cycles, data=download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4"))
 
 if __name__ == "__main__":
 	app.run(debug=True)
