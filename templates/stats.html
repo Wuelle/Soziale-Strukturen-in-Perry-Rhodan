@@ -11,5 +11,9 @@ Statistiken
 
 
 {% block body %}
-<canvas id="eigenvector_centrality"></canvas>
+<canvas id="eigenvector_centrality" style="display:none"></canvas>
+{% with id="select2_eigenvector_centrality", single=True%}
+	{% include "character_selector.html" %}
+{% endwith %}
+
 {% endblock %}
