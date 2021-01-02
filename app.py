@@ -33,8 +33,18 @@ def visualization():
 @app.route("/statistics", methods=["GET", "POST"])
 def statistics():
 	cycles = [cycle.name for cycle in session.query(Zyklus).all()]
+	data = download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4")
 
-	return render_template("stats.html", labels=cycles, data=download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4"))
+	return render_template("stats.html", label="Perry Rhodan", labels=cycles, data=data)
+
+@app.route("/EVC_Analysis", methods=["GET"])
+def evc_analysis():
+	"""
+	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.
+	Expects the Characters ID as parameter "ID".
+	"""
+	data = download.analyse.eigenvector_centrality(request.args["ID"])
+	return jsonify(data=data)
 
 if __name__ == "__main__":
 	app.run(debug=True)
