@@ -32,10 +32,17 @@ def visualization():
 
 @app.route("/statistics", methods=["GET", "POST"])
 def statistics():
-	cycles = [cycle.name for cycle in session.query(Zyklus).all()]
-	data = download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4")
+	# cycles = [cycle.name for cycle in session.query(Zyklus).all()]
+	# data = download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4")
 
-	return render_template("stats.html", label="Perry Rhodan", labels=cycles, data=data)
+	return render_template("stats.html")
+
+@app.route("/getCycles", methods=["GET"])
+def getCycles():
+	"""
+	Returns a list with all Cycle names
+	"""
+	return jsonify(titles=[c.name for c in session.query(Zyklus).all()])
 
 @app.route("/EVC_Analysis", methods=["GET"])
 def evc_analysis():
