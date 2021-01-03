@@ -1,12 +1,6 @@
 var layout;
 $(document).ready(async() => {
-	let cycles = [0, 1]
-	let response = await $.ajax({
-		url: "/getCytoscapeGraph",
-		data: {"cycles": cycles},
-		method: "GET"
-	});
-	let data = response.data;
+	let data = await getCycleData(1);
 	data.container = $("#cy");
 	data.style = [ // the stylesheet for the graph
 		{
@@ -48,7 +42,7 @@ $(document).ready(async() => {
 		}
 		]
 	data.layout = {
-		name:"grid"
+		name:"circle"
 	}
 	data.wheelSensitivity = 0.1;
 	cy = cytoscape(data);
@@ -107,7 +101,7 @@ $(document).ready(async() => {
 				edge.removeClass("withLabel")
 			}
 		}
-	});
+	}).trigger("change");
 
 	$("#toggleNodeLabels").change((e) =>{
 		for(node of cy.nodes()){
@@ -118,6 +112,21 @@ $(document).ready(async() => {
 				node.removeClass("withLabel")
 			}
 		}
+	}).trigger("change");
+
+	$("#cycle_selector").on("select2:select", async(e) => {
+		// Should be possible to do this using cy.json() but that
+		// doesnt really work rn 
+		let data = await getCycleData(e.params.data.id);
+		// let json = cy.json()
+		// json.elements = data.elements
+		console.log(data.elements.nodes.concat(data.elements.edges))
+		console.log(cy.json())
+		cy.json(data.elements.nodes.concat(data.elements.edges));
+		console.log(cy.json())
+
+		// cy.remove("*")
+		// cy.add(data.elements)
 	});
 
 	// Add Collapsible text to the sidebar
@@ -162,5 +171,12 @@ function formClusters(){
 
 	// Doesnt really make sense to use importance here, rethink
 	let clusters = cy.elements().kMeans({k:2, attributes:[function(node){return node.data("importance")}]})
-	
+}
+async function getCycleData(id){
+	let response = await $.ajax({
+		url: "/getCytoscapeGraph",
+		data: {"cycle": id},
+		method: "GET"
+	});
+	return response.data
 }

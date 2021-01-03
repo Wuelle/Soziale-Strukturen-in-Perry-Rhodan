@@ -21,10 +21,6 @@ a, a:active, a:visited, a:hover{
   float: left;
 }
 
-#navbar .right{
-  float: right;
-}
-
 #navbar li a {
   display: block;
   color: white;

@@ -21,12 +21,21 @@
 
 	</head>
 	<body>
-		<ul id="navbar">
-			<li><a href="/visualisation">Home</a></li>
-			<li><a href="/visualisation">Visualisierung</a></li>
-			<li><a href="/statistics">Statistik</a></li>
-			<li class="right"><a href="https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan">Info</a></li>
-		</ul>
+		<!-- Navbar -->
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Analyse</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/visualisation">Home</a></li>
+					<li><a href="/visualization">Visualisierung</a></li>
+					<li><a href="/statistics">Statistik</a></li>
+					<li><a href="https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan">Info</a></li>
+				</ul>
+			</div>
+		</nav>
+
 		{% block body %}
 		{% endblock %}
 	</body>

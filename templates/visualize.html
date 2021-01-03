@@ -5,19 +5,19 @@ Visualisierung
 {% endblock %}
 
 {% block head %}
-<link 
+	<link 
 		rel="stylesheet" 
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
 		integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
 		crossorigin="anonymous" />
 	<link 
 		rel="stylesheet" 
-		href="static/css/visualize.css">
-	<link 
-		rel="stylesheet" 
 		href="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.3/cytoscape.js-panzoom.min.css" 
 		integrity="sha512-MJrzp+ZGajx6AWCCCmjBWo0rPFavM1aBghVUSVVa0uYv8THryrtEygjj5r2rUg/ms33SkEC5xJ3E4ycCmxWdrw==" 
 		crossorigin="anonymous" />
+	<link 
+		rel="stylesheet" 
+		href="{{ url_for('static', filename='css/visualize.css') }}">
 	<script 
 		src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.17.1/cytoscape.min.js" 
 		integrity="sha512-dR5Qb5zIoRodLJCkh0InsAi/uyP1Pd3lMAliXEdv5ol71k2qCwWFS9N18LIGH9MQuAPWu3adPyww5SK2deReog==" 
@@ -48,7 +48,7 @@ Visualisierung
 <div id="config">
 	<button type="button" class="toggle_collapsible">Ansicht</button>
 	<div class="content">
-		{% with id="cycle_selector", ajax_url="/search_cycles", placeholder="Suchen sie nach Zyklen"%}
+		{% with id="cycle_selector", ajax_url="/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
 			{% include "character_selector.html" %}
 		{% endwith %}
 		<ul>

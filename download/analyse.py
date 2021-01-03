@@ -39,12 +39,11 @@ def eigenvector_centrality(id):
 
 	return centralities
 
-def analyse_cycles(cycles):
-	cycles = [1]
+def analyse_cycles(cycle):
 	session = new_session()
 
-	characters = session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle.in_(cycles))
-	relations = session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle.in_(cycles)).group_by(Relation.node_1, Relation.node_2).order_by(func.sum(Relation.weight).desc())
+	characters = session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle == cycle)
+	relations = session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle == cycle).group_by(Relation.node_1, Relation.node_2).order_by(func.sum(Relation.weight).desc())
 	
 	G = nx.Graph()
 	G.add_nodes_from([(c.id, {"name":c.name}) for c in set(characters)])

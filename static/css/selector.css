@@ -115,4 +115,8 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
         color: #E0E0E0!important; /*Maybe remove color idk*/
         border: none !important;
     }
+    /*Search Field on single select fields: (Doesnt work)*/
+    .select2-search__field{
+        background-color: red!important;
+    }
 }

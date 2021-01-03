@@ -3,7 +3,6 @@ import download.analyse
 from flask_sqlalchemy_session import flask_scoped_session
 from flask import Flask, render_template, url_for, jsonify, request
 import config
-from math import ceil
 
 app = Flask(__name__)
 session = flask_scoped_session(new_session, app)
@@ -11,6 +10,11 @@ session = flask_scoped_session(new_session, app)
 @app.route("/")
 def home():
 	return "Hello World!"
+
+@app.route("/favicon.ico")
+def favicon():
+	# TODO: Add some kind of icon here
+	return ""
 
 @app.route("/search_characters", methods=["GET"])
 def search_characters():
@@ -35,7 +39,6 @@ def search_cycles():
 
 	cycles = session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).all()[min_index:max_index]
 	results = [{"id":c.id, "text":c.name} for c in cycles]
-	print(len(results), "zyklen")
 	return jsonify(results=results, pagination={"more":max_index < num_cycles})
 
 @app.route("/visualization")
@@ -44,9 +47,6 @@ def visualization():
 
 @app.route("/statistics", methods=["GET", "POST"])
 def statistics():
-	# cycles = [cycle.name for cycle in session.query(Zyklus).all()]
-	# data = download.analyse.eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4")
-
 	return render_template("stats.html")
 
 @app.route("/getCycles", methods=["GET"])
@@ -58,10 +58,10 @@ def getCycles():
 
 @app.route("/getCytoscapeGraph", methods=["GET"])
 def getCytoscapeGraph():
-	cycles = request.args.getlist("cycles")
+	cycle = request.args["cycle"]
 
-	data = download.analyse.analyse_cycles(cycles)
-	print(data)
+	data = download.analyse.analyse_cycles(int(cycle))
+
 	return jsonify(data=data)
 
 @app.route("/EVC_Analysis", methods=["GET"])

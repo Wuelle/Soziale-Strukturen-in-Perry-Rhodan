@@ -16,7 +16,7 @@
         id = '{{ select2_id }}' 
         class="pretty_textbox select2-multiple groupSelector" 
         style="width: 100%;" 
-        multiple
+        {% if not single %} multiple {% endif %}
         {% if required %} required {% endif %} 
         onchange="select_changed()">
     </select>

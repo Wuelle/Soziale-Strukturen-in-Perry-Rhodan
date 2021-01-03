@@ -1,9 +1,7 @@
-/*
-Trying to style this like the main graph on cytoscape.org
-Styles for nodes etc are specified in visualize.js
-*/
 body{
 	background-color: black;
+	width: 100%;
+	height: 100%;
 }
 
 ul{
@@ -16,10 +14,10 @@ table{
 }
 #cy{
 	position: absolute;
-	top: 3em;
 	left: 0;
-	bottom: 0;
 	right: 20em;
+	bottom: 0;
+	top: 50px;
 }
 #numClusters{
 	width: 2em;
@@ -31,16 +29,6 @@ table{
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 	vertical-align: middle;
-}
-#info{
-	color: white;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 20em;
-	height: 15em;
-	background-color: #444;
-	box-sizing: border-box;
 }
 #config{
 	color: white;
