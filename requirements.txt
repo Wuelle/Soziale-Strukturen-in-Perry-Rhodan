@@ -1,9 +1,7 @@
-python-igraph 
 requests 
-pandas 
 networkx
 sqlalchemy
-tqdm
 numpy 
 sqlalchemy_utils
 wikitextparser
+flask_sqlalchemy_session

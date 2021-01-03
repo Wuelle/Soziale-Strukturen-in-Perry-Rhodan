@@ -16,7 +16,7 @@ Statistiken
 <div class="row">
 	<h2>Eigenvektorzentralität</h3>
 	<div>
-		{% with id="select2_eigenvector_centrality"%}
+		{% with id="select2_eigenvector_centrality", ajax_url="/search_characters"%}
 			{% include "character_selector.html" %}
 		{% endwith %}
 	</div>

@@ -36,7 +36,7 @@ Visualisierung
 	<script src="https://unpkg.com/cytoscape-cola@2.2.3/cytoscape-cola.js"></script>
 
 	<script 
-		src="static/js/visualize.js"
+		src="{{ url_for('static', filename='js/visualize.js') }}"
 		type="text/javascript"></script>
 {% endblock %}
 
@@ -48,14 +48,13 @@ Visualisierung
 <div id="config">
 	<button type="button" class="toggle_collapsible">Ansicht</button>
 	<div class="content">
+		{% with id="cycle_selector", ajax_url="/search_cycles", placeholder="Suchen sie nach Zyklen"%}
+			{% include "character_selector.html" %}
+		{% endwith %}
 		<ul>
 			<li>
 				<input type="checkbox" id="toggleEdgeLabels">
 				<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
-			</li>
-			<li>
-				<input type="checkbox" id="toggleBorder">
-				<label for="toggleBorder">Charakterspezies anzeigen</label>
 			</li>
 
 			<li>

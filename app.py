@@ -13,8 +13,7 @@ def home():
 	return "Hello World!"
 
 @app.route("/search_characters", methods=["GET"])
-def search():
-	pages = []
+def search_characters():
 	query = request.args["query"]
 	
 	num_characters = session.query(Node).filter(Node.name.like(f"%{query}%")).count()
@@ -24,7 +23,20 @@ def search():
 	characters = session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
 	results = [{"id":char.id, "text":char.name} for char in characters]
 
-	return jsonify(results=results, pagination={"more":num_characters > config.SELECT2_PAGESIZE})
+	return jsonify(results=results, pagination={"more":max_index < num_characters})
+
+@app.route("/search_cycles", methods=["GET"])
+def search_cycles():
+	query = request.args["query"]
+
+	num_cycles = session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).count()
+	min_index = int(request.args["page"]) * config.SELECT2_PAGESIZE
+	max_index = min(min_index + config.SELECT2_PAGESIZE, num_cycles)
+
+	cycles = session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).all()[min_index:max_index]
+	results = [{"id":c.id, "text":c.name} for c in cycles]
+	print(len(results), "zyklen")
+	return jsonify(results=results, pagination={"more":max_index < num_cycles})
 
 @app.route("/visualization")
 def visualization():
@@ -43,6 +55,14 @@ def getCycles():
 	Returns a list with all Cycle names
 	"""
 	return jsonify(titles=[c.name for c in session.query(Zyklus).all()])
+
+@app.route("/getCytoscapeGraph", methods=["GET"])
+def getCytoscapeGraph():
+	cycles = request.args.getlist("cycles")
+
+	data = download.analyse.analyse_cycles(cycles)
+	print(data)
+	return jsonify(data=data)
 
 @app.route("/EVC_Analysis", methods=["GET"])
 def evc_analysis():

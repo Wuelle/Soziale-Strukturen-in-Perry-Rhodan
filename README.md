@@ -15,6 +15,10 @@ Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt u
 ## Useful SQL Queries:
 * SELECT nodes_1.name, nodes_2.name, relations.weight FROM 'relations', "nodes" as nodes_1, "nodes" as nodes_2 where relations.node_1=nodes_1.id and relations.node_2=nodes_2.id order by nodes_1.name
 
+* SELECT nodes_1.name, nodes_2.name, sum(relations.weight) FROM 'relations', "nodes" as nodes_1, "nodes" as nodes_2 where relations.node_1=nodes_1.id and relations.node_2=nodes_2.id group by nodes_1.name, nodes_2.name order by sum(relations.weight) desc limit 0, 30
+
+* SELECT relations.node_1, relations.node_2, sum(relations.weight) FROM 'relations' group by relations.node_1, relations.node_2 order by sum(relations.weight) desc limit 0, 30
+
 ## Important Links
 ![https://js.cytoscape.org/#style/mappers](https://js.cytoscape.org/#style/mappers) 
 http://www.aymerick.com/2014/07/22/jekyll-github-pages-bower-bootstrap.html

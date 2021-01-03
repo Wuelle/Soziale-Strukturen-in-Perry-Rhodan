@@ -1,0 +1,118 @@
+/*
+Fix placeholder being cut off
+See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-377123158
+*/
+
+.select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
+    width: 100% !important;
+}
+.select2-container .select2-selection__rendered > *:first-child.select2-search--inline .select2-search__field {
+    width: 100% !important;
+}
+
+.select2-container {
+    position: absolute !important;
+}
+
+.select2-selection__rendered {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.select2-search {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.select2-search:hover {
+    background-color: #f0f0f0;
+}
+
+.select2-selection {
+    /* border: 1px solid #353535 !important; */
+    border: 1px solid #e6e6e6 !important;
+    /* border: none !important; */
+}
+
+.select2-selection {
+    background-color: transparent !important;
+    border-radius: 4px 0px 0px 4px !important;
+}
+
+.select2-container--focus{
+    background-color: transparent;
+}
+
+.searchButton {
+    background-color: #f0f0f0;
+    border: 1px solid #e6e6e6;
+    z-index: 3;
+}
+/*Remove blue Border around Dropdown*/
+.select2-dropdown{
+    border: none;
+}
+
+
+/* Color Themes */
+@media (prefers-color-scheme: light){
+    /*Already selected options have the default hover blue, unselected ones use kepiblue*/
+    .select2-container--bootstrap .select2-results__option--highlighted[aria-selected=false]{
+        background-color: #0275d8;
+    }
+    .select2-container--bootstrap .select2-results__option[aria-selected=true]{
+        background-color: #EEE;
+    }
+    .select2-container--bootstrap .select2-results__option--highlighted[aria-selected=true]{
+        background-color: #DDD;
+        color:black;
+    }
+
+}
+
+@media (prefers-color-scheme: dark) {
+    /*Search Icon*/
+    .searchButton {
+        background-color: #424242 !important;
+        color: #E0E0E0 !important;
+        border: 1px solid #353535 !important;
+    }
+    .searchButton:hover {
+        background-color: #353535 !important;
+        color: #E0E0E0 !important;
+    }
+
+    /*Search Bar*/
+    .select2-search {
+        background-color: #515151;
+        color: #E0E0E0;
+        border: 1px solid #353535;
+    }
+    .select2-search:hover {
+        background-color: #424242;
+        color: #E0E0E0;
+    }
+    /*Selected Items (The little rectangles)*/
+    .select2-container--bootstrap .select2-selection .select2-selection__choice {
+        background-color: #676767;
+        color: #E0E0E0;
+        border: 1px solid #353535;
+    }
+    /*Dropdown*/
+    .select2-results__option{
+        color: #E0E0E0;
+        background-color: #353535;
+        border-bottom: 1px solid #222222;
+    }
+    .select2-results__option[aria-selected=true] {
+        color: #E0E0E0!important;
+        background-color: #555555!important;
+        border-bottom: 1px solid #222222;
+    }
+    .select2-container--bootstrap .select2-results__option--highlighted[aria-selected=false] {
+        background-color: #454545;
+        color: #E0E0E0;
+    }
+    .select2-selection {
+        color: #E0E0E0!important; /*Maybe remove color idk*/
+        border: none !important;
+    }
+}

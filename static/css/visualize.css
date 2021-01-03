@@ -16,9 +16,9 @@ table{
 }
 #cy{
 	position: absolute;
-	top: 0;
+	top: 3em;
 	left: 0;
-	bottom: 15em;
+	bottom: 0;
 	right: 20em;
 }
 #numClusters{
