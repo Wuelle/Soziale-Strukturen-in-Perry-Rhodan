@@ -115,18 +115,15 @@ $(document).ready(async() => {
 	}).trigger("change");
 
 	$("#cycle_selector").on("select2:select", async(e) => {
-		// Should be possible to do this using cy.json() but that
-		// doesnt really work rn 
 		let data = await getCycleData(e.params.data.id);
-		// let json = cy.json()
-		// json.elements = data.elements
-		console.log(data.elements.nodes.concat(data.elements.edges))
-		console.log(cy.json())
-		cy.json(data.elements.nodes.concat(data.elements.edges));
-		console.log(cy.json())
+		cy.json({elements: data.elements});
 
-		// cy.remove("*")
-		// cy.add(data.elements)
+		// Re-run the layout
+		cy.layout({name: "circle"})
+		makeLayout().run();
+
+		// Trigger a change event so labels are displayed even on new nodes
+		$("#toggleNodeLabels").trigger("change");
 	});
 
 	// Add Collapsible text to the sidebar

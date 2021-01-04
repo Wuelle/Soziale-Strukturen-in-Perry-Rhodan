@@ -2,6 +2,8 @@ body{
 	font-family: Arial, "sans-serif";
 	font-size: 14px;
 	overflow: auto;
+  background-color: #111;
+  color: #E0E0E0;
 }
 
 a, a:active, a:visited, a:hover{

@@ -3,6 +3,7 @@ import download.analyse
 from flask_sqlalchemy_session import flask_scoped_session
 from flask import Flask, render_template, url_for, jsonify, request
 import config
+import secrets
 
 app = Flask(__name__)
 session = flask_scoped_session(new_session, app)
@@ -61,7 +62,11 @@ def getCytoscapeGraph():
 	cycle = request.args["cycle"]
 
 	data = download.analyse.analyse_cycles(int(cycle))
-
+	for element in data["elements"]["edges"]:
+		element["data"]["id"] = secrets.token_urlsafe(32)
+	print(data["elements"].keys())
+	for key in data["elements"].keys():
+		print(key, len(data["elements"][key]), data["elements"][key][0])
 	return jsonify(data=data)
 
 @app.route("/EVC_Analysis", methods=["GET"])

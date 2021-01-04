@@ -22,6 +22,7 @@ Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt u
 ## Important Links
 ![https://js.cytoscape.org/#style/mappers](https://js.cytoscape.org/#style/mappers) 
 http://www.aymerick.com/2014/07/22/jekyll-github-pages-bower-bootstrap.html
+![JSBin](https://jsbin.com/lenucicupu/edit?html,css,js,console,output)
 
 ## Konzept Graphen
 Eigenvektorzentralität einer Figuren während einem Zyklus und overall.

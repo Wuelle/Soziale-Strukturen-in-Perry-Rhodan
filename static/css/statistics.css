@@ -1,9 +1,20 @@
+h1, h2, h3, h4, h5, h6{
+	text-align: center;
+}
 .row{
 	width: 100%;
 	left: 0;
 	right: 0;
 	height: 4em;
 }
-h1, h2, h3, h4, h5, h6{
-	text-align: center;
+.pretty_canvas{
+	background-color: #555;
+	color: #E0E0E0;
+}
+#select2_evc_container{
+	position: absolute;
+	width: 50%;
+	left: 25%;
+	right: 25%;
+	align-content: center;
 }
