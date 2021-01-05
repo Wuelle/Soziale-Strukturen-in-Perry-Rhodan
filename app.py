@@ -17,20 +17,27 @@ def favicon():
 	# TODO: Add some kind of icon here
 	return ""
 
-@app.route("/search_characters", methods=["GET"])
+@app.route("/api/search_characters", methods=["GET"])
 def search_characters():
-	query = request.args["query"]
-	
-	num_characters = session.query(Node).filter(Node.name.like(f"%{query}%")).count()
-	min_index = int(request.args["page"]) * config.SELECT2_PAGESIZE
-	max_index = min(min_index + config.SELECT2_PAGESIZE, num_characters)
+	print(request.args)
+	if "id" in request.args:
+		# Query for one specific Character
+		char = session.query(Node).filter(Node.id == request.args["id"]).first()
+		return jsonify(name=char.name, id=char.id)
+	else:
+		# Perform a normal Select2 Search using pagination
+		query = request.args["query"]
+		
+		num_characters = session.query(Node).filter(Node.name.like(f"%{query}%")).count()
+		min_index = int(request.args["page"]) * config.SELECT2_PAGESIZE
+		max_index = min(min_index + config.SELECT2_PAGESIZE, num_characters)
 
-	characters = session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
-	results = [{"id":char.id, "text":char.name} for char in characters]
+		characters = session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
+		results = [{"id":char.id, "text":char.name} for char in characters]
 
-	return jsonify(results=results, pagination={"more":max_index < num_characters})
+		return jsonify(results=results, pagination={"more":max_index < num_characters})
 
-@app.route("/search_cycles", methods=["GET"])
+@app.route("/api/search_cycles", methods=["GET"])
 def search_cycles():
 	query = request.args["query"]
 
@@ -50,26 +57,26 @@ def visualization():
 def statistics():
 	return render_template("stats.html")
 
-@app.route("/getCycles", methods=["GET"])
+@app.route("/api/getCycles", methods=["GET"])
 def getCycles():
 	"""
 	Returns a list with all Cycle names
 	"""
 	return jsonify(titles=[c.name for c in session.query(Zyklus).all()])
 
-@app.route("/getCytoscapeGraph", methods=["GET"])
+@app.route("/api/getCytoscapeGraph", methods=["GET"])
 def getCytoscapeGraph():
 	cycle = request.args["cycle"]
 
 	data = download.analyse.analyse_cycles(int(cycle))
 	for element in data["elements"]["edges"]:
 		element["data"]["id"] = secrets.token_urlsafe(32)
-	print(data["elements"].keys())
+
 	for key in data["elements"].keys():
 		print(key, len(data["elements"][key]), data["elements"][key][0])
 	return jsonify(data=data)
 
-@app.route("/EVC_Analysis", methods=["GET"])
+@app.route("/api/EVC_Analysis", methods=["GET"])
 def evc_analysis():
 	"""
 	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.

@@ -48,7 +48,7 @@ Visualisierung
 <div id="config">
 	<button type="button" class="toggle_collapsible">Ansicht</button>
 	<div class="content">
-		{% with id="cycle_selector", ajax_url="/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
+		{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
 			{% include "character_selector.html" %}
 		{% endwith %}
 		<ul>

@@ -6,6 +6,7 @@ Statistiken
 
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/statistics.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/statistics.css') }}">
@@ -16,7 +17,7 @@ Statistiken
 <div class="row">
 	<h2>Eigenvektorzentralität</h3>
 	<div id="select2_evc_container">
-		{% with id="select2_eigenvector_centrality", ajax_url="/search_characters"%}
+		{% with id="select2_eigenvector_centrality", ajax_url="/api/search_characters"%}
 			{% include "character_selector.html" %}
 		{% endwith %}
 	</div>

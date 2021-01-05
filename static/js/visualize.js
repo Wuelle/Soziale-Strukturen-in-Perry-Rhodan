@@ -171,7 +171,7 @@ function formClusters(){
 }
 async function getCycleData(id){
 	let response = await $.ajax({
-		url: "/getCytoscapeGraph",
+		url: "/api/getCytoscapeGraph",
 		data: {"cycle": id},
 		method: "GET"
 	});
