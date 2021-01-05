@@ -32,6 +32,7 @@ $("document").ready(async() => {
 		},
 		
 		options: {
+			responsive: true,
 			plugins: {
 				colorschemes: {
 					scheme: 'tableau.HueCircle19'

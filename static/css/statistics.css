@@ -5,11 +5,16 @@ h1, h2, h3, h4, h5, h6{
 	width: 100%;
 	left: 0;
 	right: 0;
-	height: 4em;
+	height: 70%;
 }
 .pretty_canvas{
-	background-color: #555;
+	position: relative;
+	left: 10%;
+	right: 10%;
+	top: 50%;
 	color: #E0E0E0;
+	width: 80%!important;
+	height: 70%!important;
 }
 #select2_evc_container{
 	position: absolute;

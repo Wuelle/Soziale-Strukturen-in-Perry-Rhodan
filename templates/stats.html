@@ -14,15 +14,18 @@ Statistiken
 
 
 {% block body %}
+<!-- Eigenvector centrality -->
 <div class="row">
-	<h2>Eigenvektorzentralität</h3>
+	<h2>Eigenvektorzentralität</h2>
 	<div id="select2_evc_container">
 		{% with id="select2_eigenvector_centrality", ajax_url="/api/search_characters"%}
 			{% include "character_selector.html" %}
 		{% endwith %}
 	</div>
 	<canvas id="eigenvector_centrality" class="pretty_canvas"></canvas>
-<div>
+</div>
+
+<!-- Character Relations -->
 <div class="row" name="neu">
 	<h2>Verhältnisse über Zeit</h3>
 	test

@@ -11,10 +11,11 @@
 			integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
 			crossorigin="anonymous"></script>
 		
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css')}}">
+		<script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
 
 		{% block head %}
 		{% endblock %}
@@ -28,14 +29,9 @@
 					<a class="navbar-brand" href="#">Analyse</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="/visualization">Visualisierung</a></li>
-					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/statistics">Statistik<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="#section41">Eigenvektorzentralität</a></li>
-							<li><a href="#section42">Verhältnisse</a></li>
-						</ul>
-					</li>
-					<li><a href="https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan">Info</a></li>
+					<li {% if request.endpoint == 'visualization' %}class="active"{% endif %}><a href="/visualization">Visualisierung</a></li>
+					<li {% if request.endpoint == 'statistics' %}class="active"{% endif %}><a href="/statistics">Statistiken</a></li>
+					<li><a href="https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan">Github</a></li>
 				</ul>
 			</div>
 		</nav>

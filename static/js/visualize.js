@@ -145,7 +145,6 @@ $(document).ready(async() => {
 function downloadGraph(){
 	let filetype = $("#fileType").val();
 	let mode = $("#option_full").is(":checked");
-	console.log(filetype)
 
 	if(filetype === "svg"){
 		var image = cy.svg({full:mode, bg:"#000000"});

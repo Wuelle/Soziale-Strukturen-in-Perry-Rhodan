@@ -57,6 +57,7 @@ table{
 }
 .content{
 	display: none;
+	padding: 5px;
 }
 #startDownload, #pretty_select{
 	width: 100%;

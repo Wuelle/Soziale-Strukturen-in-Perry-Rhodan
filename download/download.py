@@ -11,8 +11,6 @@ import re
 """
 A-G leicht fehlerhaft, links mit redirects müssen nochmal gefiltert werden.
 H+ sollte ok sein.
-
-Da sind noch &nbsp Zeichen in den Namen(unwichtig) 
 """
 
 # config variables

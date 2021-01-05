@@ -51,49 +51,41 @@ Visualisierung
 		{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
 			{% include "character_selector.html" %}
 		{% endwith %}
-		<ul>
-			<li>
-				<input type="checkbox" id="toggleEdgeLabels">
-				<label for="toggleEdgeLabels">Anzahl der Interaktionen anzeigen</label>
-			</li>
+		<input class="form-check-input" type="checkbox" id="toggleEdgeLabels">
+		<label class="form-check-label" for="toggleEdgeLabels">Anzahl Interaktionen</label>
 
-			<li>
-				<input type="checkbox" id="toggleNodeLabels" checked>
-				<label for="toggleNodeLabels">Namen der Charaktere anzeigen</label>
-			</li>
+		<input class="form-check-input" type="checkbox" id="toggleNodeLabels" checked>
+		<label class="form-check-label" for="toggleNodeLabels">Namen</label>
 
-			<li>
-				<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
-				<label for="edge_length_slider">Kantenlänge</label>
-			</li>
+		<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
+		<label for="edge_length_slider">Kantenlänge</label>
 
-			<li>
-				<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
-				<label for="node_spacing_slider">Node Abstand</label>
-			</li>
-		</ul>
+		<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
+		<label for="node_spacing_slider">Node Abstand</label>
 	</div>
 
 	<button type="button" class="toggle_collapsible">Download</button>
 	<div class="content">
-		<label for="fileType">Dateiformat:</label>
-		<select id="fileType" class="pretty_select">
-			<option value="svg" id="option_svg">
-				.svg (Vektorgrafik)
-			</option>
-			<option value="png" id="option_png">
-				.png
-			</option>
-			<option value="jpg" id="option_jpg">
-				.jpg
-			</option>
+		<!-- Select element is contained in a div for style purposes -->
+		<div class="pretty_select">
+			<select id="fileType" placeholder="Wählen sie ein Format:">
+				<option value="svg" id="option_svg">
+					.svg
+				</option>
+				<option value="png" id="option_png">
+					.png
+				</option>
+				<option value="jpg" id="option_jpg">
+					.jpg
+				</option>
+			</select>
+		</div>
 
-		</select><br>
 		<input type="radio" name="graphview" value="full" id="option_full" checked>
 		<label for="option_full">Gesamter Graph</label><br>
 		<input type="radio" name="graphview" value="partial" id="option_partial">
 		<label for="option_partial">Derzeitige Ansicht</label><br>
-		<button onclick="downloadGraph()" id="startDownload">Download starten</button><br>	
+		<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>	
 	</div>
 
 	<button type="button" class="toggle_collapsible">Analyse</button>

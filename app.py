@@ -19,7 +19,6 @@ def favicon():
 
 @app.route("/api/search_characters", methods=["GET"])
 def search_characters():
-	print(request.args)
 	if "id" in request.args:
 		# Query for one specific Character
 		char = session.query(Node).filter(Node.id == request.args["id"]).first()
@@ -71,9 +70,6 @@ def getCytoscapeGraph():
 	data = download.analyse.analyse_cycles(int(cycle))
 	for element in data["elements"]["edges"]:
 		element["data"]["id"] = secrets.token_urlsafe(32)
-
-	for key in data["elements"].keys():
-		print(key, len(data["elements"][key]), data["elements"][key][0])
 	return jsonify(data=data)
 
 @app.route("/api/EVC_Analysis", methods=["GET"])
