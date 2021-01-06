@@ -31,13 +31,13 @@ table{
 	vertical-align: middle;
 }
 #config{
-	color: white;
+	background-color: #333;
+	color: #E0E0E0;
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	right: 0;
 	width: 20em;
-	background-color: #555;
 	box-sizing: border-box;
 	padding: 10px;
 	overflow: hidden;
@@ -46,7 +46,7 @@ table{
 	width: 100%;
 	outline: none;
 	text-align: left;
-	background-color: #333;
+	background-color: #444;
 	border: none;
 	color: white;
 	padding: 5px;
@@ -59,12 +59,7 @@ table{
 	display: none;
 	padding: 5px;
 }
-#startDownload, #pretty_select{
+#startDownload{
 	width: 100%;
 }
-#credits{
-	position: absolute;
-	font-size: 10px;
-	bottom: 15px;
-	left: 15px;
-}
+

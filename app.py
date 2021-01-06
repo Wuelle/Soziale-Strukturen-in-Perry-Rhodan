@@ -24,6 +24,24 @@ def search_characters():
 		char = session.query(Node).filter(Node.id == request.args["id"]).first()
 		return jsonify(name=char.name, id=char.id)
 	else:
+		# TODO: SPLIT IN MAIN/SIDE CHARACTERS
+		# # Perform a normal Select2 Search using pagination
+		# query = request.args["query"]
+		
+		# # Characters are split into two groups, "main" and "side"
+		# num_characters = session.query(Node).filter(Node.name.like(f"%{query}%")).count()
+		# min_index = int(request.args["page"]) * config.SELECT2_PAGESIZE
+		# max_index = min(min_index + config.SELECT2_PAGESIZE, num_characters)
+		# all_characters = ....order_by()
+
+		# characters = session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
+
+		# # Convert to select2 format
+		# main_characters = {"id":char.id, "text":char.name} for char in main_characters
+		# side_characters = {"id":char.id, "text":char.name} for char in side_characters
+		# results = [{text: "Hauptcharaktere", children: main_characters}, {text: "Nebencharaktere", children: side_characters}]
+
+		# return jsonify(results=results, pagination={"more":max_index < num_characters})
 		# Perform a normal Select2 Search using pagination
 		query = request.args["query"]
 		

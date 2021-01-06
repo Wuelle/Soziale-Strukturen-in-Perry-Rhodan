@@ -46,68 +46,55 @@ Visualisierung
 <div id="cy"></div>
 
 <div id="config">
-	<button type="button" class="toggle_collapsible">Ansicht</button>
-	<div class="content">
-		{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
-			{% include "character_selector.html" %}
-		{% endwith %}
-		<input class="form-check-input" type="checkbox" id="toggleEdgeLabels">
-		<label class="form-check-label" for="toggleEdgeLabels">Anzahl Interaktionen</label>
+	<h2>Ansicht</h2>
+	{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
+		{% include "character_selector.html" %}
+	{% endwith %}
+	<input class="form-check-input" type="checkbox" id="toggleEdgeLabels">
+	<label class="form-check-label" for="toggleEdgeLabels">Anzahl Interaktionen</label>
 
-		<input class="form-check-input" type="checkbox" id="toggleNodeLabels" checked>
-		<label class="form-check-label" for="toggleNodeLabels">Namen</label>
+	<input class="form-check-input" type="checkbox" id="toggleNodeLabels" checked>
+	<label class="form-check-label" for="toggleNodeLabels">Namen</label>
 
-		<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
-		<label for="edge_length_slider">Kantenlänge</label>
+	<input type="range" min="1" max="200" value="100" class="slider" id="edge_length_slider">
+	<label for="edge_length_slider">Kantenlänge</label>
 
-		<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
-		<label for="node_spacing_slider">Node Abstand</label>
+	<input type="range" min="1" max="50" value="75" class="slider" id="node_spacing_slider">
+	<label for="node_spacing_slider">Node Abstand</label>
+
+	<h2>Download</h2>
+	<!-- Select element is contained in a div for style purposes -->
+	<div class="pretty_select">
+		<select id="fileType" placeholder="Wählen sie ein Format:">
+			<option value="svg" id="option_svg">
+				.svg
+			</option>
+			<option value="png" id="option_png">
+				.png
+			</option>
+			<option value="jpg" id="option_jpg">
+				.jpg
+			</option>
+		</select>
 	</div>
 
-	<button type="button" class="toggle_collapsible">Download</button>
-	<div class="content">
-		<!-- Select element is contained in a div for style purposes -->
-		<div class="pretty_select">
-			<select id="fileType" placeholder="Wählen sie ein Format:">
-				<option value="svg" id="option_svg">
-					.svg
-				</option>
-				<option value="png" id="option_png">
-					.png
-				</option>
-				<option value="jpg" id="option_jpg">
-					.jpg
-				</option>
-			</select>
-		</div>
+	<input type="radio" name="graphview" value="full" id="option_full" checked>
+	<label for="option_full">Gesamter Graph</label><br>
+	<input type="radio" name="graphview" value="partial" id="option_partial">
+	<label for="option_partial">Derzeitige Ansicht</label><br>
+	<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>
 
-		<input type="radio" name="graphview" value="full" id="option_full" checked>
-		<label for="option_full">Gesamter Graph</label><br>
-		<input type="radio" name="graphview" value="partial" id="option_partial">
-		<label for="option_partial">Derzeitige Ansicht</label><br>
-		<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>	
-	</div>
-
-	<button type="button" class="toggle_collapsible">Analyse</button>
-	<div class="content">
-		<p>
-			<em>
-				<u>Anmerkung:</u> Die visuelle Anordnung der Nodes hat keinen Einfluss auf die 
-				Bildung der Gruppen. Diese basiert auf der Anzahl der Interaktionen zwischen 
-				den Charakteren
-			</em>
-		</p>
-		<input type="number" min="1" max="5" id="numClusters"></input>
-		<label for="numClusters">Cluster</label>
-		<button onclick="formClusters()">fuzzyCMeans</button>
-	</div>
-
-	<div id="credits">
-		Daten vom <a href="https://www.perrypedia.de">Perrypedia</a><br>
-		Visualisierung mit <a href="https://js.cytoscape.org">Cytoscape.js</a><br>
-		Layout mit <a href="http://marvl.infotech.monash.edu/webcola/">Cola.js</a><br>
-	</div>
-	
+	<h2>Analyse</h2>
+	<p>
+		<em>
+			<u>Anmerkung:</u> Die visuelle Anordnung der Nodes hat keinen Einfluss auf die 
+			Bildung der Gruppen. Diese basiert auf der Anzahl der Interaktionen zwischen 
+			den Charakteren
+		</em>
+	</p>
+	<input type="number" min="1" max="5" id="numClusters"></input>
+	<label for="numClusters">Cluster</label>
+	<button onclick="formClusters()">fuzzyCMeans</button>
 </div>
 {% endblock %}
 
