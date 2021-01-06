@@ -17,6 +17,11 @@ def favicon():
 	# TODO: Add some kind of icon here
 	return ""
 
+@app.route("/api/getClusters", methods=["GET"])
+def getClusters():
+	data = download.analyse.cluster(int(request.args["cycle"]))
+	return jsonify(data=data)
+
 @app.route("/api/search_characters", methods=["GET"])
 def search_characters():
 	if "id" in request.args:

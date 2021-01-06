@@ -68,7 +68,7 @@ $(document).ready(async() => {
 
 	// Run Cola Layout
 	var layout = makeLayout();
-	layout.run();
+	// layout.run();  // Commented out for debugging
 
 	function makeLayout(opts){
 		// Overwrite parameters
@@ -115,6 +115,7 @@ $(document).ready(async() => {
 	}).trigger("change");
 
 	$("#cycle_selector").on("select2:select", async(e) => {
+		removeBubblesets();
 		let data = await getCycleData(e.params.data.id);
 		cy.json({elements: data.elements});
 
@@ -162,11 +163,19 @@ function downloadGraph(){
 	a.click();
 }
 
-function formClusters(){
-	let num_clusters = $("#numClusters").val();
+function removeBubblesets(){
+	// Destroys all displayed bubblesets, eg when the cycle changes
+}
 
-	// Doesnt really make sense to use importance here, rethink
-	let clusters = cy.elements().kMeans({k:2, attributes:[function(node){return node.data("importance")}]})
+async function formClusters(){
+	let cycle_id = $("#cycle_selector").val()
+
+	let response = await $.ajax({
+		url: "/api/getClusters",
+		data: {"cycle": cycle_id},
+		method: "GET"
+	});
+	console.log(response);
 }
 async function getCycleData(id){
 	let response = await $.ajax({

@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Loop through elements with the class "pretty_select"
 	var select_elements = document.getElementsByClassName("pretty_select");
-	console.log(select_elements, "löl");
 	for (var i = 0; i < select_elements.length; i++) {
 		// get the original (hidden) select element
 		var html_select = select_elements[i].getElementsByTagName("select")[0];

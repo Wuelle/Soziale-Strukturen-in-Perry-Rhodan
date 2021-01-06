@@ -4,8 +4,22 @@ from download.Database import Node, Relation, Link, Zyklus, new_session, engine
 from sqlalchemy.sql import text
 from sqlalchemy import desc, func, distinct, or_
 import matplotlib.pyplot as plt
+import community
 import json
 import random
+
+def build_graph_from_cycle(cycle):
+	session = new_session()
+
+	characters = session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle == cycle)
+	relations = session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle == cycle).group_by(Relation.node_1, Relation.node_2).order_by(func.sum(Relation.weight).desc())
+	
+	G = nx.Graph()
+	G.add_nodes_from([(c.id, {"name":c.name}) for c in set(characters)])
+	G.add_weighted_edges_from([(r[0].node_1, r[0].node_2, r[1]) for r in relations])
+
+	session.close()
+	return G
 
 def eigenvector_centrality(id):
 	"""
@@ -40,20 +54,21 @@ def eigenvector_centrality(id):
 	return centralities
 
 def analyse_cycles(cycle):
-	session = new_session()
-
-	characters = session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle == cycle)
-	relations = session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle == cycle).group_by(Relation.node_1, Relation.node_2).order_by(func.sum(Relation.weight).desc())
-	
-	G = nx.Graph()
-	G.add_nodes_from([(c.id, {"name":c.name}) for c in set(characters)])
-	G.add_weighted_edges_from([(r[0].node_1, r[0].node_2, r[1]) for r in relations])
+	G = build_graph_from_cycle(cycle)
 	nx.set_node_attributes(G, nx.eigenvector_centrality(G), "importance")
 	return nx.readwrite.json_graph.cytoscape_data(G)
 
-# print(eigenvector_centrality("EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4"))
+def cluster(cycle):
+	"""
+	Calculates a fitting number of Clusters in a cycle.
 
+	Parameters:
+		cycle (int): The Cycle ID (starts at 0)
+	Returns:
+		communities (dict): A dictionary of type {character_id: community_id, ...}
+	"""
+	G = build_graph_from_cycle(cycle)
 
-# # Save the data in json format for use in cytoscape.js
-# with open("data/cytoscape_graph.json", "w") as outfile:
-# 	json.dump(nx.readwrite.json_graph.cytoscape_data(G), outfile)
+	communities = community.best_partition(G)
+
+	return communities

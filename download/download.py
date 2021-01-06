@@ -275,6 +275,6 @@ session = new_session()
 
 
 # session.commit()
-getZyklen()
+# getZyklen()
 session.commit()
 # getSections("Quelle:PR1008")
