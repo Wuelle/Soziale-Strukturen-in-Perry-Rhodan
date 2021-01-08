@@ -1,0 +1,12 @@
+body{
+	text-align: center;
+}
+#error_code{
+	font-size: 35px;
+}
+#error_type{
+	font-size: 50px;
+}
+#error_msg{
+	font-size: 20px;
+}

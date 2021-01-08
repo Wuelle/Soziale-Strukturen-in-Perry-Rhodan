@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Seite nicht gefunden
+Internal Server Error
 {% endblock %}
 
 {% block head %}
@@ -10,12 +10,12 @@ Seite nicht gefunden
 
 {% block body %}
 <div id="error_code">
-	404
+	500
 </div>
 <div id="error_type">
-	Page not found
+	Internal Server Error
 </div>
 <div id="error_msg">
-	Bitte überprüfen sie dass sie die Adresse richtig eingegeben haben.
+	Bitte versuchen sie es später noch einmal.
 </div>
 {% endblock %}
