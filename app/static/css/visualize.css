@@ -40,7 +40,7 @@ table{
 	width: 20em;
 	box-sizing: border-box;
 	padding: 10px;
-	overflow: hidden;
+	overflow: scroll;
 }
 .section{
 	margin-bottom: 50px;
@@ -48,4 +48,8 @@ table{
 .pretty_button{
 	width: 100%;
 }
-
+.color_block{
+	display: inline-block;
+	width: 25px;
+	height: 13px;
+}

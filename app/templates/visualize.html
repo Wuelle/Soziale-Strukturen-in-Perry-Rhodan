@@ -40,6 +40,7 @@ Visualisierung
 	<script 
 		src="{{ url_for('static', filename='js/visualize.js') }}"
 		type="text/javascript"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/color_generator.js') }}"></script>
 {% endblock %}
 
 
@@ -53,11 +54,23 @@ Visualisierung
 		{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
 			{% include "character_selector.html" %}
 		{% endwith %}
-		<input class="form-check-input" type="checkbox" id="toggleEdgeLabels">
-		<label class="form-check-label" for="toggleEdgeLabels">Anzahl Interaktionen</label><br>
-
-		<input class="form-check-input" type="checkbox" id="toggleNodeLabels" checked>
+		<label class="switch">
+			<input type="checkbox" id="toggleNodeLabels" checked>
+			<span class="slider"></span>
+		</label>
 		<label class="form-check-label" for="toggleNodeLabels">Namen</label><br>
+
+		<label class="switch">
+			<input type="checkbox" id="toggleEdgeLabels">
+			<span class="slider"></span>
+		</label>
+		<label for="toggleEdgeLabels">Anzahl Interaktionen</label><br>
+
+		<label class="switch">
+			<input type="checkbox" id="toggleLayout">
+			<span class="slider"></span>
+		</label>
+		<label for="toggleEdgeLabels">Cola.js Layout (langsamer)</label><br>
 	</div>
 
 	<div class="section">
@@ -94,6 +107,8 @@ Visualisierung
 			</em>
 		</p> -->
 		<button class="pretty_button" onclick="formClusters()">In Gruppen teilen</button>
+		<ol id="communities">
+		</ol>
 	</div>
 </div>
 {% endblock %}

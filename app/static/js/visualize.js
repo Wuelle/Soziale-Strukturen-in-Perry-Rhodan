@@ -1,10 +1,9 @@
-var layout, bb;
+var layout, bb, use_cola;
 $(document).ready(async() => {
 	// Preselect "Die Dritte Macht" in select2 element
 	let initial_id = 1;
-	let initial_label = "Die dritte Macht";
 
-	// Fetch the preselected item, and add to the control
+	// Fetch the preselected item for select2
 	var cycleSelect = $('#cycle_selector');
 	$.ajax({
 		type: 'GET',
@@ -70,35 +69,28 @@ $(document).ready(async() => {
 	});
 	cy.panzoom();
 
-	// Browser might have saved previous checkbox states
-	$("#toggleNodeLabels").trigger("change");
-	$("#toggleEdgeLabels").trigger("change");
-
-	// Create default parameters for Cola.js
-	var params = {
-		name: "cola",
-		nodeSpacing: $("#node_spacing_slider").val(),
-		edgeLengthVal: $("#edge_length_slider").val(),
-		animate: true,
-		randomize: false,
-		maxSimulationTime: 5000
-	};
-
-	// Run Cola Layout
 	var layout = makeLayout();
-	// layout.run();  // Commented out for debugging
+	layout.run();  // Commented out for debugging
 
 	function makeLayout(opts){
-		// Overwrite parameters
-		for(var i in opts){
-			params[i] = opts[i];
+		if(use_cola){
+			return cy.layout({
+				name: "cola",
+				nodeSpacing: 50,
+				edgeLengthVal: 50,
+				animate: true,
+				randomize: false,
+				edgeLength: function(e){ return 50 / e.data("weight");},
+				maxSimulationTime: 5000
+			});
 		}
-		params.edgeLength = function(e){ return params.edgeLengthVal / e.data("weight"); };
-
-		return cy.layout(params);
+		else{
+			// Return circular layout - faster, but less fancy
+			return cy.layout({name: "circle"})
+		}
 	}
 
-	$("#toggleEdgeLabels").change((e) =>{
+	$("#toggleEdgeLabels").change((e) => {
 		for(edge of cy.edges()){
 			if(e.target.checked){
 				edge.addClass("withLabel")
@@ -109,7 +101,7 @@ $(document).ready(async() => {
 		}
 	}).trigger("change");
 
-	$("#toggleNodeLabels").change((e) =>{
+	$("#toggleNodeLabels").change((e) => {
 		for(node of cy.nodes()){
 			if(e.target.checked){
 				node.addClass("withLabel")
@@ -120,8 +112,16 @@ $(document).ready(async() => {
 		}
 	}).trigger("change");
 
+	$("#toggleLayout").change((e) => {
+		use_cola = e.target.checked;
+		makeLayout().run();
+	}).trigger("change");
+
 	$("#cycle_selector").on("select2:select", async(e) => {
+		// Reset Group analysis stuff
 		removeBubblesets();
+		$("#communities").html("")
+
 		let data = await getCycleData(e.params.data.id);
 		cy.json({elements: data.elements});
 
@@ -171,6 +171,8 @@ async function formClusters(){
 		method: "GET"
 	});
 	let groups = group(response.data);
+	let colors = generate({num: size_dict(groups), lum: 50, sat: 100})
+
 	for(var g_id in groups){
 		let chars = groups[g_id]
 
@@ -182,6 +184,9 @@ async function formClusters(){
         	fillStyle: 'red',
       	};
 		bb.addPath(cy_nodes, null, null, bbStyle);
+
+		// Add the Group to the list of Groups
+		$("#communities").append("<li><span class='color_block' style='background-color:" + colors[g_id] + "'></span> " + chars.length + " Mitglieder</li>")
 	}
 }
 async function getCycleData(id){
@@ -206,3 +211,5 @@ function group(groups) {
 	}
 	return new_groups
 }
+
+function size_dict(d){c=0; for (i in d) ++c; return c}
