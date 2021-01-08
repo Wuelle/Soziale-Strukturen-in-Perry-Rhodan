@@ -31,10 +31,10 @@ table{
 	vertical-align: middle;
 }
 #config{
-	background-color: #333;
+	background-color: #222;
 	color: #E0E0E0;
 	position: absolute;
-	top: 0;
+	top: 50px;
 	bottom: 0;
 	right: 0;
 	width: 20em;
@@ -42,24 +42,10 @@ table{
 	padding: 10px;
 	overflow: hidden;
 }
-.toggle_collapsible{
-	width: 100%;
-	outline: none;
-	text-align: left;
-	background-color: #444;
-	border: none;
-	color: white;
-	padding: 5px;
-	margin-bottom:5px;
+.section{
+	margin-bottom: 50px;
 }
-.toggle_collapsible:hover{
-	background-color: #666;
-}
-.content{
-	display: none;
-	padding: 5px;
-}
-#startDownload{
+.pretty_button{
 	width: 100%;
 }
 

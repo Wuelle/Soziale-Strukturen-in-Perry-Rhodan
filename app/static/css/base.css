@@ -6,19 +6,26 @@ body{
   color: #E0E0E0;
 }
 
+h1, h2, h3, h4, h5, h6{
+  text-align: center;
+}
+
 a, a:active, a:visited, a:hover{
 	text-decoration: none;
 	color: blue;
 }
 
 .pretty_button{
-  background-color: #333;
+  background-color: #383838;
   border: none;
   color: #E0E0E0;
   padding: 5px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
+}
+.pretty_button:hover{
+  background-color: #333;
 }
 /*Default html select, NOT select2*/
 .pretty_select select{
