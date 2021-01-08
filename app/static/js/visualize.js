@@ -1,6 +1,23 @@
-var layout;
+var layout, bb;
 $(document).ready(async() => {
-	let data = await getCycleData(1);
+	// Preselect "Die Dritte Macht" in select2 element
+	let initial_id = 1;
+	let initial_label = "Die dritte Macht";
+
+	// Fetch the preselected item, and add to the control
+	var cycleSelect = $('#cycle_selector');
+	$.ajax({
+		type: 'GET',
+		url: '/api/search_cycles',
+		data: {id: initial_id}
+	}).then(function (data) {
+		// create the option and append to Select2
+		var option = new Option(data.name, data.id, true, true);
+		cycleSelect.append(option).trigger('change');
+	});
+
+
+	let data = await getCycleData(initial_id);
 	data.container = $("#cy");
 	data.style = [ // the stylesheet for the graph
 		{
@@ -45,11 +62,12 @@ $(document).ready(async() => {
 		name:"circle"
 	}
 	data.wheelSensitivity = 0.1;
+
+	// Initialize cytoscape stuff
 	cy = cytoscape(data);
-	// cy.ready((e) => {
-	// 		const bb = cy.bubbleSets();
-	// 		bb.addPath(cy.nodes(), cy.edges(), null);
-	// });
+	cy.ready((e) => {
+			bb = cy.bubbleSets();
+	});
 	cy.panzoom();
 
 	// Browser might have saved previous checkbox states
@@ -80,18 +98,6 @@ $(document).ready(async() => {
 		return cy.layout(params);
 	}
 
-	// The sliders modify nodeSpacing and edgeLengthVal params
-	$("#edge_length_slider").bind("change", {layout: layout}, function(e){
-		e.data.layout.stop();
-		var layout = makeLayout({edgeLengthVal: e.target.value});
-		layout.run();
-	});
-	$("#node_spacing_slider").bind("change", {layout: layout}, function(e){
-		e.data.layout.stop();
-		var layout = makeLayout({nodeSpacing: e.target.value});
-		layout.run();
-	});
-
 	$("#toggleEdgeLabels").change((e) =>{
 		for(edge of cy.edges()){
 			if(e.target.checked){
@@ -120,27 +126,12 @@ $(document).ready(async() => {
 		cy.json({elements: data.elements});
 
 		// Re-run the layout
-		cy.layout({name: "circle"})
-		makeLayout().run();
+		cy.layout({name: "circle"}).run()
+		// makeLayout().run();
 
 		// Trigger a change event so labels are displayed even on new nodes
 		$("#toggleNodeLabels").trigger("change");
 	});
-
-	// Add Collapsible text to the sidebar
-	var coll = document.getElementsByClassName("toggle_collapsible");
-
-	for (var i = 0; i < coll.length; i++) {
-	  coll[i].addEventListener("click", function(){
-	    this.classList.toggle("active");
-	    var content = this.nextElementSibling;
-	    if (content.style.display === "block") {
-	      content.style.display = "none";
-	    } else {
-	      content.style.display = "block";
-	    }
-	  });
-	}
 });
 
 function downloadGraph(){
@@ -164,7 +155,11 @@ function downloadGraph(){
 }
 
 function removeBubblesets(){
+	console.log("removing all bubblesets")
 	// Destroys all displayed bubblesets, eg when the cycle changes
+	for (var path of bb.getPaths()){
+		bb.removePath(path);
+	}
 }
 
 async function formClusters(){
@@ -175,7 +170,19 @@ async function formClusters(){
 		data: {"cycle": cycle_id},
 		method: "GET"
 	});
-	console.log(response);
+	let groups = group(response.data);
+	for(var g_id in groups){
+		let chars = groups[g_id]
+
+		let cy_nodes = cy.collection();
+		for(var char of chars){
+			cy_nodes = cy_nodes.union(cy.nodes("#" + char)[0]);
+		}
+		const bbStyle = {
+        	fillStyle: 'red',
+      	};
+		bb.addPath(cy_nodes, null, null, bbStyle);
+	}
 }
 async function getCycleData(id){
 	let response = await $.ajax({
@@ -184,4 +191,18 @@ async function getCycleData(id){
 		method: "GET"
 	});
 	return response.data
+}
+
+function group(groups) {
+	new_groups = {}
+	for(var char in groups){
+		let group_id = groups[char]
+		if(group_id in new_groups){
+			new_groups[group_id].push(char);
+		}
+		else{
+			new_groups[group_id] = [char];
+		}
+	}
+	return new_groups
 }

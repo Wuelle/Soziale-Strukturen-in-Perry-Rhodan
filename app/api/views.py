@@ -78,12 +78,17 @@ def search_characters():
 
 @api.route("/search_cycles", methods=["GET"])
 def search_cycles():
-	query = request.args["query"]
+	if "id" in request.args:
+		# Query for one specific Character
+		cycle = db.session.query(Zyklus).filter(Zyklus.id == request.args["id"]).first()
+		return jsonify(name=cycle.name, id=cycle.id)
+	else:
+		query = request.args["query"]
 
-	num_cycles = db.session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).count()
-	min_index = int(request.args["page"]) * current_app.config["SELECT2_PAGESIZE"]
-	max_index = min(min_index + current_app.config["SELECT2_PAGESIZE"], num_cycles)
+		num_cycles = db.session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).count()
+		min_index = int(request.args["page"]) * current_app.config["SELECT2_PAGESIZE"]
+		max_index = min(min_index + current_app.config["SELECT2_PAGESIZE"], num_cycles)
 
-	cycles = db.session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).all()[min_index:max_index]
-	results = [{"id":c.id, "text":c.name} for c in cycles]
-	return jsonify(results=results, pagination={"more":max_index < num_cycles})
+		cycles = db.session.query(Zyklus).filter(Zyklus.name.like(f"%{query}%")).all()[min_index:max_index]
+		results = [{"id":c.id, "text":c.name} for c in cycles]
+		return jsonify(results=results, pagination={"more":max_index < num_cycles})
