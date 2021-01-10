@@ -12,7 +12,7 @@ h1, h2, h3, h4, h5, h6{
 
 a, a:active, a:visited, a:hover{
 	text-decoration: none;
-	color: blue;
+	color: #E0E0E0;
 }
 
 .pretty_button{
@@ -71,6 +71,9 @@ a, a:active, a:visited, a:hover{
 }
 
 /*SWITCH CHECKBOX*/
+.switch-group{
+  margin-top: 10px;
+}
  /* The switch - the box around the slider */
 .switch {
   position: relative;

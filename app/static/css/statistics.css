@@ -2,21 +2,39 @@
 	width: 100%;
 	left: 0;
 	right: 0;
-	height: 70%;
+	height: 80%;
 }
 .pretty_canvas{
 	position: relative;
-	left: 10%;
-	right: 10%;
-	top: 50%;
 	color: #E0E0E0;
 	width: 80%!important;
 	height: 70%!important;
 }
+
+/*FIRST CANVAS*/
 #select2_evc_container{
-	position: absolute;
+	position: relative;
 	width: 50%;
 	left: 25%;
 	right: 25%;
-	align-content: center;
+}
+#eigenvector_centrality{
+	display: relative;
+	left: 10%;
+}
+
+/*SECOND CANVAS*/
+#select2_group{
+	display: flex;
+	height: 34px;
+}
+#select2_char_1_container{
+	position: absolute;
+	width: 30%;
+	left: 10%;
+}
+#select2_char_2_container{
+	position: absolute;
+	width: 30%;
+	right: 10%;
 }

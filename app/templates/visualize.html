@@ -54,30 +54,32 @@ Visualisierung
 		{% with id="cycle_selector", ajax_url="/api/search_cycles", placeholder="Suchen sie nach Zyklen", single=True%}
 			{% include "character_selector.html" %}
 		{% endwith %}
-		<label class="switch">
-			<input type="checkbox" id="toggleNodeLabels" checked>
-			<span class="slider"></span>
-		</label>
-		<label class="form-check-label" for="toggleNodeLabels">Namen</label><br>
+		<div class="switch-group">
+			<label class="switch">
+				<input type="checkbox" id="toggleNodeLabels" checked>
+				<span class="slider"></span>
+			</label>
+			<label class="form-check-label" for="toggleNodeLabels">Namen</label><br>
 
-		<label class="switch">
-			<input type="checkbox" id="toggleEdgeLabels">
-			<span class="slider"></span>
-		</label>
-		<label for="toggleEdgeLabels">Anzahl Interaktionen</label><br>
+			<label class="switch">
+				<input type="checkbox" id="toggleEdgeLabels">
+				<span class="slider"></span>
+			</label>
+			<label for="toggleEdgeLabels">Anzahl Interaktionen</label><br>
 
-		<label class="switch">
-			<input type="checkbox" id="toggleLayout">
-			<span class="slider"></span>
-		</label>
-		<label for="toggleEdgeLabels">Cola.js Layout (langsamer)</label><br>
+			<label class="switch">
+				<input type="checkbox" id="toggleLayout">
+				<span class="slider"></span>
+			</label>
+			<label for="toggleEdgeLabels">Cola.js Layout (langsamer)</label><br>
+		</div>
 	</div>
 
 	<div class="section">
 		<h2>Download</h2>
 		<!-- Select element is contained in a div for style purposes -->
 		<div class="pretty_select">
-			<select id="fileType" placeholder="Wählen sie ein Format:">
+			<select id="fileType">
 				<option value="svg" id="option_svg">
 					.svg
 				</option>
@@ -88,12 +90,16 @@ Visualisierung
 					.jpg
 				</option>
 			</select>
+			<label for="fileType">Dateiformat</label>
+		</div>
+		<div class="switch-group">
+			<label class="switch">
+				<input type="checkbox" id="download_option">
+				<span class="slider"></span>
+			</label>
+			<label for="download_option">Nur derzeitige Ansicht</label><br>
 		</div>
 
-		<input type="radio" name="graphview" value="full" id="option_full" checked>
-		<label for="option_full">Gesamter Graph</label><br>
-		<input type="radio" name="graphview" value="partial" id="option_partial">
-		<label for="option_partial">Derzeitige Ansicht</label><br>
 		<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>
 	</div>
 
@@ -106,9 +112,9 @@ Visualisierung
 				den Charakteren
 			</em>
 		</p> -->
-		<button class="pretty_button" onclick="formClusters()">In Gruppen teilen</button>
 		<ol id="communities">
 		</ol>
+		<button class="pretty_button" onclick="formClusters()">In Gruppen teilen</button>
 	</div>
 </div>
 {% endblock %}

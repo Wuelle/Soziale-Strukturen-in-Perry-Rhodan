@@ -1,3 +1,6 @@
+![Python Linting with flake8](https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan/workflows/Python%20Linting%20with%20flake8/badge.svg?branch=main)
+![CodeQL](https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan/workflows/CodeQL/badge.svg)
+
 # Soziale Strukturen im Perryversum
 Dieses Repository enthält eine soziale Netzwerksanalyse der Charaktere nach Daten des ![Perrypedias](https://www.perrypedia.de)
 Derzeit experimentiere ich noch herum aber das Endziel ist es, einen Interaktiven Netzwerksgraphen auf ![meiner Website](https://wuelle.github.io/Soziale-Strukturen-in-Perry-Rhodan/) zu haben.
@@ -20,9 +23,6 @@ Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt u
 * SELECT relations.node_1, relations.node_2, sum(relations.weight) FROM 'relations' group by relations.node_1, relations.node_2 order by sum(relations.weight) desc limit 0, 30
 
 ## Important Links
-![https://js.cytoscape.org/#style/mappers](https://js.cytoscape.org/#style/mappers) 
-http://www.aymerick.com/2014/07/22/jekyll-github-pages-bower-bootstrap.html
-![JSBin](https://jsbin.com/lenucicupu/edit?html,css,js,console,output)
 https://exploreflask.com/en/latest/views.html#caching
 
 ## Konzept Graphen
