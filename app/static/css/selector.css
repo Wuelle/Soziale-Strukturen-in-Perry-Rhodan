@@ -10,10 +10,6 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
     width: 100% !important;
 }
 
-.select2-container {
-    position: absolute !important;
-}
-
 .select2-selection__rendered {
     border-radius: 4px 0px 0px 4px;
 }
