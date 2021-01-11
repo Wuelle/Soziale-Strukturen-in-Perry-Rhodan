@@ -28,17 +28,16 @@ def eigenvector_centrality(id):
 	centralities = []
 
 	for cycle in cycles:
-		relations = db.session.query(Relation).filter(Relation.cycle == cycle.id).all()
-		# The Database also contains the newest cycle, which doesnt contain characters yet
-		if len(relations) != 0:
-			edges = [(r.node_1, r.node_2, {"weight":r.weight}) for r in relations]
+		if db.session.query(Relation).filter(Relation.cycle == cycle.id, Relation.node_1 == id or Relation.node_2 == id).first():
+			relations = db.session.query(Relation).filter(Relation.cycle == cycle.id).all()
+			# The Database also contains the newest cycle, which doesnt contain characters yet
+			if len(relations) != 0:
+				edges = [(r.node_1, r.node_2, {"weight":r.weight}) for r in relations]
 
+				G = nx.Graph()
+				G.add_edges_from(edges)
+				ec = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
 
-			G = nx.Graph()
-			G.add_edges_from(edges)
-			ec = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
-
-			if id in ec:
 				centralities.append(ec[id])
 			else:
 				centralities.append(0)

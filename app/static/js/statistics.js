@@ -106,14 +106,18 @@ $("document").ready(async() => {
 });
 
 async function addLine(character, evc_chart){
-	let data = await getEVCData(character.id);
-
-	evc_chart.data.datasets.push({
-		fill: false,
-		label: character.text,
-		data: data
-	})
-	evc_chart.update();
+	$.ajax({
+		url: "/api/EVC_Analysis",
+		method: "GET",
+		data: {id: character.id}
+	}).then((response) => {
+		evc_chart.data.datasets.push({
+			fill: false,
+			label: character.text,
+			data: response.data
+		})
+		evc_chart.update();
+	});
 }
 
 function removeLine(data, evc_chart){

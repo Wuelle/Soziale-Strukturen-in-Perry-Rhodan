@@ -38,6 +38,14 @@ def getCytoscapeGraph():
 		element["data"]["id"] = secrets.token_urlsafe(32)
 	return jsonify(data=data)
 
+@api.route("/getCycleEVC", methods=["GET"])
+def getCycleEVC():
+	G = analyse.build_graph_from_cycle(int(request.args["id"]))
+	evc_values = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
+	nx.set_node_attributes(G, evc_values, "importance")
+	result = [{"id": node[0], "name":node[1]["name"], "value":node[1]["importance"]} for node in G.nodes(data=True)]
+	return jsonify(data=sorted(result, key=lambda x: x["value"], reverse=True))
+
 @api.route("/EVC_Analysis", methods=["GET"])
 def evc_analysis():
 	"""
