@@ -11,9 +11,7 @@ Aus offensichtlichen Gründen enthält dieses Repository Spoiler für die gesamt
 Nebenserien wie zb. Perry-Rhodan-Neo oder den Blaubänden wird nicht behandelt und die Charaktere sind nicht in der Analyse enthalten.
 
 ## TODO:
-* Maybe dont quote around Link.link, not really necessary
-* rename Link.link to Link.url
-* speed up getMainCharacters by breaking out of for loop if characters are found
+* Open issue in select2-bootstrap repo, if position is set to absolute the select2-container-bootstrap element overlaps appended buttons in input-group
 
 ## Useful SQL Queries:
 * SELECT nodes_1.name, nodes_2.name, relations.weight FROM 'relations', "nodes" as nodes_1, "nodes" as nodes_2 where relations.node_1=nodes_1.id and relations.node_2=nodes_2.id order by nodes_1.name

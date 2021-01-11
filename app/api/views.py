@@ -34,6 +34,11 @@ def evc_analysis():
 	data = analyse.eigenvector_centrality(request.args["ID"])
 	return jsonify(data=data)
 
+@api.route("/closeness", methods=["GET"])
+def closeness():
+	data = analyse.closeness(request.args["id_1"], request.args["id_2"])
+	return jsonify(data=data)
+
 @api.route("/getClusters", methods=["GET"])
 def getClusters():
 	data = analyse.cluster(int(request.args["cycle"]))

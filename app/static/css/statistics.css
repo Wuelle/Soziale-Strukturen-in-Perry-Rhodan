@@ -9,6 +9,7 @@
 	color: #E0E0E0;
 	width: 80%!important;
 	height: 70%!important;
+	left: 10%;
 }
 
 /*FIRST CANVAS*/
@@ -20,7 +21,6 @@
 }
 #eigenvector_centrality{
 	display: relative;
-	left: 10%;
 }
 
 /*SECOND CANVAS*/

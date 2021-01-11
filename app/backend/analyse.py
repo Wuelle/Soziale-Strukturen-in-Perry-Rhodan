@@ -47,6 +47,20 @@ def eigenvector_centrality(id):
 
 	return centralities
 
+def closeness(id_1, id_2):
+	cycles = db.session.query(Zyklus).all()
+
+	values = []
+	for cycle in cycles:
+		G = build_graph_from_cycle(cycle.id)
+		try:
+			values.append(nx.shortest_path_length(G, source=id_1, target=id_2))
+		except nx.exception.NodeNotFound:
+			values.append(None)
+		except nx.exception.NetworkXNoPath:
+			values.append(None)
+	return values
+
 def analyse_cycles(cycle):
 	G = build_graph_from_cycle(cycle)
 	nx.set_node_attributes(G, nx.eigenvector_centrality(G), "importance")
