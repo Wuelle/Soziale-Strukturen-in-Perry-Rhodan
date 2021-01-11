@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+Zyklusanalyse
+{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cycles.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='js/cycles.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div id="select2_cycleselector_container">
+	{% with id="select2_cycleselector", ajax_url="/api/search_cycles", placeholder="Wählen sie einen Zyklus", single=True %}
+		{% include "character_selector.html"%}
+	{% endwith %}
+</div>
+<table id="cycle_attributes">
+	<tr>
+		<th>Name:</th>
+		<tr id="cycle_name"></tr>
+	</tr>
+	<tr>
+		<th>Personen:</th>
+		<td id="cycle_num_persons"></td>
+	</tr>
+	<tr>
+		<th>Verbindungen:</th>
+		<td id="cycle_num_relations"></td>
+	</tr>
+	<tr>
+		<th>Verbundenheit:</th>
+		<tr id="cycle_clustering"></tr>
+	</tr>
+</table>
+<canvas id="cycle_evc_ranking">
+</canvas>
+<table id="communities_table">
+	<tr>
+		<th>Anzahl Mitglieder</th>
+		<th>Centrality</th>
+		<th>Mitglieder</th>
+	</tr>
+</table>
+{% endblock %}

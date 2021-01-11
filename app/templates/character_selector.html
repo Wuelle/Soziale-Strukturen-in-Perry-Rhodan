@@ -16,9 +16,9 @@
         id = '{{ select2_id }}' 
         class="pretty_textbox select2-multiple groupSelector" 
         style="width: 100%;" 
-        {% if not single %} multiple {% endif %}
+        multiple
         {% if required %} required {% endif %} 
-        onchange="select_changed()">
+        >
     </select>
     <span class="input-group-btn">
         <button class="searchButton btn btn-default btn-height" 
@@ -74,11 +74,20 @@
         });
 
     });
-    // Add selected groups to hidden field in form
-    function select_changed(){
-        document.getElementById('groups').value = $("#{{ select2_id }}.pretty_textbox.select2-multiple.select2-hidden-accessible").val()
+    function selectElement(element_id, select2_element, url){
+        // Fetches the requested element from the remote data source and
+        // selects it
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {id: element_id}
+        }).then(function (data) {
+            // create the option and append to Select2
+            var option = new Option(data.name, data.id, true, true);
+            select2_element.append(option).trigger('change');
+        });
     }
-    select_changed()
+
     {% if single %}
         // The default select2 single select element looks terrible,
         // so just use a multiple select and delete every selection

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 from app.backend.models import Node, Relation, Zyklus, Link
 import app.backend.analyse as analyse
+import networkx as nx
 import secrets
 from app import db
 
@@ -13,6 +14,18 @@ def getCycles():
 	Returns a list with all Cycle names
 	"""
 	return jsonify(titles=[c.name for c in db.session.query(Zyklus).all()])
+
+@api.route("getcycleinfo", methods=["GET"])
+def getcycleinfo():
+	cycle_id = request.args["id"]
+	cycle = db.session.query(Zyklus).filter(Zyklus.id == cycle_id).first()
+
+	relations = db.session.query(Relation).filter(Relation.cycle == cycle_id).all()
+	num_persons = len(set([r.node_1 for r in relations] + [r.node_2 for r in relations]))
+
+	G = analyse.build_graph_from_cycle(cycle_id)
+	clustering_coefficient = round(nx.average_clustering(G, weight="weight"), 3)
+	return jsonify(name=cycle.name, num_relations=len(relations), num_persons=num_persons, clustering=clustering_coefficient)
 
 @api.route("/getCytoscapeGraph", methods=["GET"])
 def getCytoscapeGraph():
@@ -29,9 +42,9 @@ def getCytoscapeGraph():
 def evc_analysis():
 	"""
 	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.
-	Expects the Characters ID as parameter "ID".
+	Expects the Characters ID as parameter "id".
 	"""
-	data = analyse.eigenvector_centrality(request.args["ID"])
+	data = analyse.eigenvector_centrality(request.args["id"])
 	return jsonify(data=data)
 
 @api.route("/closeness", methods=["GET"])

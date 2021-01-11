@@ -32,6 +32,7 @@
 				<ul class="nav navbar-nav">
 					<li {% if request.endpoint == 'frontend.visualization' %}class="active"{% endif %}><a href="{{ url_for('frontend.visualization') }}">Visualisierung</a></li>
 					<li {% if request.endpoint == 'frontend.statistics' %}class="active"{% endif %}><a href="{{ url_for('frontend.statistics') }}">Statistiken</a></li>
+					<li {% if request.endpoint == 'frontend.cycles' %}class="active"{% endif %}><a href="{{ url_for('frontend.cycles') }}">Zyklen</a></li>
 					<li><a href="https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan">Github</a></li>
 				</ul>
 			</div>

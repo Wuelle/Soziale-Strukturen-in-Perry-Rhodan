@@ -1,0 +1,11 @@
+#cycle_attributes{
+	position: relative;
+	right: 0;
+}
+/*The chart.js canvas*/
+#cycle_evc_ranking{
+	position: relative;
+	width: 70%;
+	left: 15%;
+	height: 80%;
+}

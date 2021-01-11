@@ -11,6 +11,10 @@ def visualization():
 def statistics():
 	return render_template("statistics.html")
 
+@frontend.route("/cycles", methods=["GET"])
+def cycles():
+	return render_template("cycles.html")
+	
 @frontend.route("/")
 def home():
 	return "Hello World!"

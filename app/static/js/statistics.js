@@ -1,28 +1,30 @@
+// Initial data
+let initial_values = {
+	evc: {
+		id: "EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4",
+		label: "Perry Rhodan"
+	},
+	closeness: {
+		id_1: "EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4",
+		label_1: "Perry Rhodan",
+		id_2: "_DgImJtg6FhvnsA7BtCznkWprLKKsvj3SZTCKzQkrvg",
+		label_2: "Atlan da Gonozal"
+	}
+}
+let cycles_prom = $.ajax({method:"GET", url:"/api/getCycles"})
+
 $("document").ready(async() => {
 	// Set global Chart.js Variables
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.plugins.colorschemes.scheme = 'tableau.HueCircle19'
 	Chart.defaults.global.layout.padding = {left: 50, right: 50, top: 0, bottom: 0}
 
-	// Initial data
-	initial_values = {
-		evc: {
-			id: "EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4",
-			label: "Perry Rhodan"
-		},
-		closeness: {
-			id_1: "EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4",
-			label_1: "Perry Rhodan",
-			id_2: "_DgImJtg6FhvnsA7BtCznkWprLKKsvj3SZTCKzQkrvg",
-			label_2: "Atlan da Gonozal"
-		}
-	}
-	let cycles = await $.ajax({method:"GET", url:"/api/getCycles"})
-
 	// Select the default objects in the select2 boxes
-	selectElement(initial_values.evc.id, $('#select2_eigenvector_centrality'))
-	selectElement(initial_values.closeness.id_1, $("#select2_char_1"))
-	selectElement(initial_values.closeness.id_2, $("#select2_char_2"))
+	selectElement(initial_values.evc.id, $('#select2_eigenvector_centrality'), '/api/search_characters')
+	selectElement(initial_values.closeness.id_1, $("#select2_char_1"), '/api/search_characters')
+	selectElement(initial_values.closeness.id_2, $("#select2_char_2"), '/api/search_characters')
+
+	cycles = await cycles_prom;
 
 	// Create Chart
 	var evc_chart = new Chart($("#eigenvector_centrality"), {
@@ -74,34 +76,34 @@ $("document").ready(async() => {
 		updateCloseness(closeness_chart);
 	});
 	// Add data after Graph has been initialized since this takes a while
-	let response = await $.ajax({
+	$.ajax({
 		url: "/api/EVC_Analysis",
 		method: "GET",
-		data: {ID: initial_values.evc.id}
+		data: {id: initial_values.evc.id}
+	}).then((response) => {
+		// Add loaded dataset to graph
+		evc_chart.data.datasets.push({
+			fill: false,
+			label: initial_values.evc.label,
+			data: response.data
+		})
+		evc_chart.update();
 	});
 
-	// Load first dataset
-	evc_chart.data.datasets.push({
-		fill: false,
-		label: initial_values.evc.label,
-		data: response.data
-	})
-	evc_chart.update();
-
-	// Load second dataset
-	response = await $.ajax({
+	// Load and display dataset for the second graph
+	$.ajax({
 		url: "/api/closeness",
 		method: "GET",
 		data: {id_1: initial_values.closeness.id_1, id_2: initial_values.closeness.id_2}
+	}).then((response) => {
+		closeness_chart.data.datasets.push({
+			fill: false,
+			label: initial_values.closeness.label_1 + " <-> " + initial_values.closeness.label_2,
+			data: response.data
+		})
+		closeness_chart.update();
 	});
-
-	closeness_chart.data.datasets.push({
-		fill: false,
-		label: initial_values.closeness.label_1 + " <-> " + initial_values.closeness.label_2,
-		data: response.data
-	})
-	closeness_chart.update();
-})
+});
 
 async function addLine(character, evc_chart){
 	let data = await getEVCData(character.id);
@@ -118,20 +120,6 @@ function removeLine(data, evc_chart){
 	index = evc_chart.data.datasets.findIndex(dataset => dataset.id == data.id);
 	evc_chart.data.datasets.splice(index, 1);
 	evc_chart.update();
-}
-
-async function selectElement(element_id, select2_element){
-	// Fetches the requested element from the remote data source and
-	// selects it
-	$.ajax({
-		type: 'GET',
-		url: '/api/search_characters',
-		data: {id: element_id}
-	}).then(function (data) {
-		// create the option and append to Select2
-		var option = new Option(data.name, data.id, true, true);
-		select2_element.append(option).trigger('change');
-	});
 }
 
 async function updateCloseness(closeness_chart){
