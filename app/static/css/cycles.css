@@ -2,10 +2,20 @@
 #cycle_attributes{
 	position: absolute;
 	right: 5%;
+	border-collapse: collapse;
+	border-style: hidden;
 }
+#cycle_attributes td{
+	border: 1px solid white
+}
+#cycle_attributes th{
+	border: 1px solid white
+	text-align: center;
+}
+
 /*Select2 Element*/
 #select2_cycleselector_container{
-	position: absolute;
+	position: relative;
 	width: 30%;
 	left: 35%;
 }
