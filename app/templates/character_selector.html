@@ -74,26 +74,18 @@
         });
 
     });
-    function selectElement(element_id, select2_element, url){
-        // Fetches the requested element from the remote data source and
-        // selects it
-        $.ajax({
-            type: 'GET',
-            url: url,
-            data: {id: element_id}
-        }).then(function (data) {
-            // create the option and append to Select2
-            var option = new Option(data.name, data.id, true, true);
-            select2_element.append(option).trigger('change');
-        });
+    function selectElement(option, select2_element){
+        // create the option and append to Select2
+        var option = new Option(option.label, option.id, true, true);
+        select2_element.append(option).change();
     }
 
     {% if single %}
         // The default select2 single select element looks terrible,
         // so just use a multiple select and delete every selection
         // except for the newest one
-        $('#{{ select2_id }}').on('select2:select', function (e) {
-            $(this).val(e.params.data.id).change();
+        $('#{{ select2_id }}').on('select2:select', (e) => {
+            $(e.target).val(e.params.data.id).change();
         });
     {% endif %}
 </script>

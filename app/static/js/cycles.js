@@ -8,7 +8,7 @@ $(document).ready(async() => {
 	Chart.defaults.global.plugins.colorschemes.scheme = 'tableau.HueCircle19'
 	Chart.defaults.global.layout.padding = {left: 50, right: 50, top: 0, bottom: 0}
 
-	selectElement(initial_values.id, $("#select2_cycleselector"), "/api/search_cycles")
+	selectElement(initial_values, $("#select2_cycleselector"))
 
 
 	cycle_evc_ranking = new Chart($("#cycle_evc_ranking"), {
@@ -21,17 +21,50 @@ $(document).ready(async() => {
 			scales: {
 				yAxes: [{
 					ticks: {
-						max: 1,
 						min: 0
 					}
 				}]
 			}
 		}
 	});
-	$("#select2_cycleselector").on("select2:select", (e) => {updateStats(e.params.data);});
+	$("#select2_cycleselector").on("select2:select", (e) => {updateStats(e.params.data);})
 
-	// Load the data into the main bar chart
-	getCycleEVC(initial_values.id).then((response) => {
+	// Trigger the intial Update manually
+	updateStats(initial_values);
+});
+
+function updateStats(data){
+	/*
+	Updates the whole page to display the stats of the newly selected cycle
+	*/
+
+	updateInfoTable(data.id);
+	updateCycleEVC(data.id);
+};
+
+function updateInfoTable(cycle_id){
+	$.ajax({
+		method: "GET",
+		url: "/api/getcycleinfo",
+		data: {id: cycle_id}
+	}).then((response) => {
+		$("#cycle_name").html(response.name);
+		$("#cycle_num_persons").html(response.num_persons);
+		$("#cycle_num_relations").html(response.num_relations);
+		$("#cycle_clustering").html(response.clustering);
+	});
+}
+
+
+function updateCycleEVC(cycle_id){
+	// delete the old dataset
+	cycle_evc_ranking.data.datasets.splice(0, 1);
+	
+	$.ajax({
+		method: "GET",
+		url: "/api/getCycleEVC",
+		data: {id: cycle_id}
+	}).then((response) => {
 		// take the top ten characters (maybe dont hardcode this limit later...)
 		let items = response.data.slice(0, 10)
 		let labels = [];
@@ -47,35 +80,5 @@ $(document).ready(async() => {
 			data: values
 		})
 		cycle_evc_ranking.update()
-	});
-});
-
-function updateStats(data){
-	/*
-	Updates the whole page to display the stats of the newly selected cycle
-	*/
-
-	// Update stats table
-	getBasicData(data.id).then((response) => {
-		$("#cycle_name").html(response.name);
-		$("#cycle_num_persons").html(response.num_persons);
-		$("#cycle_num_relations").html(response.num_relations);
-		$("#cycle_clustering").html(response.clustering);
-	});
-};
-
-function getBasicData(cycle_id){
-	return $.ajax({
-		method: "GET",
-		url: "/api/getcycleinfo",
-		data: {id: cycle_id}
-	});
-}
-
-function getCycleEVC(cycle_id){
-	return $.ajax({
-		method: "GET",
-		url: "/api/getCycleEVC",
-		data: {id: cycle_id}
-	});
+	});;
 }
