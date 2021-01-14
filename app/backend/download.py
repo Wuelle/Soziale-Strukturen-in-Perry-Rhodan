@@ -1,3 +1,8 @@
+"""
+Downloads the data required for this project from https://www.perrypedia.de
+Still need some MAJOR cleanup before release
+"""
+
 from Database import Node, Relation, Link, Zyklus, new_session
 from sqlalchemy.sql.expression import exists
 from urllib.parse import quote, unquote

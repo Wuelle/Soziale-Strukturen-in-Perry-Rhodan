@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request, current_app
 from app.backend.models import Node, Relation, Zyklus, Link
+from sqlalchemy import desc, func, distinct, or_
 import app.backend.analyse as analyse
 import networkx as nx
-import secrets
 from app import db
+import secrets
 
 # Define the blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
@@ -31,12 +32,32 @@ def getcycleinfo():
 def getCytoscapeGraph():
 	cycle = request.args["cycle"]
 
-	data = analyse.analyse_cycles(int(cycle))
+	# Contains the graph in exported (cytoscape.js) form
+	graph = {
+		"data": [], 
+		"directed": False,
+		"multigraph": False,
+		"elements": {"nodes": [], "edges": []}
+		}
 
-	# Assign arbitrary id since networkx doesnt do that...
-	for element in data["elements"]["edges"]:
-		element["data"]["id"] = secrets.token_urlsafe(32)
-	return jsonify(data=data)
+	characters = db.session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle==cycle)
+	relations =  db.session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle==cycle).group_by(Relation.node_1, Relation.node_2)
+
+	for char in characters:
+		graph["elements"]["nodes"].append({"data":{"id": char.id, "value": char.id, "name": char.name}})
+
+	for rel in relations:
+		graph["elements"]["edges"].append({"data":{"id": rel[0].id, "source": rel[0].node_1, "target": rel[0].node_2, "weight": rel[1]}})
+
+	print(len(graph["elements"]["nodes"]))
+	print(len(graph["elements"]["edges"]))
+
+	# Recalc with old method
+	data = analyse.analyse_cycles(int(cycle))
+	print(len(data["elements"]["nodes"]))
+	print(len(data["elements"]["edges"]))
+
+	return jsonify(data=graph)
 
 @api.route("/getCycleEVC", methods=["GET"])
 def getCycleEVC():
