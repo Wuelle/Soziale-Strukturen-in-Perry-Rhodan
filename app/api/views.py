@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, current_app
-from app.backend.models import Node, Relation, Zyklus, Link
+from app.backend.models import Node, Relation, Zyklus, Link, Information, Community
 from sqlalchemy import desc, func, distinct, or_
 import app.backend.analyse as analyse
 import networkx as nx
@@ -15,6 +15,12 @@ def getCycles():
 	Returns a list with all Cycle names
 	"""
 	return jsonify(titles=[c.name for c in db.session.query(Zyklus).all()])
+
+def characters_in_cycle(cycle):
+	return db.session.query(Node, Information).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle==cycle, Information.cycle==cycle, Node.id==Information.node)
+
+def relations_in_cycle(cycle):
+	return db.session.query(Relation).filter(Relation.cycle==cycle)
 
 @api.route("getcycleinfo", methods=["GET"])
 def getcycleinfo():
@@ -40,22 +46,14 @@ def getCytoscapeGraph():
 		"elements": {"nodes": [], "edges": []}
 		}
 
-	characters = db.session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle==cycle)
-	relations =  db.session.query(Relation, func.sum(Relation.weight)).filter(Relation.cycle==cycle).group_by(Relation.node_1, Relation.node_2)
+	characters = characters_in_cycle(cycle)
+	relations =  relations_in_cycle(cycle)
 
-	for char in characters:
-		graph["elements"]["nodes"].append({"data":{"id": char.id, "value": char.id, "name": char.name}})
+	for char, info in characters:
+		graph["elements"]["nodes"].append({"data":{"id": char.id, "value": char.id, "name": char.name, "importance":info.value}})
 
 	for rel in relations:
-		graph["elements"]["edges"].append({"data":{"id": rel[0].id, "source": rel[0].node_1, "target": rel[0].node_2, "weight": rel[1]}})
-
-	print(len(graph["elements"]["nodes"]))
-	print(len(graph["elements"]["edges"]))
-
-	# Recalc with old method
-	data = analyse.analyse_cycles(int(cycle))
-	print(len(data["elements"]["nodes"]))
-	print(len(data["elements"]["edges"]))
+		graph["elements"]["edges"].append({"data":{"id": rel.id, "source": rel.node_1, "target": rel.node_2, "weight": rel.weight}})
 
 	return jsonify(data=graph)
 
@@ -83,7 +81,14 @@ def closeness():
 
 @api.route("/getClusters", methods=["GET"])
 def getClusters():
-	data = analyse.cluster(int(request.args["cycle"]))
+	"""
+	Returns a dict of shape {character_id: group_id}
+	"""
+	cycle = request.args["cycle"]
+	characters = characters_in_cycle(cycle)
+
+	data = {char.id: info.community for (char, info) in characters}
+
 	return jsonify(data=data)
 
 @api.route("/search_characters", methods=["GET"])

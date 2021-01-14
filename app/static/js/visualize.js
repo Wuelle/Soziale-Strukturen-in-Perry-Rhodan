@@ -70,7 +70,7 @@ $(document).ready(async() => {
 	cy.panzoom();
 
 	var layout = makeLayout();
-	layout.run();  // Commented out for debugging
+	layout.run();
 
 	function makeLayout(opts){
 		if(use_cola){
@@ -163,7 +163,7 @@ function removeBubblesets(){
 }
 
 async function formClusters(){
-	let cycle_id = $("#cycle_selector").val()
+	let cycle_id = $("#cycle_selector").val()[0]
 
 	let response = await $.ajax({
 		url: "/api/getClusters",
