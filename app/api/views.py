@@ -30,12 +30,13 @@ def getcycleinfo():
 	relations = db.session.query(Relation).filter(Relation.cycle == cycle_id).all()
 	num_persons = len(set([r.node_1 for r in relations] + [r.node_2 for r in relations]))
 
-	G = analyse.build_graph_from_cycle(cycle_id)
-	clustering_coefficient = round(nx.average_clustering(G, weight="weight"), 3)
-	return jsonify(name=cycle.name, num_relations=len(relations), num_persons=num_persons, clustering=clustering_coefficient)
+	return jsonify(name=cycle.name, num_relations=len(relations), num_persons=num_persons, clustering=cycle.connectedness)
 
 @api.route("/getCytoscapeGraph", methods=["GET"])
 def getCytoscapeGraph():
+	"""
+	Returns the Graph for that cycle in cytoscape.js format, as displayed in /visualization
+	"""
 	cycle = request.args["cycle"]
 
 	# Contains the graph in exported (cytoscape.js) form
@@ -71,8 +72,8 @@ def evc_analysis():
 	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.
 	Expects the Characters ID as parameter "id".
 	"""
-	data = analyse.eigenvector_centrality(request.args["id"])
-	return jsonify(data=data)
+	infos = db.session.query(Information.value).filter(Information.node == request.args["id"]).order_by(Information.cycle).all()
+	return jsonify(data=infos)
 
 @api.route("/closeness", methods=["GET"])
 def closeness():

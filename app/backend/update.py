@@ -102,6 +102,7 @@ def recalc_everything():
 			comm_mapping = cm.best_partition(G)
 			communities = set(comm_mapping.values())
 			eigenvector_centrality = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
+			cycle.connectedness = round(nx.average_clustering(G, weight="weight"), 3)
 
 			local_id_to_global_id = {}
 			for index, comm_id in enumerate(communities):
@@ -122,5 +123,7 @@ def recalc_everything():
 
 			# save progress
 			db.session.commit()
+
+recalc_everything()
 
 

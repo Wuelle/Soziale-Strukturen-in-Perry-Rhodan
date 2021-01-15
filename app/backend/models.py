@@ -21,6 +21,7 @@ class Zyklus(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String)
 	num_books = db.Column(db.Integer)
+	connectedness = db.Column(db.Float)
 
 # This stuff is calculated by NetworkX - stored to save time
 

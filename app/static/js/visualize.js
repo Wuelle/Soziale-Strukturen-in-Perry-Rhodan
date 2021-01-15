@@ -163,6 +163,7 @@ function removeBubblesets(){
 }
 
 async function formClusters(){
+	$("#communites").html("")
 	let cycle_id = $("#cycle_selector").val()[0]
 
 	let response = await $.ajax({
