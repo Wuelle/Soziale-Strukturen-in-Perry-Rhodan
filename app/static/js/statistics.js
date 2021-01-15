@@ -20,9 +20,9 @@ $("document").ready(async() => {
 	Chart.defaults.global.layout.padding = {left: 50, right: 50, top: 0, bottom: 0}
 
 	// Select the default objects in the select2 boxes
-	selectElement(initial_values.evc.id, $('#select2_eigenvector_centrality'), '/api/search_characters')
-	selectElement(initial_values.closeness.id_1, $("#select2_char_1"), '/api/search_characters')
-	selectElement(initial_values.closeness.id_2, $("#select2_char_2"), '/api/search_characters')
+	selectElement(initial_values.evc, $("#select2_eigenvector_centrality"));
+	selectElement({id: initial_values.closeness.id_1, label: initial_values.closeness.label_1}, $("#select2_char_1"));
+	selectElement({id: initial_values.closeness.id_2, label: initial_values.closeness.label_2}, $("#select2_char_2"));
 
 	cycles = await cycles_prom;
 
@@ -83,6 +83,7 @@ $("document").ready(async() => {
 	}).then((response) => {
 		// Add loaded dataset to graph
 		evc_chart.data.datasets.push({
+			id: initial_values.evc.id,
 			fill: false,
 			label: initial_values.evc.label,
 			data: response.data
@@ -112,6 +113,7 @@ async function addLine(character, evc_chart){
 		data: {id: character.id}
 	}).then((response) => {
 		evc_chart.data.datasets.push({
+			id: character.id,
 			fill: false,
 			label: character.text,
 			data: response.data

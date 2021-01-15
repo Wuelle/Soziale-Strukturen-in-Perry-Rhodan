@@ -13,3 +13,7 @@ CSRF_SESSION_KEY = "secret"
 
 # Secret key for signing cookies
 SECRET_KEY = "secret"
+
+# Flask-Caching stuff
+CACHE_TYPE = "simple"
+CACHE_DEFAULT_TIMEOUT = 300
