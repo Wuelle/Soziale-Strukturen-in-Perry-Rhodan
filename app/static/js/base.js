@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		// Create a div that contains the new select element (the "real" one is hidden)
 		var selected_item = document.createElement("DIV");
 		selected_item.setAttribute("class", "select-selected");
-		selected_item.innerHTML = html_select.getAttribute("placeholder");
+		selected_item.innerHTML = html_select.options[0].innerHTML;
 		select_elements[i].appendChild(selected_item);
 
 		// Create a div that contains the list of available options
@@ -22,13 +22,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			option.addEventListener("click", function(e) {
 				/* When an item is clicked, update the original select box,
 				and the selected item: */
-				var y, i, k, s, h, sl, yl;
-				s = this.parentNode.parentNode.getElementsByTagName("select")[0];
-				sl = s.length;
+				var y, i, k, parent_select, h, num_options, yl;
+				parent_select = this.parentNode.parentNode.getElementsByTagName("select")[0];
+				num_options = parent_select.length;
 				h = this.parentNode.previousSibling;
-				for (i = 0; i < sl; i++) {
-					if (s.options[i].innerHTML == this.innerHTML) {
-						s.selectedIndex = i;
+				for (i = 0; i < num_options; i++) {
+					if (parent_select.options[i].innerHTML == this.innerHTML) {
+						parent_select.selectedIndex = i;
 						h.innerHTML = this.innerHTML;
 						y = this.parentNode.getElementsByClassName("same-as-selected");
 						yl = y.length;
@@ -41,6 +41,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				}
 				h.click();
 			});
+			if (option_index == 0){
+				option.setAttribute("class", "same-as-selected")
+			}
 			option_list.appendChild(option);
 		}
 		// Add the Option list to the original element
