@@ -83,6 +83,7 @@ $("document").ready(async() => {
 	}).then((response) => {
 		// Add loaded dataset to graph
 		evc_chart.data.datasets.push({
+			id: initial_values.evc.id,
 			fill: false,
 			label: initial_values.evc.label,
 			data: response.data
@@ -112,6 +113,7 @@ async function addLine(character, evc_chart){
 		data: {id: character.id}
 	}).then((response) => {
 		evc_chart.data.datasets.push({
+			id: character.id,
 			fill: false,
 			label: character.text,
 			data: response.data
