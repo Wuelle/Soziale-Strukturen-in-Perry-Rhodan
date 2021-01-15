@@ -2,14 +2,16 @@ from flask import Blueprint, jsonify, request, current_app
 from app.backend.models import Node, Relation, Zyklus, Link, Information, Community
 from sqlalchemy import desc, func, distinct, or_
 import app.backend.analyse as analyse
+from app.utils import unless, make_cache_key
+from app import db, cache
 import networkx as nx
-from app import db
 import secrets
 
 # Define the blueprint
 api = Blueprint('api', __name__, url_prefix='/api')
 
 @api.route("/getCycles", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def getCycles():
 	"""
 	Returns a list with all Cycle names
@@ -23,6 +25,7 @@ def relations_in_cycle(cycle):
 	return db.session.query(Relation).filter(Relation.cycle==cycle)
 
 @api.route("getcycleinfo", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def getcycleinfo():
 	cycle_id = request.args["id"]
 	cycle = db.session.query(Zyklus).filter(Zyklus.id == cycle_id).first()
@@ -33,6 +36,7 @@ def getcycleinfo():
 	return jsonify(name=cycle.name, num_relations=len(relations), num_persons=num_persons, clustering=cycle.connectedness)
 
 @api.route("/getCytoscapeGraph", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def getCytoscapeGraph():
 	"""
 	Returns the Graph for that cycle in cytoscape.js format, as displayed in /visualization
@@ -59,6 +63,7 @@ def getCytoscapeGraph():
 	return jsonify(data=graph)
 
 @api.route("/getCycleEVC", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def getCycleEVC():
 	G = analyse.build_graph_from_cycle(int(request.args["id"]))
 	evc_values = nx.eigenvector_centrality(G, max_iter=200, weight="weight")
@@ -67,20 +72,23 @@ def getCycleEVC():
 	return jsonify(data=sorted(result, key=lambda x: x["value"], reverse=True))
 
 @api.route("/EVC_Analysis", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def evc_analysis():
 	"""
 	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.
 	Expects the Characters ID as parameter "id".
 	"""
 	infos = db.session.query(Information.value).filter(Information.node == request.args["id"]).order_by(Information.cycle).all()
-	return jsonify(data=infos)
+	return jsonify(data=[info for info, in infos])
 
 @api.route("/closeness", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def closeness():
 	data = analyse.closeness(request.args["id_1"], request.args["id_2"])
 	return jsonify(data=data)
 
 @api.route("/getClusters", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
 def getClusters():
 	"""
 	Returns a dict of shape {character_id: group_id}
