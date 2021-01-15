@@ -29,8 +29,9 @@ function hslToRgb(h, s, l) {
 function generate(config) {
     var colors = [];
     for (var i = 0; i < config.num; i++) {
-        colors.push('rgb(' + hslToRgb(i / config.num, config.sat / 100, config.lum / 100).toString() + ')');
-
+        let color = hslToRgb(i / config.num, config.sat / 100, config.lum / 100)
+        color.push(config.alpha)
+        colors.push('rgba(' + color.toString() + ')');
     }
     return colors;
 }

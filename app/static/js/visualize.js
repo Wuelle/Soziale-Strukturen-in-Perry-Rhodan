@@ -65,7 +65,7 @@ $(document).ready(async() => {
 	// Initialize cytoscape stuff
 	cy = cytoscape(data);
 	cy.ready((e) => {
-			bb = cy.bubbleSets();
+		bb = cy.bubbleSets();
 	});
 	cy.panzoom();
 
@@ -172,7 +172,9 @@ async function formClusters(){
 		method: "GET"
 	});
 	let groups = group(response.data);
-	let colors = generate({num: size_dict(groups), lum: 50, sat: 100})
+	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
+	let colors_transparent = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 0.2})
+
 
 	for(var g_id in groups){
 		let chars = groups[g_id]
@@ -181,10 +183,10 @@ async function formClusters(){
 		for(var char of chars){
 			cy_nodes = cy_nodes.union(cy.nodes("#" + char)[0]);
 		}
-		const bbStyle = {
-        	fillStyle: 'red',
-      	};
-		bb.addPath(cy_nodes, null, null, bbStyle);
+		bb.addPath(cy_nodes, null, null, {
+        	style: {fill: colors_transparent[g_id]},
+        	stroke: "green"
+      	});
 
 		// Add the Group to the list of Groups
 		$("#communities").append("<li><span class='color_block' style='background-color:" + colors[g_id] + "'></span> " + chars.length + " Mitglieder</li>")
