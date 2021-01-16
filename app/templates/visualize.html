@@ -77,21 +77,6 @@ Visualisierung
 
 	<div class="section">
 		<h2>Download</h2>
-		<!-- Select element is contained in a div for style purposes -->
-		<div class="pretty_select" id="fileType_select">
-			<select id="fileType">
-				<option value="svg" id="option_svg">
-					.svg
-				</option>
-				<option value="png" id="option_png">
-					.png
-				</option>
-				<option value="jpg" id="option_jpg">
-					.jpg
-				</option>
-			</select>
-		</div>
-		<label for="fileType_select">Dateiformat</label>
 		<div class="switch-group">
 			<label class="switch">
 				<input type="checkbox" id="download_option">
@@ -99,8 +84,24 @@ Visualisierung
 			</label>
 			<label for="download_option">Nur derzeitige Ansicht</label><br>
 		</div>
+		<div class="row">
+			<!-- Select element is contained in a div for style purposes -->
+			<div class="pretty_select" id="fileType_select">
+				<select id="fileType">
+					<option value="svg" id="option_svg">
+						.svg
+					</option>
+					<option value="png" id="option_png">
+						.png
+					</option>
+					<option value="jpg" id="option_jpg">
+						.jpg
+					</option>
+				</select>
+			</div>
 
-		<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>
+			<button class="pretty_button" onclick="downloadGraph()" id="startDownload">Download starten</button>
+		</div>
 	</div>
 
 	<div class="section">

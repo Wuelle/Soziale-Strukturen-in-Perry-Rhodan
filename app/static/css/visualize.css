@@ -1,16 +1,5 @@
 body{
 	background-color: black;
-	width: 100%;
-	height: 100%;
-}
-
-ul{
-	list-style: none;
-}
-table{
-	font-size: 20px;
-	width: 100%;
-	color: white;
 }
 #cy{
 	position: absolute;
@@ -18,9 +7,6 @@ table{
 	right: 20em;
 	bottom: 0;
 	top: 50px;
-}
-#numClusters{
-	width: 2em;
 }
 .cy-panzoom{
 	display: inline;
@@ -39,11 +25,10 @@ table{
 	right: 0;
 	width: 20em;
 	box-sizing: border-box;
-	padding: 10px;
 	overflow: scroll;
 }
 .section{
-	margin-bottom: 50px;
+	margin: 10px;
 }
 .pretty_button{
 	width: 100%;
@@ -52,4 +37,22 @@ table{
 	display: inline-block;
 	width: 25px;
 	height: 13px;
+	border: 3px solid rgba(0, 0, 0, 0.2);
+}
+#startDownload {
+	width: 60%;
+	left: 5px;
+	position: relative;
+}
+.row {
+  display: inline-block;
+  margin-top: 5px;
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+#communities{
+	position: relative;
+	width: 75%;
+	left: 12.5%;
 }

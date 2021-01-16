@@ -1,22 +1,13 @@
 var layout, bb, use_cola;
 $(document).ready(async() => {
+	let initial_values = {
+		id: 1,
+		label: "Die dritte Macht"
+	};
 	// Preselect "Die Dritte Macht" in select2 element
-	let initial_id = 1;
+	selectElement(initial_values, $('#cycle_selector'))
 
-	// Fetch the preselected item for select2
-	var cycleSelect = $('#cycle_selector');
-	$.ajax({
-		type: 'GET',
-		url: '/api/search_cycles',
-		data: {id: initial_id}
-	}).then(function (data) {
-		// create the option and append to Select2
-		var option = new Option(data.name, data.id, true, true);
-		cycleSelect.append(option).trigger('change');
-	});
-
-
-	let data = await getCycleData(initial_id);
+	let data = await getCycleData(initial_values.id);
 	data.container = $("#cy");
 	data.style = [ // the stylesheet for the graph
 		{
@@ -67,6 +58,9 @@ $(document).ready(async() => {
 	cy.ready((e) => {
 		bb = cy.bubbleSets();
 	});
+	cy.on("render", (e) => {
+		console.log("I am ready")
+	})
 	cy.panzoom();
 
 	var layout = makeLayout();
@@ -120,14 +114,13 @@ $(document).ready(async() => {
 	$("#cycle_selector").on("select2:select", async(e) => {
 		// Reset Group analysis stuff
 		removeBubblesets();
-		$("#communities").html("")
+		$("#communities").empty()
 
 		let data = await getCycleData(e.params.data.id);
 		cy.json({elements: data.elements});
 
 		// Re-run the layout
-		cy.layout({name: "circle"}).run()
-		// makeLayout().run();
+		makeLayout().run();
 
 		// Trigger a change event so labels are displayed even on new nodes
 		$("#toggleNodeLabels").trigger("change");
@@ -155,7 +148,6 @@ function downloadGraph(){
 }
 
 function removeBubblesets(){
-	console.log("removing all bubblesets")
 	// Destroys all displayed bubblesets, eg when the cycle changes
 	for (var path of bb.getPaths()){
 		bb.removePath(path);
@@ -163,7 +155,9 @@ function removeBubblesets(){
 }
 
 async function formClusters(){
-	$("#communites").html("")
+	$("#communities").empty()
+	removeBubblesets()
+
 	let cycle_id = $("#cycle_selector").val()[0]
 
 	let response = await $.ajax({
@@ -174,7 +168,6 @@ async function formClusters(){
 	let groups = group(response.data);
 	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
 	let colors_transparent = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 0.2})
-
 
 	for(var g_id in groups){
 		let chars = groups[g_id]
