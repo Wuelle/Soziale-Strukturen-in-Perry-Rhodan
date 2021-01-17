@@ -14,6 +14,10 @@ def statistics():
 @frontend.route("/cycles", methods=["GET"])
 def cycles():
 	return render_template("cycles.html")
+
+@frontend.route("/contact", methods=["GET"])
+def contact():
+	return render_template("contact.html")
 	
 @frontend.route("/")
 def home():
