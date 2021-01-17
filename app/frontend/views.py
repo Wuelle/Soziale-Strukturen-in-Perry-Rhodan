@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, flash
 
 # Define the blueprint
 frontend = Blueprint('frontend', __name__, url_prefix='')
@@ -17,6 +17,7 @@ def cycles():
 
 @frontend.route("/contact", methods=["GET"])
 def contact():
+	flash("Test")
 	return render_template("contact.html")
 	
 @frontend.route("/")

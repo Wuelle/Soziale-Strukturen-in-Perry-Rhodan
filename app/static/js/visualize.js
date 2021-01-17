@@ -164,7 +164,8 @@ async function formClusters(){
 		url: "/api/getClusters",
 		data: {"cycle": cycle_id},
 		method: "GET"
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 	let groups = group(response.data);
 	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
 	let colors_transparent = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 0.2})
@@ -194,7 +195,8 @@ async function getCycleData(id){
 		url: "/api/getCytoscapeGraph",
 		data: {"cycle": id},
 		method: "GET"
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});;
 	return response.data
 }
 

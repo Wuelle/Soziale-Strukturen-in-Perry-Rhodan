@@ -98,7 +98,8 @@ function updateCycleEVC(cycle_id){
 			data: values
 		})
 		cycle_evc_ranking.update()
-	});;
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 }
 
 async function updateCommunityInfo(cycle_id){
@@ -108,7 +109,8 @@ async function updateCommunityInfo(cycle_id){
 		url: "/api/getClusters",
 		data: {"cycle": cycle_id},
 		method: "GET"
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 	groups = group(response.data);
 	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
 	let colors_transparent = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 0.2})
@@ -145,7 +147,8 @@ function selectGroup(e){
 			let char = $("<span></span>").text(e[id]).addClass("member");
 			$("#community_members").append(char);
 		}
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 
 	// Update the Ranking Graph
 	community_evc_ranking.data.datasets.splice(0, 1);

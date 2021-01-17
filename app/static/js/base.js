@@ -95,3 +95,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	then close all select boxes: */
 	document.addEventListener("click", closeAllSelect); 
 })
+
+function flash(msg){
+	let div = $("<div></div>").text(msg).addClass("flashed_message");
+	div.delay(10000).fadeOut(500);
+	div.hover((e) => {
+		$(e.target).css("display", "none");
+	})
+	$("#flashed_messages").append(div);
+}

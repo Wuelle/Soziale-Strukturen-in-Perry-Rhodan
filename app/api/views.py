@@ -84,6 +84,7 @@ def evc_analysis():
 @api.route("/closeness", methods=["GET"])
 @cache.cached(unless=unless, key_prefix=make_cache_key)
 def closeness():
+	assert False
 	data = analyse.closeness(request.args["id_1"], request.args["id_2"])
 	return jsonify(data=data)
 

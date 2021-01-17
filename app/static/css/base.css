@@ -134,11 +134,23 @@ input:checked + .slider:before {
   transform: translateX(13px);
 }
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
+/*Flashed Messages*/
+#flashed_messages{
+  position: absolute;
+  width: 20%;
+  height: 600px;
+  overflow: hidden;
+  left: 40%;
+  top: 50px;
 }
 
-.slider.round:before {
-  border-radius: 50%;
-} 
+.flashed_message{
+  background-color: orange;
+  color: #333;
+  font-size: 17px;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  text-align: center;
+}
+

@@ -11,7 +11,7 @@ let initial_values = {
 		label_2: "Atlan da Gonozal"
 	}
 }
-let cycles_prom = $.ajax({method:"GET", url:"/api/getCycles"})
+let cycles_prom = $.ajax({method:"GET", url:"/api/getCycles"}).fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 
 $("document").ready(async() => {
 	// Set global Chart.js Variables
@@ -90,7 +90,8 @@ $("document").ready(async() => {
 			data: response.data
 		})
 		evc_chart.update();
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 
 	// Load and display dataset for the second graph
 	$.ajax({
@@ -104,7 +105,8 @@ $("document").ready(async() => {
 			data: response.data
 		})
 		closeness_chart.update();
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 });
 
 async function addLine(character, evc_chart){
@@ -120,7 +122,8 @@ async function addLine(character, evc_chart){
 			data: response.data
 		})
 		evc_chart.update();
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 }
 
 function removeLine(data, evc_chart){
@@ -140,7 +143,8 @@ async function updateCloseness(closeness_chart){
 		url: "/api/closeness",
 		method: "GET",
 		data: {id_1: data_1.id, id_2: data_2.id}
-	});
+	})
+	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 
 	closeness_chart.data.datasets.push({
 		fill: false,

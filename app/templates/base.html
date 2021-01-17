@@ -18,6 +18,18 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css')}}">
 		<script type="text/javascript" src="{{ url_for('static', filename='js/base.js') }}"></script>
 
+		<script type="text/javascript">
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					$(document).ready(() => {
+						{% for message in messages %}
+							flash("{{ message }}");
+						{% endfor %}
+					});
+				{% endif %}
+			{% endwith %}
+		</script>
+
 		{% block head %}
 		{% endblock %}
 
@@ -38,7 +50,7 @@
 				</ul>
 			</div>
 		</nav>
-
+		<div id="flashed_messages"></div>
 		{% block body %}
 		{% endblock %}
 	</body>
