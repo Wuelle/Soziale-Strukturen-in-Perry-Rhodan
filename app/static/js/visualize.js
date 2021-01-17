@@ -182,7 +182,11 @@ async function formClusters(){
       	});
 
 		// Add the Group to the list of Groups
-		$("#communities").append("<li><span class='color_block' style='background-color:" + colors[g_id] + "'></span> " + chars.length + " Mitglieder</li>")
+		let li = $("<li></li>").attr("id", g_id);
+		let color_block = $("<span></span>").addClass("color_block").css({"background-color": colors[g_id]});
+		li.append(color_block);
+		li.append(" " + chars.length + " Mitglieder");
+		$("#communities").append(li);
 	}
 }
 async function getCycleData(id){

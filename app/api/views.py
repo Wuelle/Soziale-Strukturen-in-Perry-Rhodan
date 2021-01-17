@@ -102,10 +102,14 @@ def getClusters():
 
 @api.route("/search_characters", methods=["GET"])
 def search_characters():
-	if "id" in request.args:
+	if "id[]" in request.args:
+		# Query for specific Characters
+		chars = db.session.query(Node.id, Node.name).filter(Node.id.in_(request.args.getlist("id[]"))).all()
+		return jsonify(**{char[0]:char[1] for char in chars})
+	elif "id" in request.args:
 		# Query for one specific Character
 		char = db.session.query(Node).filter(Node.id == request.args["id"]).first()
-		return jsonify(name=char.name, id=char.id)
+		return jsonify(**{char.id:char.name})
 	else:
 		# TODO: SPLIT IN MAIN/SIDE CHARACTERS
 		# # Perform a normal Select2 Search using pagination

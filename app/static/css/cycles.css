@@ -26,3 +26,93 @@
 	left: 15%;
 	height: 80%!important;
 }
+
+#community_info{
+	background-color: #222;
+	position: relative;
+	width: 70%;
+	left: 15%;
+	height: 600px;
+}
+/*Containers just add padding*/
+#community_list_container, #community_members_container, #community_ranking_container{
+	-moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box;     
+    box-sizing: border-box;
+}
+#community_list_container{
+	background-color: #222;
+	position: absolute;
+	padding: 10px;
+	width: 25%;
+	height: 100%;
+	left: 0;
+	top: 0;
+}
+#community_members_container{
+	align-content: center;
+	position: absolute;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	width: 75%;
+	height: 20%;
+	top: 0;
+	right: 0;
+}
+#community_ranking_container{
+	position:absolute;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	right: 0;
+	bottom: 0;
+	width: 75%;
+	height: 80%;
+}
+#community_members{	
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+#community_ranking{
+	width:100%!important;
+	height:100%!important;
+}
+.color_block{
+	display: inline-block;
+	width: 25px;
+	height: 13px;
+	border: 3px solid rgba(0, 0, 0, 0.2);
+}
+
+#community_list li{
+	/*This is to prevent shifting when the item is selected*/
+	border: 1px solid transparent;
+}
+
+#community_list li.selected{
+	background-color: #383838;
+	font-weight: bold;
+}
+
+#community_list li:hover{
+	background-color: #444;
+}
+
+.member {
+	background-color: #555;
+	border: 1px solid #444;
+	padding: 4px;
+	margin-left: 3px;
+	display: inline-block;
+	margin-top: 3px;
+	border-radius: 3px;
+}
+.member:hover{
+	background-color: #444;
+	border-color: #333;
+}
+.foreground{
+	width: 100%!important;
+	height: 100%!important;
+	background-color: #333;
+}

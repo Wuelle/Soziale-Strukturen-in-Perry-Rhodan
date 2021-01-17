@@ -1,15 +1,3 @@
-// Display secret message in console
-console.log("\
-	                                 _               _             \n\
-	                                | |             | |            \n\
-	 _ __   ___ _ __ _ __ _   _ _ __| |__   ___   __| | __ _ _ __  \n\
-	| '_ \\ / _ \\ '__| '__| | | | '__| '_ \\ / _ \\ / _` |/ _` | '_ \ \n\
-	| |_) |  __/ |  | |  | |_| | |  | | | | (_) | (_| | (_| | | | |\n\
-	| .__/ \\___|_|  |_|   \\__, |_|  |_| |_|\\___/ \\__,_|\\__,_|_| |_|\n\
-	| |                    __/ |                                   \n\
-	|_|                   |___/                                    ");
-
-
 // Initial data
 let initial_values = {
 	evc: {
@@ -30,6 +18,7 @@ $("document").ready(async() => {
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.plugins.colorschemes.scheme = 'tableau.HueCircle19'
 	Chart.defaults.global.layout.padding = {left: 50, right: 50, top: 0, bottom: 0}
+	Chart.defaults.global.defaultFontColor = "#E0E0E0";
 
 	// Select the default objects in the select2 boxes
 	selectElement(initial_values.evc, $("#select2_eigenvector_centrality"));

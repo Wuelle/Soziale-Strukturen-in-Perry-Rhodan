@@ -1,3 +1,14 @@
+// Display secret message in console
+console.log("\
+	                                 _               _             \n\
+	                                | |             | |            \n\
+	 _ __   ___ _ __ _ __ _   _ _ __| |__   ___   __| | __ _ _ __  \n\
+	| '_ \\ / _ \\ '__| '__| | | | '__| '_ \\ / _ \\ / _` |/ _` | '_ \ \n\
+	| |_) |  __/ |  | |  | |_| | |  | | | | (_) | (_| | (_| | | | |\n\
+	| .__/ \\___|_|  |_|   \\__, |_|  |_| |_|\\___/ \\__,_|\\__,_|_| |_|\n\
+	| |                    __/ |                                   \n\
+	|_|                   |___/                                    ");
+
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Loop through elements with the class "pretty_select"
 	var select_elements = document.getElementsByClassName("pretty_select");
