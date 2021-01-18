@@ -16,3 +16,12 @@ vom ![Perrypedia](https://www.perrypedia.de) das eine Weiterverbreitung der enth
 unter der ![GNU freie Dokumentationslizenz](https://www.perrypedia.de/wiki/Perrypedia:FDL) ausdrücklich gestattet(siehe ![Hilfe:Urheberrecht](https://www.perrypedia.de/wiki/Hilfe:Urheberrecht)) Sollten dennoch Urheberrechtsverletzungen 
 auftreten können sie mich jederzeit unter ```simon.wuelker@arcor.de``` anschreiben und ich werde die betroffenen Sektionen sofort 
 entfernen.
+
+## Notes
+`qa is not a function`
+SELECT nodes.name, sum(relations.weight), relations.node_1, relations.node_2 FROM nodes, relations where nodes.id=relations.node_1 or nodes.id=relations.node_2 group by relations.node_1 order by sum(relations.weight) desc LIMIT 0,30
+sql.js
+
+darkmode inloop viewer!
+
+https://github.com/nagix/chartjs-plugin-colorschemes colorwheel

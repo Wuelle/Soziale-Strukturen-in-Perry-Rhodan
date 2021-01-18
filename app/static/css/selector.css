@@ -114,3 +114,31 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
     background-color: #333;
 }
 
+/*This is stuff for the character option preview (select2 html content)*/
+.select2-result-character{
+    height: 50px;
+}
+.select2-result-character__avatar{
+    float: left;
+    width: 34px;
+    margin-right: 10px;
+}
+.select2-result-character__avatar img{
+    width: 100%;
+    height: auto;
+    border-radius: 2px;
+}
+.select2-result-character__name{
+    font-weight: bold;
+}
+.select2-result-copyright{
+    font-size: 10px;
+    font-style: italic;
+    position: relative;
+    text-align: right;
+}
+/*Default Bootstrap padding is not equal on all sides*/
+.select2-container--bootstrap .select2-results__option{
+    padding: 10px;
+}
+

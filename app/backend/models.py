@@ -7,6 +7,7 @@ class Node(db.Model):
 	id = db.Column(db.String, primary_key=True)
 	name = db.Column(db.String)
 	species = db.Column(db.String)
+	thumbnail = db.Column(db.String)
 
 class Link(db.Model):
 	__tablename__ = "links"

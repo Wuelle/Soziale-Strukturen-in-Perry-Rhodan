@@ -5,11 +5,15 @@ Can only handle the values needed for /visualize for now.
 """
 from app.backend.models import Node, Link, Relation, Zyklus, Information, Community
 from sqlalchemy import desc, func, distinct, or_
+import community as cm
 import networkx as nx
 from app import db
-import community as cm
+import requests
 import random
 import json
+
+# config variables
+api_endpoint = "https://www.perrypedia.de/mediawiki/api.php"
 
 def build_graph_from_cycle(cycle):
 	characters = db.session.query(Node).join(Relation, or_(Node.id==Relation.node_1, Node.id==Relation.node_2)).filter(Relation.cycle == cycle)
@@ -84,7 +88,7 @@ def cluster(cycle):
 
 	return communities
 
-def recalc_everything():
+def recalc_NetworkX():
 	"""
 	Deletes and recalculates the rows of all tables containing cached NetworkX results
 	"""
@@ -124,6 +128,31 @@ def recalc_everything():
 			# save progress
 			db.session.commit()
 
-recalc_everything()
+def get_thumbnail_links():
+	"""
+	Saves a link to the characters main image in the 'thumbnail' column
+	"""
+	result = db.session.query(Node, Link.link).filter(Node.id==Link.character_id).all()
+
+	for char, link in result:
+		response = requests.get(api_endpoint, params={
+			"action": "query",
+			"prop": "pageimages",
+			"pithumbsize": 50,
+			"format": "json",
+			"redirects": True,
+			"titles": link
+		}).json()
+		try:
+			th_link = list(response["query"]["pages"].values())[0]["thumbnail"]["source"]
+			print(char.name, th_link)
+		except:
+			th_link = None
+		char.thumbnail = th_link
+
+	db.session.commit()
+
+# recalc_NetworkX()
+get_thumbnail_links()
 
 

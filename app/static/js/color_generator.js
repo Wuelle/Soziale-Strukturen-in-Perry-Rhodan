@@ -27,11 +27,26 @@ function hslToRgb(h, s, l) {
 }
 
 function generate(config) {
+    /*
+    Parameters:
+        -config:
+            -num(int): Number of colors to generate, required
+            -sat(int): Color saturation in [0, 100], required
+            -lum(int): Color luminosity in [0, 100], required
+            -alpha(float): Transparency value in [0, 1], optional (default: 1)
+            -offset(float): hue offset in [0, 1], optional (default: 1)
+    */
     var colors = [];
+
+    // set optional argument values if not present
+    if(!config.offset)config.offset=0;
+    if(!config.alpha)config.alpha=1;
+
     for (var i = 0; i < config.num; i++) {
-        let color = hslToRgb(i / config.num, config.sat / 100, config.lum / 100)
+        let color = hslToRgb((i / config.num) + config.offset, config.sat / 100, config.lum / 100)
         color.push(config.alpha)
         colors.push('rgba(' + color.toString() + ')');
     }
+    console.log(colors)
     return colors;
 }

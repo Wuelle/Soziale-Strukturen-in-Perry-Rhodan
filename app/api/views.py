@@ -1,10 +1,11 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import Blueprint, jsonify, request, current_app, render_template
 from app.backend.models import Node, Relation, Zyklus, Link, Information, Community
 from sqlalchemy import desc, func, distinct, or_
-import app.backend.analyse as analyse
 from app.utils import unless, make_cache_key
+import app.backend.analyse as analyse
 from app import db, cache
 import networkx as nx
+import numpy as np
 import secrets
 
 # Define the blueprint
@@ -23,6 +24,14 @@ def characters_in_cycle(cycle):
 
 def relations_in_cycle(cycle):
 	return db.session.query(Relation).filter(Relation.cycle==cycle)
+
+def select2_html(c):
+	"""
+	Generates a html preview to be displayed in the select2 options for one character
+	"""
+	img_url = c.thumbnail if c.thumbnail else "https://www.perrypedia.de/mediawiki/images/thumb/e/eb/PR0489.jpg/34px-PR0489.jpg"
+	return render_template("select2_result.html", img_url=img_url, name=c.name)
+
 
 @api.route("getcycleinfo", methods=["GET"])
 @cache.cached(unless=unless, key_prefix=make_cache_key)
@@ -78,13 +87,20 @@ def evc_analysis():
 	Performs an Eigenvectorcentrality Analysis of the Character on every cycle.
 	Expects the Characters ID as parameter "id".
 	"""
-	infos = db.session.query(Information.value).filter(Information.node == request.args["id"]).order_by(Information.cycle).all()
-	return jsonify(data=[info for info, in infos])
+	num_cycles = db.session.query(Zyklus).count()
+	infos = db.session.query(Information).filter(Information.node == request.args["id"]).order_by(Information.cycle).all()
+	
+	# there should actually be a really neat way to do this but this works as well
+	data = [0]*num_cycles
+	for el in infos:
+		# print(el.cycle-1, num_cycles)
+		data[el.cycle-1] = el.value
+
+	return jsonify(data=data)
 
 @api.route("/closeness", methods=["GET"])
 @cache.cached(unless=unless, key_prefix=make_cache_key)
 def closeness():
-	assert False
 	data = analyse.closeness(request.args["id_1"], request.args["id_2"])
 	return jsonify(data=data)
 
@@ -138,7 +154,7 @@ def search_characters():
 		max_index = min(min_index + current_app.config["SELECT2_PAGESIZE"], num_characters)
 
 		characters = db.session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
-		results = [{"id":char.id, "text":char.name} for char in characters]
+		results = [{"id":char.id, "text":char.name, "html":select2_html(char)} for char in characters]
 
 		return jsonify(results=results, pagination={"more":max_index < num_characters})
 

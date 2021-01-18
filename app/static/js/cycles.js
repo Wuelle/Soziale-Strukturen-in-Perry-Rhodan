@@ -112,8 +112,7 @@ async function updateCommunityInfo(cycle_id){
 	})
 	.fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 	groups = group(response.data);
-	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
-	let colors_transparent = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 0.2})
+	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1, offset: 0.5333})
 
 	for(var g_id in groups){
 		let chars = groups[g_id]
