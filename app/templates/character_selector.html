@@ -11,81 +11,94 @@
 {% if id %} {% set select2_id = id %} {% else %} {% set select2_id = "groupSelector" %} {% endif %}
 
 <div class="input-group">
-    <input type="hidden" name="groups" id="groups" value=""></input>
-    <select 
-        id = '{{ select2_id }}' 
-        class="pretty_textbox select2-multiple groupSelector" 
-        style="width: 100%;" 
-        multiple
-        {% if required %} required {% endif %} 
-        >
-    </select>
-    <span class="input-group-btn">
-        <button class="searchButton btn btn-default btn-height" 
-            type="button" 
-            data-select2-open='{{ select2_id }}'
-            id="searchButton-{{ select2_id }}"
-            aria-label="Suchen">
-            <span class="glyphicon glyphicon-search"></span>
-        </button>
-    </span>
+	<input type="hidden" name="groups" id="groups" value=""></input>
+	<select 
+		id = '{{ select2_id }}' 
+		class="pretty_textbox select2-multiple groupSelector" 
+		style="width: 100%;" 
+		multiple
+		{% if required %} required {% endif %} 
+		>
+	</select>
+	<span class="input-group-btn">
+		<button class="searchButton btn btn-default btn-height" 
+			type="button" 
+			data-select2-open='{{ select2_id }}'
+			id="searchButton-{{ select2_id }}"
+			aria-label="Suchen">
+			<span class="glyphicon glyphicon-search"></span>
+		</button>
+	</span>
 </div>
 
 <script type="text/javascript">
-    // Initialize Select2 on the vanilla select box
-    $("#{{ select2_id }}").each(function(){
-        $(this).select2({
-            language: "de",
-            placeholder: {% if not placeholder %}"Suchen sie nach Charakteren"{% else %}"{{ placeholder }}"{% endif %},
-            width: "resolve",
-            tokenSeparators: ['+', ";"],
-            theme: "bootstrap",
-            escapeMarkup: function(markup) {
-                return markup;
-            },
-            templateResult: function(data) {
-                if("html" in data){
-                    return data.html;
-                }
-                else{
-                    return data.text;
-                }
-            },
-            templateSelection: function(data) {
-                return data.text;
-            },
-            ajax: {
-                url: '{{ ajax_url }}',
-                dataType: 'json',
-                data: function (params) {
-                    var queryParameters = {
-                       query: params.term || "",
-                       page: params.page || 0                    }
-                    return queryParameters;
-                },
-            }
-        });
-    });
+	// Initialize Select2 on the vanilla select box
+	$("#{{ select2_id }}").each(function(){
+		$(this).select2({
+			language: "de",
+			placeholder: {% if not placeholder %}"Suchen sie nach Charakteren"{% else %}"{{ placeholder }}"{% endif %},
+			width: "resolve",
+			tokenSeparators: ['+', ";"],
+			theme: "bootstrap",
+			escapeMarkup: function(markup) {
+				return markup;
+			},
+			templateResult: function(data) {
+				if("html" in data){
+					return data.html;
+				}
+				else{
+					return data.text;
+				}
+			},
+			templateSelection: function(data) {
+				return data.text;
+			},
+			ajax: {
+				url: '{{ ajax_url }}',
+				dataType: 'json',
+				data: function (params) {
+					var queryParameters = {
+						 query: params.term || "",
+						 page: params.page || 0                    }
+					return queryParameters;
+				},
+			}
+		});
+	});
 
-    // This makes the Search button open the Select2 element when clicked
-    $("button[data-select2-open]").each(function(){
-        $(this).click(function() {
-            $("#" + $(this).data("select2-open")).select2("open");
-        });
+	// This makes the Search button open the Select2 element when clicked
+	$("button[data-select2-open]").each(function(){
+		$(this).click(function() {
+			$("#" + $(this).data("select2-open")).select2("open");
+		});
 
-    });
-    function selectElement(option, select2_element){
-        // create the option and append to Select2
-        var option = new Option(option.label, option.id, true, true);
-        select2_element.append(option).change();
-    }
+	});
+	function selectElement(option, select2_element){
+		// create the option and append to Select2
+		var option = new Option(option.label, option.id, true, true);
+		select2_element.append(option).change();
+	}
 
-    {% if single %}
-        // The default select2 single select element looks terrible,
-        // so just use a multiple select and delete every selection
-        // except for the newest one
-        $('#{{ select2_id }}').on('select2:select', (e) => {
-            $(e.target).val(e.params.data.id).change();
-        });
-    {% endif %}
+	{% if single %}
+		// The default select2 single select element looks terrible,
+		// so just use a multiple select and delete every selection
+		// except for the newest one
+		$('#{{ select2_id }}').on('select2:select', (e) => {
+			$(e.target).val(e.params.data.id).change();
+		});
+	{% endif %}
+
+	// Define custom getter function (since i am using a "fake" single select)
+	(function($){
+		$.fn.extend({
+			s2_value: function() {
+				data = $(this).select2("data")
+				if(data.length != 0){
+					return $(this).select2("data")[0].id;
+				}
+			}
+		});
+
+	})(jQuery);
 </script>

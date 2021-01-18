@@ -158,7 +158,7 @@ async function formClusters(){
 	$("#communities").empty()
 	removeBubblesets()
 
-	let cycle_id = $("#cycle_selector").val()[0]
+	let cycle_id = $("#cycle_selector").s2_value()
 
 	let response = await $.ajax({
 		url: "/api/getClusters",

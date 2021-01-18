@@ -74,15 +74,15 @@ function updateStats(data){
 };
 
 function updateCloseness(){
-	let id_1 = $("#select2_char_1").val()
-	let id_2 = $("#select2_char_2").val()
-	let cycle_id = $("#select2_cycleselector").val()
+	let id_1 = $("#select2_char_1").s2_value()
+	let id_2 = $("#select2_char_2").s2_value()
+	let cycle_id = $("#select2_cycleselector").s2_value()
 
 	if(id_1 && id_2 && cycle_id){
 		$.ajax({
 			method: "GET",
 			url: "/api/getCloseness",
-			data: {id_1: id_1[0], id_2: id_2[0], cycle: cycle_id[0]}
+			data: {id_1: id_1, id_2: id_2, cycle: cycle_id}
 		}).then((response) => {
 			// Output the results
 			output = $("#relation_output");
