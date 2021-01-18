@@ -24,22 +24,4 @@ Statistiken
 	</div>
 	<canvas id="eigenvector_centrality" class="pretty_canvas"></canvas>
 </div>
-
-<!-- Character Relations -->
-<div class="row" name="neu">
-	<h2>Verhältnisse über Zeit</h2>
-	<div id="select2_group">
-		<div id="select2_char_1_container">
-			{% with id="select2_char_1", ajax_url="/api/search_characters", single=True, placeholder="Wählen sie einen Charakter"%}
-				{% include "character_selector.html" %}
-			{% endwith %}
-		</div>
-		<div id="select2_char_2_container">
-			{% with id="select2_char_2", ajax_url="/api/search_characters", single=True, placeholder="Wählen sie einen zweiten Charakter"%}
-				{% include "character_selector.html" %}
-			{% endwith %}
-		</div>
-	</div>
-	<canvas id="closeness" class="pretty_canvas"></canvas>
-</div>
 {% endblock %}

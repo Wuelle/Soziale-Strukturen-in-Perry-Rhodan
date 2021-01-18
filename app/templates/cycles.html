@@ -14,47 +14,68 @@ Zyklusanalyse
 {% endblock %}
 
 {% block body %}
-	<div id="select2_cycleselector_container">
-		{% with id="select2_cycleselector", ajax_url="/api/search_cycles", placeholder="Wählen sie einen Zyklus", single=True %}
-			{% include "character_selector.html"%}
-		{% endwith %}
-	</div>
-	<table id="cycle_attributes">
-		<tr>
-			<th>Name:</th>
-			<td id="cycle_name">Lade...</td>
-		</tr>
-		<tr>
-			<th>Personen:</th>
-			<td id="cycle_num_persons">Lade...</td>
-		</tr>
-		<tr>
-			<th>Verbindungen:</th>
-			<td id="cycle_num_relations">Lade..</td>
-		</tr>
-		<tr>
-			<th>Verbundenheit:</th>
-			<td id="cycle_clustering">Lade...</td>
-		</tr>
-	</table>
+	<div class="row">
+		<div id="select2_cycleselector_container">
+			{% with id="select2_cycleselector", ajax_url="/api/search_cycles", placeholder="Wählen sie einen Zyklus", single=True %}
+				{% include "character_selector.html"%}
+			{% endwith %}
+		</div>
+		<table id="cycle_attributes">
+			<tr>
+				<th>Name:</th>
+				<td id="cycle_name">Lade...</td>
+			</tr>
+			<tr>
+				<th>Personen:</th>
+				<td id="cycle_num_persons">Lade...</td>
+			</tr>
+			<tr>
+				<th>Verbindungen:</th>
+				<td id="cycle_num_relations">Lade..</td>
+			</tr>
+			<tr>
+				<th>Verbundenheit:</th>
+				<td id="cycle_clustering">Lade...</td>
+			</tr>
+		</table>
 
-	<canvas id="cycle_evc_ranking" class="pretty_canvas">
-	</canvas>
-	<h2>Gruppenanalyse</h2>
-	<div id="community_info">
-		<div id="community_list_container">
-			<div class="foreground">
-				<ol id="community_list"></ol>
+		<canvas id="cycle_evc_ranking" class="pretty_canvas">
+		</canvas>
+	</div>
+
+	<div class="row">
+		<h2>Verhältnisse über Zeit</h2>
+		<div id="select2_group">
+			<div id="select2_char_1_container">
+				{% with id="select2_char_1", ajax_url="/api/search_characters", single=True, placeholder="Wählen sie einen Charakter"%}
+					{% include "character_selector.html" %}
+				{% endwith %}
+			</div>
+			<div id="select2_char_2_container">
+				{% with id="select2_char_2", ajax_url="/api/search_characters", single=True, placeholder="Wählen sie einen zweiten Charakter"%}
+					{% include "character_selector.html" %}
+				{% endwith %}
 			</div>
 		</div>
-		<div id="community_members_container">
-			<div class="foreground" id="community_members"></div>
-		</div>
-		<div id="community_ranking_container">
-			<div class="foreground">
-				<canvas id="community_ranking"></canvas>
+		<div id="relation_output">TestTestTestTestTest</div>
+	</div>
+
+	<div class="row">
+		<h2>Gruppenanalyse</h2>
+		<div id="community_info">
+			<div id="community_list_container">
+				<div class="foreground">
+					<ol id="community_list"></ol>
+				</div>
+			</div>
+			<div id="community_members_container">
+				<div class="foreground" id="community_members"></div>
+			</div>
+			<div id="community_ranking_container">
+				<div class="foreground">
+					<canvas id="community_ranking"></canvas>
+				</div>
 			</div>
 		</div>
-		
 	</div>
 {% endblock %}

@@ -13,12 +13,18 @@
 	text-align: center;
 }
 
+/*Every section on the page is inside a .row div*/
+.row{
+	margin-bottom: 50px;
+}
+
 /*Select2 Element*/
 #select2_cycleselector_container{
 	position: relative;
 	width: 30%;
 	left: 35%;
 }
+
 /*The chart.js canvas*/
 .pretty_canvas{
 	position: relative;
@@ -34,6 +40,7 @@
 	left: 15%;
 	height: 600px;
 }
+
 /*Containers just add padding*/
 #community_list_container, #community_members_container, #community_ranking_container{
 	-moz-box-sizing: border-box; 
@@ -115,4 +122,23 @@
 	width: 100%!important;
 	height: 100%!important;
 	background-color: #333;
+}
+
+/*Relation Widget*/
+#select2_group{
+	display: flex;
+	height: 34px;
+}
+#select2_char_1_container{
+	position: absolute;
+	width: 30%;
+	left: 10%;
+}
+#select2_char_2_container{
+	position: absolute;
+	width: 30%;
+	right: 10%;
+}
+#relation_output{
+	text-align: center;
 }

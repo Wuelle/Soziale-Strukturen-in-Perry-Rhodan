@@ -152,5 +152,6 @@ input:checked + .slider:before {
   margin-top: 5px;
   border-radius: 4px;
   text-align: center;
+  z-index: 50;
 }
 

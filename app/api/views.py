@@ -98,11 +98,11 @@ def evc_analysis():
 
 	return jsonify(data=data)
 
-@api.route("/closeness", methods=["GET"])
+@api.route("/getCloseness", methods=["GET"])
 @cache.cached(unless=unless, key_prefix=make_cache_key)
-def closeness():
-	data = analyse.closeness(request.args["id_1"], request.args["id_2"])
-	return jsonify(data=data)
+def getCloseness():
+	distance = analyse.closeness(request.args["id_1"], request.args["id_2"], cycle_id=request.args["cycle"])
+	return jsonify(distance=distance)
 
 @api.route("/getClusters", methods=["GET"])
 @cache.cached(unless=unless, key_prefix=make_cache_key)

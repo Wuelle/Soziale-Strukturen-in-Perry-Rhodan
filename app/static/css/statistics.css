@@ -19,19 +19,3 @@
 	left: 25%;
 	right: 25%;
 }
-
-/*SECOND CANVAS*/
-#select2_group{
-	display: flex;
-	height: 34px;
-}
-#select2_char_1_container{
-	position: absolute;
-	width: 30%;
-	left: 10%;
-}
-#select2_char_2_container{
-	position: absolute;
-	width: 30%;
-	right: 10%;
-}

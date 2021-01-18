@@ -47,6 +47,5 @@ function generate(config) {
         color.push(config.alpha)
         colors.push('rgba(' + color.toString() + ')');
     }
-    console.log(colors)
     return colors;
 }
