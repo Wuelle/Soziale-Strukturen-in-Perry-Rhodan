@@ -17,7 +17,6 @@ def cycles():
 
 @frontend.route("/contact", methods=["GET"])
 def contact():
-	flash("Test")
 	return render_template("contact.html")
 	
 @frontend.route("/")

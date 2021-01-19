@@ -45,6 +45,7 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
 /*Remove blue Border around Dropdown*/
 .select2-dropdown{
     border: none;
+    border-radius: 2px!important;
 }
 
 /*DARKMODE (maybe add media-prefers later)*/

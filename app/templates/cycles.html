@@ -20,24 +20,27 @@ Zyklusanalyse
 				{% include "character_selector.html"%}
 			{% endwith %}
 		</div>
-		<table id="cycle_attributes">
-			<tr>
-				<th>Name:</th>
-				<td id="cycle_name">Lade...</td>
-			</tr>
-			<tr>
-				<th>Personen:</th>
-				<td id="cycle_num_persons">Lade...</td>
-			</tr>
-			<tr>
-				<th>Verbindungen:</th>
-				<td id="cycle_num_relations">Lade..</td>
-			</tr>
-			<tr>
-				<th>Verbundenheit:</th>
-				<td id="cycle_clustering">Lade...</td>
-			</tr>
-		</table>
+		<div id="cycle_attributes_container">
+			<h3>Info</h3>
+			<table id="cycle_attributes">
+				<tr>
+					<th>Name:</th>
+					<td id="cycle_name">Lade...</td>
+				</tr>
+				<tr>
+					<th>Personen:</th>
+					<td id="cycle_num_persons">Lade...</td>
+				</tr>
+				<tr>
+					<th>Verbindungen:</th>
+					<td id="cycle_num_relations">Lade..</td>
+				</tr>
+				<tr>
+					<th>Verbundenheit:</th>
+					<td id="cycle_clustering">Lade...</td>
+				</tr>
+			</table>
+		</div>
 
 		<canvas id="cycle_evc_ranking" class="pretty_canvas">
 		</canvas>

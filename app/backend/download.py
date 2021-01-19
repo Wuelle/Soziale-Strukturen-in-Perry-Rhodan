@@ -1,12 +1,14 @@
 """
 Downloads the data required for this project from https://www.perrypedia.de
 Still need some MAJOR cleanup before release
+
+All of the interaction with 'https://www.perrypedia.de'
+is done in this module
 """
 
-from Database import Node, Relation, Link, Zyklus, new_session
-from sqlalchemy.sql.expression import exists
+from app.backend.models import Node, Relation, Link, Zyklus
+from app import db
 from urllib.parse import quote, unquote
-from sqlalchemy import select
 import wikitextparser as wtp
 import numpy as np
 import requests
@@ -183,7 +185,7 @@ def getMainCharacters(book_index):
 		for link in links:
 			title = redirectsTo(link.title).replace("&nbsp;", " ")
 			# If a character with that link exists in the database
-			if row := session.query(Link).filter(Link.link == title).first():
+			if row := db.session.query(Link).filter(Link.link == title).first():
 				characters.append(row.character_id)
 			else:
 				print(title, "is unknown")
@@ -250,8 +252,31 @@ def getZyklen():
 				adjustRelations(main_characters, cycle.id)
 		book_index += num_books
 		session.commit()
+
+def getThumbnailLinks():
+	"""
+	Saves a link to the characters main image in the 'thumbnail' column
+	"""
+	result = db.session.query(Node, Link.link).filter(Node.id==Link.character_id).all()
+
+	for char, link in result:
+		response = requests.get(api_endpoint, params={
+			"action": "query",
+			"prop": "pageimages",
+			"pithumbsize": 50,
+			"format": "json",
+			"redirects": True,
+			"titles": link
+		}).json()
+		try:
+			th_link = list(response["query"]["pages"].values())[0]["thumbnail"]["source"]
+			print(char.name, th_link)
+		except:
+			th_link = None
+		char.thumbnail = th_link
+
+	db.session.commit()
 		
-session = new_session()
 # pages = getLinksOnPage("Personen", plnamespace="0", filter=lambda x: re.match("^Personen [A-Z]$", x))
 # for page in pages[21:]:
 # 	getCharacters(page, {
@@ -281,5 +306,4 @@ session = new_session()
 
 # session.commit()
 # getZyklen()
-session.commit()
 # getSections("Quelle:PR1008")

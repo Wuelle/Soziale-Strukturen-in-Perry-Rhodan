@@ -1,15 +1,20 @@
 /*The Info table on the right of the page*/
-#cycle_attributes{
+#cycle_attributes_container{
 	position: absolute;
 	right: 5%;
+	display: none;
+}
+#cycle_attributes{
 	border-collapse: collapse;
 	border-style: hidden;
+	background-color: #333;
+	border-radius: 2px;
 }
-#cycle_attributes td{
-	border: 1px solid white
+#cycle_attributes td, #cycle_attributes th{
+	border: 1px solid #393939;
+	padding: 4px;
 }
 #cycle_attributes th{
-	border: 1px solid white
 	text-align: center;
 }
 
@@ -141,4 +146,5 @@
 }
 #relation_output{
 	text-align: center;
+	font-size: 17px;
 }

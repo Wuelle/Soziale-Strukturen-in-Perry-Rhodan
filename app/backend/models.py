@@ -53,6 +53,7 @@ class Information(db.Model):
 	value = db.Column(db.Float)
 	community = db.Column(db.Integer) 
 	cycle = db.Column(db.Integer, db.ForeignKey("cycle.id"))
+	appearances = db.Column(db.Integer)
 
 class Community(db.Model):
 	"""

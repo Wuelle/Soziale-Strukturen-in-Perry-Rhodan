@@ -4,6 +4,7 @@ Should be called once a week to handle new books.
 Can only handle the values needed for /visualize for now.
 """
 from app.backend.models import Node, Link, Relation, Zyklus, Information, Community
+from app.backend.download import getMainCharacters, getThumbnailLinks
 from sqlalchemy import desc, func, distinct, or_
 import community as cm
 import networkx as nx
@@ -90,7 +91,8 @@ def cluster(cycle):
 
 def recalc_NetworkX():
 	"""
-	Deletes and recalculates the rows of all tables containing cached NetworkX results
+	Deletes and recalculates the rows of all tables containing cached NetworkX results.
+	Everything else has to be downloaded prior to calling this function!
 	"""
 	# Delete previous data
 	db.session.query(Information).delete()
@@ -128,31 +130,39 @@ def recalc_NetworkX():
 			# save progress
 			db.session.commit()
 
-def get_thumbnail_links():
+def addBook(index, cycle):
 	"""
-	Saves a link to the characters main image in the 'thumbnail' column
+	Updates the database with information about a certain book. 
+	(Update num_appearances, eigenvector values etc..)
+	Parameters:
+		index(int): The index of the book (eg. 3100), required
 	"""
-	result = db.session.query(Node, Link.link).filter(Node.id==Link.character_id).all()
+	print(index)
+	ids = getMainCharacters(index)
+	result = db.session.query(Node, Information).filter(Node.id==Information.node, Node.id.in_(ids), Information.cycle==cycle)
 
-	for char, link in result:
-		response = requests.get(api_endpoint, params={
-			"action": "query",
-			"prop": "pageimages",
-			"pithumbsize": 50,
-			"format": "json",
-			"redirects": True,
-			"titles": link
-		}).json()
-		try:
-			th_link = list(response["query"]["pages"].values())[0]["thumbnail"]["source"]
-			print(char.name, th_link)
-		except:
-			th_link = None
-		char.thumbnail = th_link
-
+	# Update number of appearances
+	for char, info in result:
+		info.appearances += 1
+		
 	db.session.commit()
 
 # recalc_NetworkX()
-get_thumbnail_links()
+# getThumbnailLinks()
+
+for info in db.session.query(Information):
+	info.appearances = 0
+db.session.commit()
+
+# get the number of appearances for every character
+cycles = db.session.query(Zyklus).order_by(Zyklus.id).all()
+index = 0
+for cycle in cycles:
+	for _ in range(cycle.num_books):
+		index += 1
+		addBook(index, cycle.id)
 
 
+
+
+# Cycles: use start_ix and end_ix instead of num_books

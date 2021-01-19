@@ -102,6 +102,7 @@ function updateInfoTable(cycle_id){
 		$("#cycle_num_persons").html(response.num_persons);
 		$("#cycle_num_relations").html(response.num_relations);
 		$("#cycle_clustering").html(response.clustering);
+		$("#cycle_attributes_container").css("display", "block")
 	}).fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 }
 
@@ -155,8 +156,12 @@ async function updateCommunityInfo(cycle_id){
 		li.append(color_block);
 		li.append(" " + chars.length + " Mitglieder");
 		li.click(selectGroup);
+		if(g_id == 0)li.addClass("preselected")
+
 		$("#community_list").append(li);
 	}
+	// select the first group
+	$("#community_list").find(".preselected").click()
 }
 
 function selectGroup(e){

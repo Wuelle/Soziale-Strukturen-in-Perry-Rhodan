@@ -29,7 +29,7 @@ def select2_html(c):
 	"""
 	Generates a html preview to be displayed in the select2 options for one character
 	"""
-	img_url = c.thumbnail if c.thumbnail else "https://www.perrypedia.de/mediawiki/images/thumb/e/eb/PR0489.jpg/34px-PR0489.jpg"
+	img_url = c.thumbnail if c.thumbnail else "/static/img/no_avatar.png"
 	return render_template("select2_result.html", img_url=img_url, name=c.name)
 
 
