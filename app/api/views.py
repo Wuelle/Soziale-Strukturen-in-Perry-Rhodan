@@ -25,12 +25,15 @@ def characters_in_cycle(cycle):
 def relations_in_cycle(cycle):
 	return db.session.query(Relation).filter(Relation.cycle==cycle)
 
-def select2_html(c):
+def select2_html(c, appearances):
 	"""
-	Generates a html preview to be displayed in the select2 options for one character
+	Generates a html preview to be displayed in the select2 options for one character.
+	Parameters: 
+		c(Charakter): The Character object
+		appearances(int): The number of times that character appears in PR
 	"""
 	img_url = c.thumbnail if c.thumbnail else "/static/img/no_avatar.png"
-	return render_template("select2_result.html", img_url=img_url, name=c.name)
+	return render_template("select2_result.html", img_url=img_url, name=c.name, appearances=appearances)
 
 
 @api.route("getcycleinfo", methods=["GET"])
@@ -58,7 +61,7 @@ def getCytoscapeGraph():
 		"directed": False,
 		"multigraph": False,
 		"elements": {"nodes": [], "edges": []}
-		}
+	}
 
 	characters = characters_in_cycle(cycle)
 	relations =  relations_in_cycle(cycle)
@@ -117,6 +120,15 @@ def getClusters():
 
 	return jsonify(data=data)
 
+@api.route("getCycleConnectedness", methods=["GET"])
+@cache.cached(unless=unless, key_prefix=make_cache_key)
+def getCycleConnectedness():
+	"""
+	Returns the connectedness of cycles over time (to be displayed as a graph)
+	"""
+	result = db.session.query(Zyklus.connectedness).order_by(Zyklus.id).all()
+	return jsonify(data=[value for value, in result])
+
 @api.route("/search_characters", methods=["GET"])
 def search_characters():
 	if "id[]" in request.args:
@@ -128,24 +140,6 @@ def search_characters():
 		char = db.session.query(Node).filter(Node.id == request.args["id"]).first()
 		return jsonify(**{char.id:char.name})
 	else:
-		# TODO: SPLIT IN MAIN/SIDE CHARACTERS
-		# # Perform a normal Select2 Search using pagination
-		# query = request.args["query"]
-		
-		# # Characters are split into two groups, "main" and "side"
-		# num_characters = db.session.query(Node).filter(Node.name.like(f"%{query}%")).count()
-		# min_index = int(request.args["page"]) * config.SELECT2_PAGESIZE
-		# max_index = min(min_index + config.SELECT2_PAGESIZE, num_characters)
-		# all_characters = ....order_by()
-
-		# characters = db.session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
-
-		# # Convert to select2 format
-		# main_characters = {"id":char.id, "text":char.name} for char in main_characters
-		# side_characters = {"id":char.id, "text":char.name} for char in side_characters
-		# results = [{text: "Hauptcharaktere", children: main_characters}, {text: "Nebencharaktere", children: side_characters}]
-
-		# return jsonify(results=results, pagination={"more":max_index < num_characters})
 		# Perform a normal Select2 Search using pagination
 		query = request.args["query"]
 		
@@ -153,8 +147,13 @@ def search_characters():
 		min_index = int(request.args["page"]) * current_app.config["SELECT2_PAGESIZE"]
 		max_index = min(min_index + current_app.config["SELECT2_PAGESIZE"], num_characters)
 
-		characters = db.session.query(Node).filter(Node.name.like(f"%{query}%")).all()[min_index:max_index]
-		results = [{"id":char.id, "text":char.name, "html":select2_html(char)} for char in characters]
+		characters = (
+			db.session.query(Node, func.sum(Information.appearances))
+			.filter(Node.name.like(f"%{query}%"), Information.node==Node.id)
+			.order_by(desc(Information.appearances))
+			.all()[min_index:max_index]
+			)
+		results = [{"id":char.id, "text":char.name, "html":select2_html(char, app)} for char, app in characters]
 
 		return jsonify(results=results, pagination={"more":max_index < num_characters})
 

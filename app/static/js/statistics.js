@@ -25,7 +25,7 @@ $("document").ready(async() => {
 
 	cycles = await cycles_prom;
 
-	// Create Chart
+	// Create Charts
 	var evc_chart = new Chart($("#eigenvector_centrality"), {
 		type: 'line',
 		data: {
@@ -44,6 +44,23 @@ $("document").ready(async() => {
 			}
 		}
 	});
+	var connectedness_chart = new Chart($("#connectedness"), {
+		type: 'line',
+		data: {
+			labels: cycles.titles,
+			datasets: [] // data takes a while to load, is added later
+		},
+		
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						min: 0
+					}
+				}]
+			}
+		}
+	});
 
 	// Add event handlers to select2 element
 	$("#select2_eigenvector_centrality").on("select2:select", (e) => {
@@ -55,6 +72,18 @@ $("document").ready(async() => {
 	
 	// Add data after Graph has been initialized since this takes a while
 	addLine({id: initial_values.id, text: initial_values.label}, evc_chart)
+
+	// Load the data for the second graph (cycle-connectedness)
+	$.ajax({
+		url: "/api/getCycleConnectedness",
+		method: "GET"
+	}).then((response) => {
+		connectedness_chart.data.datasets.push({
+			label: "Verbundenheit",
+			data: response.data
+		})
+		connectedness_chart.update();
+	}).fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 });
 
 async function addLine(character, evc_chart){
