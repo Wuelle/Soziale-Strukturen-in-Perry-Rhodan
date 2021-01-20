@@ -6,3 +6,5 @@ sqlalchemy_utils
 wikitextparser
 flask-sqlalchemy
 flask-caching
+matplotlib
+community
