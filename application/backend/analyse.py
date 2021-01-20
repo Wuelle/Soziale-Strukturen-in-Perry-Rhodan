@@ -1,8 +1,8 @@
-from app.backend.models import Node, Link, Relation, Zyklus
+from application.backend.models import Node, Link, Relation, Zyklus
 from sqlalchemy import desc, func, distinct, or_
 import matplotlib.pyplot as plt
 import networkx as nx
-from app import db
+from application import db
 import community
 import random
 import json

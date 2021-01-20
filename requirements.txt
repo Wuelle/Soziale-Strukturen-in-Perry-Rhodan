@@ -1,7 +1,8 @@
 requests 
 networkx
-sqlalchemy
 numpy 
+sqlalchemy
 sqlalchemy_utils
 wikitextparser
-flask_sqlalchemy_session
+flask-sqlalchemy
+flask-caching

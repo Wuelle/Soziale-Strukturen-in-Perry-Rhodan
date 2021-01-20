@@ -1,4 +1,4 @@
-from app import db
+from application import db
 
 # Define Core PR Objects
 class Node(db.Model):

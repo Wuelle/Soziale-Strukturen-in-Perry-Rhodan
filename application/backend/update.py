@@ -3,12 +3,12 @@ This module defines functions used to analyze the networks and calculate the val
 Should be called once a week to handle new books.
 Can only handle the values needed for /visualize for now.
 """
-from app.backend.models import Node, Link, Relation, Zyklus, Information, Community
-from app.backend.download import getMainCharacters, getThumbnailLinks
+from application.backend.models import Node, Link, Relation, Zyklus, Information, Community
+from application.backend.download import getMainCharacters, getThumbnailLinks
 from sqlalchemy import desc, func, distinct, or_
 import community as cm
 import networkx as nx
-from app import db
+from application import db
 import requests
 import random
 import json

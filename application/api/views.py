@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request, current_app, render_template
-from app.backend.models import Node, Relation, Zyklus, Link, Information, Community
+from application.backend.models import Node, Relation, Zyklus, Link, Information, Community
 from sqlalchemy import desc, func, distinct, or_
-from app.utils import unless, make_cache_key
-import app.backend.analyse as analyse
-from app import db, cache
+from application.utils import unless, make_cache_key
+import application.backend.analyse as analyse
+from application import db, cache
 import networkx as nx
 import numpy as np
 import secrets

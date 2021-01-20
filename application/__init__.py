@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+import networkx  # AWS Debug, remove later 
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 
@@ -18,8 +19,8 @@ def internal_server_error(error):
 	return render_template("500.html"), 500
     
 # Import Modules
-from app.api.views import api
-from app.frontend.views import frontend
+from application.api.views import api
+from application.frontend.views import frontend
 
 # Register blueprints
 app.register_blueprint(api)
