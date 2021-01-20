@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash
+from flask import Blueprint, render_template, redirect, url_for
 
 # Define the blueprint
 frontend = Blueprint('frontend', __name__, url_prefix='')
@@ -21,7 +21,7 @@ def contact():
 	
 @frontend.route("/")
 def home():
-	return "Hello World!"
+	return redirect(url_for('frontend.visualization'))
 
 @frontend.route("/favicon.ico")
 def favicon():

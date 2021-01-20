@@ -124,6 +124,7 @@ $(document).ready(async() => {
 
 		// Trigger a change event so labels are displayed even on new nodes
 		$("#toggleNodeLabels").trigger("change");
+		$("#toggleEdgeLabels").trigger("change");
 	});
 });
 
