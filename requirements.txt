@@ -8,3 +8,4 @@ flask-sqlalchemy
 flask-caching
 matplotlib
 community
+python-dotenv
