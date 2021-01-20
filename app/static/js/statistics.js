@@ -1,5 +1,4 @@
 function chartjs_colorscheme(scheme){
-	console.log(scheme)
 	scheme.splice(0, scheme.length, "rgba(0,204,255,1)", "rgba(51,0,255,1)", "rgba(255,0,204,1)", "rgba(255,51,0,1)", "rgba(204,255,0,1)", "rgba(0,255,51,1)")
 	return scheme
 }
@@ -16,7 +15,7 @@ $("document").ready(async() => {
 	// Set global Chart.js Variables
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.plugins.colorschemes.scheme = 'tableau.HueCircle19'
-	Chart.defaults.global.plugins.colorschemes.custom = chartjs_colorscheme;
+	// Chart.defaults.global.plugins.colorschemes.custom = chartjs_colorscheme;
 	Chart.defaults.global.layout.padding = {left: 50, right: 50, top: 0, bottom: 0}
 	Chart.defaults.global.defaultFontColor = "#E0E0E0";
 

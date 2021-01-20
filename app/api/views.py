@@ -149,8 +149,9 @@ def search_characters():
 
 		characters = (
 			db.session.query(Node, func.sum(Information.appearances))
-			.filter(Node.name.like(f"%{query}%"), Information.node==Node.id)
-			.order_by(desc(Information.appearances))
+			.filter(Node.name.like(f"%{query}%"), Node.id==Information.node)
+			.group_by(Node.id)
+			.order_by(desc(func.sum(Information.appearances)))
 			.all()[min_index:max_index]
 			)
 		results = [{"id":char.id, "text":char.name, "html":select2_html(char, app)} for char, app in characters]
