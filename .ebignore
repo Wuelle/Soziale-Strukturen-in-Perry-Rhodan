@@ -1,0 +1,12 @@
+.gitignore
+__pycache__
+venv
+*.db-journal
+*.gml
+.pytest_cache
+application/tests
+virt
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
