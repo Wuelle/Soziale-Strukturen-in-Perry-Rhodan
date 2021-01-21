@@ -98,9 +98,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 function flash(msg){
 	let div = $("<div></div>").text(msg).addClass("flashed_message");
-	div.delay(10000).fadeOut(500);
+	div.delay(10000).fadeOut(500).promise().then((e) => {
+		$(e).remove()
+		if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display", "none")
+
+	});
 	div.hover((e) => {
-		$(e.target).css("display", "none");
+		$(e.target).fadeOut(500).remove();
+		if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display", "none")
 	})
 	$("#flashed_messages").append(div);
+	$("#flashed_messages").css("display", "initial")
 }

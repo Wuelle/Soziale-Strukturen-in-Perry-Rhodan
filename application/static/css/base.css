@@ -138,7 +138,6 @@ input:checked + .slider:before {
 #flashed_messages{
   position: absolute;
   width: 20%;
-  height: 600px;
   overflow: hidden;
   left: 40%;
   top: 50px;
