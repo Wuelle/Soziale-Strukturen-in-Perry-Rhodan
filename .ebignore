@@ -6,6 +6,8 @@ venv
 .pytest_cache
 application/tests
 virt
+*.md
+.webassets-cache
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

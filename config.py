@@ -14,6 +14,9 @@ CSRF_SESSION_KEY = "secret"
 # Secret key for signing cookies
 SECRET_KEY = "secret"
 
-# Flask-Caching stuff
+# flask-caching
 CACHE_TYPE = "simple"
 CACHE_DEFAULT_TIMEOUT = 300
+
+# flask-assets
+ASSETS_DEBUG = False

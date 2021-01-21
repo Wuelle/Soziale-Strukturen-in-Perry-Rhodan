@@ -8,9 +8,13 @@ Zyklusanalyse
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/cycles.css') }}">
-	<script type="text/javascript" src="{{ url_for('static', filename='js/cycles.js') }}"></script>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/color_generator.js') }}"></script>
+	<!-- Load bundled assets -->
+	{% assets "cycles.js" %}
+	<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+	{% assets "cycles.css" %}
+	<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+	{% endassets %}
 {% endblock %}
 
 {% block body %}

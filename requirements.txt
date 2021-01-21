@@ -9,3 +9,4 @@ flask-caching
 matplotlib
 community
 python-dotenv
+flask-assets
