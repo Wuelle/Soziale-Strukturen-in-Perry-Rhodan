@@ -10,3 +10,5 @@ matplotlib
 community
 python-dotenv
 flask-assets
+jsmin
+rcssmin

@@ -30,9 +30,9 @@ assets.register("visualize.js", visualize_bundle_js)
 assets.register("statistics.js", statistics_bundle_js)
 assets.register("cycles.js", cycles_bundle_js)
 
-visualize_bundle_css = Bundle("css/visualize.css", "css/pretty_checkbox.css", "css/pretty_select.css", output="build/css/visualize.css", filters="cssmin")
-statistics_bundle_css = Bundle("css/statistics.css", output="build/css/statistics.css", filters="cssmin")
-cycles_bundle_css = Bundle("css/cycles.css", output="build/css/cycles.css", filters="cssmin")
+visualize_bundle_css = Bundle("css/visualize.css", "css/pretty_checkbox.css", "css/pretty_select.css", output="build/css/visualize.css", filters="rcssmin")
+statistics_bundle_css = Bundle("css/statistics.css", output="build/css/statistics.css", filters="rcssmin")
+cycles_bundle_css = Bundle("css/cycles.css", output="build/css/cycles.css", filters="rcssmin")
 
 assets.register("visualize.css", visualize_bundle_css)
 assets.register("statistics.css", statistics_bundle_css)
