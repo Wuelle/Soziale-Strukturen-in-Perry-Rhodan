@@ -21,18 +21,17 @@ def internal_server_error(error):
 	return render_template("500.html"), 500
 
 # minify static files
-visualize_bundle_js = Bundle("js/visualize.js", "js/color_generator.js", "js/pretty_select.js", output="build/js/visualize.js", filters="jsmin")
-statistics_bundle_js = Bundle("js/statistics.js", output="build/js/statistics.js", filters="jsmin")
-cycles_bundle_js = Bundle("js/cycles.js", "js/color_generator.js", output="build/js/cycles.js", filters="jsmin")
-
+visualize_bundle_js = Bundle("js/base.js", "js/visualize.js", "js/color_generator.js", "js/pretty_select.js", output="build/js/visualize.js", filters="jsmin")
+statistics_bundle_js = Bundle("js/base.js", "js/statistics.js", output="build/js/statistics.js", filters="jsmin")
+cycles_bundle_js = Bundle("js/base.js", "js/cycles.js", "js/color_generator.js", output="build/js/cycles.js", filters="jsmin")
 
 assets.register("visualize.js", visualize_bundle_js)
 assets.register("statistics.js", statistics_bundle_js)
 assets.register("cycles.js", cycles_bundle_js)
 
-visualize_bundle_css = Bundle("css/visualize.css", "css/pretty_checkbox.css", "css/pretty_select.css", output="build/css/visualize.css", filters="rcssmin")
-statistics_bundle_css = Bundle("css/statistics.css", output="build/css/statistics.css", filters="rcssmin")
-cycles_bundle_css = Bundle("css/cycles.css", output="build/css/cycles.css", filters="rcssmin")
+visualize_bundle_css = Bundle("css/base.css", "css/selector.css", "css/visualize.css", "css/pretty_checkbox.css", "css/pretty_select.css", output="build/css/visualize.css", filters="rcssmin")
+statistics_bundle_css = Bundle("css/base.css", "css/selector.css", "css/statistics.css", output="build/css/statistics.css", filters="rcssmin")
+cycles_bundle_css = Bundle("css/base.css", "css/selector.css", "css/cycles.css", output="build/css/cycles.css", filters="rcssmin")
 
 assets.register("visualize.css", visualize_bundle_css)
 assets.register("statistics.css", statistics_bundle_css)
