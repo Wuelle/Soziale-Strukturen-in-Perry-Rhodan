@@ -44,7 +44,7 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
 }
 /*Remove blue Border around Dropdown*/
 .select2-dropdown{
-    border: none;
+    border: none!important;
     border-radius: 2px!important;
 }
 
@@ -73,9 +73,9 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
 }
 /*Selected Items (The little rectangles)*/
 .select2-container--bootstrap .select2-selection .select2-selection__choice {
-    background-color: #676767;
-    color: #E0E0E0;
-    border: 1px solid #353535;
+    background-color: #676767!important;
+    color: #E0E0E0!important;
+    border: 1px solid #353535!important;
 }
 /*Dropdown*/
 .select2-results__option{
@@ -89,7 +89,7 @@ See https://github.com/select2/select2-bootstrap-theme/issues/77#issuecomment-37
     border-bottom: 1px solid #222222;
 }
 .select2-container--bootstrap .select2-results__option--highlighted[aria-selected=false] {
-    background-color: #454545;
+    background-color: #454545!important;
     color: #E0E0E0;
 }
 .select2-selection {
