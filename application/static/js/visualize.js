@@ -55,9 +55,9 @@ $(document).ready(async() => {
 
 	// Initialize cytoscape stuff
 	cy = cytoscape(data);
-	cy.ready((e) => {
-		bb = cy.bubbleSets();
-	});
+	// cy.ready((e) => {
+	// 	bb = cy.bubbleSets();
+	// });
 	cy.on("render", (e) => {
 		console.log("I am ready")
 	})
@@ -113,7 +113,6 @@ $(document).ready(async() => {
 
 	$("#cycle_selector").on("select2:select", async(e) => {
 		// Reset Group analysis stuff
-		removeBubblesets();
 		$("#communities").empty()
 
 		let data = await getCycleData(e.params.data.id);
@@ -148,16 +147,15 @@ function downloadGraph(){
 	a.click();
 }
 
-function removeBubblesets(){
-	// Destroys all displayed bubblesets, eg when the cycle changes
-	for (var path of bb.getPaths()){
-		bb.removePath(path);
-	}
-}
+// function removeBubblesets(){
+// 	// Destroys all displayed bubblesets, eg when the cycle changes
+// 	for (var path of bb.getPaths()){
+// 		bb.removePath(path);
+// 	}
+// }
 
 async function formClusters(){
 	$("#communities").empty()
-	removeBubblesets()
 
 	let cycle_id = $("#cycle_selector").s2_value()
 
@@ -174,14 +172,14 @@ async function formClusters(){
 	for(var g_id in groups){
 		let chars = groups[g_id]
 
-		let cy_nodes = cy.collection();
-		for(var char of chars){
-			cy_nodes = cy_nodes.union(cy.nodes("#" + char)[0]);
-		}
-		bb.addPath(cy_nodes, null, null, {
-        	style: {fill: colors_transparent[g_id]},
-        	stroke: "green"
-      	});
+		// let cy_nodes = cy.collection();
+		// for(var char of chars){
+		// 	cy_nodes = cy_nodes.union(cy.nodes("#" + char)[0]);
+		// }
+		// bb.addPath(cy_nodes, null, null, {
+  //       	style: {fill: colors_transparent[g_id]},
+  //       	stroke: "green"
+  //     	});
 
 		// Add the Group to the list of Groups
 		let li = $("<li></li>").attr("id", g_id);
