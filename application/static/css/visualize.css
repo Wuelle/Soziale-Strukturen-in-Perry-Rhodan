@@ -25,7 +25,7 @@ body{
 	right: 0;
 	width: 20em;
 	box-sizing: border-box;
-	overflow: scroll;
+	overflow: auto;
 }
 .section{
 	margin: 10px;
