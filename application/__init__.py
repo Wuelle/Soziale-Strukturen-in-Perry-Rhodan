@@ -32,10 +32,12 @@ assets.register("cycles.js", cycles_bundle_js)
 visualize_bundle_css = Bundle("css/base.css", "css/selector.css", "css/visualize.css", "css/pretty_checkbox.css", "css/pretty_select.css", output="build/css/visualize.css", filters="rcssmin")
 statistics_bundle_css = Bundle("css/base.css", "css/selector.css", "css/statistics.css", output="build/css/statistics.css", filters="rcssmin")
 cycles_bundle_css = Bundle("css/base.css", "css/selector.css", "css/cycles.css", output="build/css/cycles.css", filters="rcssmin")
+info_bundle_css = Bundle("css/base.css", "css/info.css", output="build/css/info.css", filters="rcssmin")
 
 assets.register("visualize.css", visualize_bundle_css)
 assets.register("statistics.css", statistics_bundle_css)
 assets.register("cycles.css", cycles_bundle_css)
+assets.register("info.css", info_bundle_css)
 	
 # Import Modules
 from application.api.views import api

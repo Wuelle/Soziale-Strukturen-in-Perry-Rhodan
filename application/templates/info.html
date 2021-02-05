@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+Infos
+{% endblock %}
+
+{% block head %}
+{% assets "info.css" %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
+
+{% block body %}
+<h2>Soziale Netzwerksanalyse des Perryversums</h2>
+<p>
+	Diese Website enthält eine Ansammlung von interaktiven Graphen und Visualisierungen die die Struktur innerhalb des Universums der Heftserie 
+	<a href="https://perry-rhodan.net/">Perry Rhodan</a> graphisch darstellen und mathematisch aufarbeiten sollen. Enthalten sind dabei die Daten bis ca. Heft 3090, 
+	dh. bis kurz vor Anfang des 'Chaotarchen' Zyklus.<br>
+	Der gesamte Quellcode der Website und des Servers ist Open-Source und kann auf GitHub eingesehen werden.
+	Beiträge sind willkommen.
+</p>
+
+<p>
+	<h2>Klärung mathematischer Begriffe</h2>
+	<dl>
+		<dt><span class="highlight">Eigenvektorzentralität</span></dt>
+		<dd>
+			Ein Wert zwischen 0 und 1 der die Wichtigkeit eines Charakters in seinem Umfeld beschreibt.
+			Höhere Eigenvektorzentralitäten entsprechen dabei wichtigeren Charakteren.
+		</dd>
+
+		<dt><span class="highlight">Verbundenheit</span></dt>
+		<dd>
+			Beschreibt wie nahe sich die verschiedenen Charaktere in einer Gruppe stehen. Kann Werte im
+			Intervall zwischen 0 und 1 annehmen, wobei 0 einer sehr zerstreuten Gruppe und 1 einer Gruppe mit stark gewichteten
+			Verbindungen entspricht.
+		</dd>
+
+		<dt><span class="highlight">Soziales Netzwerk</span></dt>
+		<dd>Eine Ansammlung von Charakteren(Nodes) und ihren Interaktionen.</dd>
+
+		<dt><span class="highlight">Gewicht</span></dt>
+		<dd>
+			Beschreibt die Stärke einer Verbindung zwischen zwei Charakteren. Ein Gewicht von eins bedeutet das es
+			genau ein Heft in der Serie gibt, in dem die beiden Charaktere gemeinsam Hauptcharaktere waren.
+		</dd>
+	</dl>
+</p>
+{% endblock %}

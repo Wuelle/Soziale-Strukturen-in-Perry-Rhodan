@@ -18,10 +18,14 @@ def cycles():
 @frontend.route("/contact", methods=["GET"])
 def contact():
 	return render_template("contact.html")
-	
+
+@frontend.route("/info", methods=["GET"])
+def info():
+	return render_template("info.html")
+
 @frontend.route("/")
 def home():
-	return redirect(url_for('frontend.visualization'))
+	return redirect(url_for("frontend.info"))
 
 @frontend.route("/favicon.ico")
 def favicon():
