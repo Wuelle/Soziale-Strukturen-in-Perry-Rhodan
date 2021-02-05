@@ -1,3 +1,14 @@
+console.log("\
+	                                 _               _             \n\
+	                                | |             | |            \n\
+	 _ __   ___ _ __ _ __ _   _ _ __| |__   ___   __| | __ _ _ __  \n\
+	| '_ \\ / _ \\ '__| '__| | | | '__| '_ \\ / _ \\ / _` |/ _` | '_ \ \n\
+	| |_) |  __/ |  | |  | |_| | |  | | | | (_) | (_| | (_| | | | |\n\
+	| .__/ \\___|_|  |_|   \\__, |_|  |_| |_|\\___/ \\__,_|\\__,_|_| |_|\n\
+	| |                    __/ |                                   \n\
+	|_|                   |___/                                    ");function flash(msg){let div=$("<div></div>").text(msg).addClass("flashed_message");div.delay(10000).fadeOut(500).promise().then((e)=>{$(e).remove()
+if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display","none")});div.hover((e)=>{$(e.target).fadeOut(500).remove();if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display","none")})
+$("#flashed_messages").append(div);$("#flashed_messages").css("display","initial")}
 let initial_values={cycle:{id:1,label:"Die dritte Macht"},closeness_1:{id:"EJ-OFZ2G2I6plm7cYkxkey7oXBTcbef9WjV7RzJfFH4",label:"Perry Rhodan"},closeness_2:{id:"Q1rzWyIepljelu1G1xJFy0AMRxUQl1Y_0kY_cCceHlg",label:"Gucky"}}
 var groups;$(document).ready(async()=>{Chart.defaults.global.responsive=true;Chart.defaults.global.plugins.colorschemes.scheme='tableau.HueCircle19'
 Chart.defaults.global.layout.padding={left:50,right:50,top:0,bottom:0}
@@ -11,10 +22,8 @@ function updateCycleEVC(cycle_id){cycle_evc_ranking.data.datasets.splice(0,1);$.
 cycle_evc_ranking.data.labels=labels;cycle_evc_ranking.data.datasets.push({label:"Eigenvektorzentralität",data:values})
 cycle_evc_ranking.update()}).fail(()=>{flash("Fehler beim Kontaktieren des Servers")});}
 async function updateCommunityInfo(cycle_id){$("#community_list").empty()
-let response=await $.ajax({url:"/api/getClusters",data:{"cycle":cycle_id},method:"GET"}).fail(()=>{flash("Fehler beim Kontaktieren des Servers")});groups=group(response.data);let colors=generate({num:size_dict(groups),lum:50,sat:100,alpha:1})
-for(var g_id in groups){let chars=groups[g_id]
-let li=$("<li></li>").attr("id",g_id);let color_block=$("<span></span>").addClass("color_block").css({"background-color":colors[g_id]});li.append(color_block);li.append(" "+chars.length+" Mitglieder");li.click(selectGroup);if(g_id==0)li.addClass("preselected")
-$("#community_list").append(li);}
+let response=await $.ajax({url:"/api/getClusters",data:{"cycle":cycle_id},method:"GET"}).fail(()=>{flash("Fehler beim Kontaktieren des Servers")});groups=group(response.data);let colors=generate({num:size_dict(groups),lum:50,sat:100,alpha:1});let index=0;for(var g_id in groups){let chars=groups[g_id];let li=$("<li></li>").attr("id",g_id);let color_block=$("<span></span>").addClass("color_block").css({"background-color":colors[index]});li.append(color_block);li.append(" "+chars.length+" Mitglieder");li.click(selectGroup);if(index==0)li.addClass("preselected")
+$("#community_list").append(li);index+=1;}
 $("#community_list").find(".preselected").click()}
 function selectGroup(e){let target=$(e.target)
 for(var i of $("#community_list li"))$(i).removeClass("selected")

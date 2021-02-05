@@ -82,7 +82,7 @@
 	height: 80%;
 }
 #community_members{	
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 #community_ranking{

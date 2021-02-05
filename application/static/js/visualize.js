@@ -58,9 +58,6 @@ $(document).ready(async() => {
 	// cy.ready((e) => {
 	// 	bb = cy.bubbleSets();
 	// });
-	cy.on("render", (e) => {
-		console.log("I am ready")
-	})
 	cy.panzoom();
 
 	var layout = makeLayout();

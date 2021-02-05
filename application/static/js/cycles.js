@@ -145,20 +145,23 @@ async function updateCommunityInfo(cycle_id){
 	}).fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 
 	groups = group(response.data);
-	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1})
+	let colors = generate({num: size_dict(groups), lum: 50, sat: 100, alpha: 1});
 
+	// TODO: prettify this!
+	let index = 0;
 	for(var g_id in groups){
-		let chars = groups[g_id]
+		let chars = groups[g_id];
 
 		// Add the Group to the list of Groups
 		let li = $("<li></li>").attr("id", g_id);
-		let color_block = $("<span></span>").addClass("color_block").css({"background-color": colors[g_id]});
+		let color_block = $("<span></span>").addClass("color_block").css({"background-color": colors[index]});
 		li.append(color_block);
 		li.append(" " + chars.length + " Mitglieder");
 		li.click(selectGroup);
-		if(g_id == 0)li.addClass("preselected")
+		if(index == 0)li.addClass("preselected")
 
 		$("#community_list").append(li);
+		index += 1;
 	}
 	// select the first group
 	$("#community_list").find(".preselected").click()
