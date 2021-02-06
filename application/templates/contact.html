@@ -14,6 +14,10 @@ h2{
 	left: 5%;
 }
 </style>
+<!-- This is just a quickfix for deploy, bundle only contains base.css -->
+{% assets "contact.css" %}
+	<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 {% endblock %}
 
 {% block body%}
