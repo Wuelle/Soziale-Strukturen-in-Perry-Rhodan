@@ -9,14 +9,12 @@ dl{
 	width: 65%;
 	left: 17.5%;
 }
+dt{
+	margin-top: 15px;
+}
 dd{
 	margin-left: 50px;
 }
 h2{
 	margin-top: 50px;
-}
-.highlight{
-	border-radius: 3px;
-	padding: 3px;
-	background-color: #222;
 }

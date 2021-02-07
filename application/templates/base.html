@@ -7,6 +7,7 @@
 		<meta name="keywords" content="Perry Rhodan, Social Network, Analysis">
 		<meta name="author" content="Simon Wuelker">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
 		<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 		<title> {% block title %} {% endblock %}</title>
 
@@ -18,18 +19,17 @@
 		
 		<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
-		<script type="text/javascript">
-			{% with messages = get_flashed_messages() %}
-				{% if messages %}
-					$(document).ready(() => {
-						{% for message in messages %}
-							flash("{{ message }}");
-						{% endfor %}
-					});
-				{% endif %}
-			{% endwith %}
-		</script>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<script type="text/javascript">
+				$(document).ready(() => {
+					{% for message in messages %}
+						flash("{{ message }}");
+					{% endfor %}
+				</script>
+				});
+			{% endif %}
+		{% endwith %}
 		{% block head %}
 		{% endblock %}
 
