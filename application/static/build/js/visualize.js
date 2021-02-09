@@ -17,7 +17,7 @@ else{return cy.layout({name:"circle"})}}
 $("#toggleEdgeLabels").change((e)=>{for(edge of cy.edges()){if(e.target.checked){edge.addClass("withLabel")}
 else{edge.removeClass("withLabel")}}}).trigger("change");$("#toggleNodeLabels").change((e)=>{for(node of cy.nodes()){if(e.target.checked){node.addClass("withLabel")}
 else{node.removeClass("withLabel")}}}).trigger("change");$("#toggleLayout").change((e)=>{use_cola=e.target.checked;makeLayout().run();}).trigger("change");$("#cycle_selector").on("select2:select",async(e)=>{$("#communities").empty()
-let data=await getCycleData(e.params.data.id);cy.json({elements:data.elements});makeLayout().run();$("#toggleNodeLabels").trigger("change");$("#toggleEdgeLabels").trigger("change");});});function downloadGraph(){let filetype=$("#fileType").val();let mode=$("#download_option").is(":checked");if(filetype==="svg"){var image=cy.svg({full:mode,bg:"#000000"});}
+let data=await getCycleData(e.params.data.id);cy.json({elements:data.elements});makeLayout().run();$("#toggleNodeLabels").trigger("change");$("#toggleEdgeLabels").trigger("change");});});function downloadGraph(){let filetype=$("#fileType").val();let mode=!$("#download_option").is(":checked");if(filetype==="svg"){var image=cy.svg({full:mode,bg:"#000000"});}
 else if(filetype==="png"){var image=cy.png({full:mode,bg:"#000000",output:"blob"});}
 else if(filetype==="jpg"){var image=cy.jpg({full:mode,bg:"#000000",output:"blob"});}
 let a=document.createElement("a");let blob=new Blob([image],{type:"image/"+filetype});a.download="RhodanGraph."+filetype;a.href=window.URL.createObjectURL(blob);a.click();}

@@ -2,7 +2,7 @@
 ![CodeQL](https://github.com/Wuelle/Soziale-Strukturen-in-Perry-Rhodan/workflows/CodeQL/badge.svg)
 
 # Soziale Strukturen im Perryversum
-Dieses Repository enthält den Quellcode für eine soziale Netzwerksanalyse der Charaktere der Heftserie 'Perry Rhodan'.
+Dieses Repository enthält den Quellcode für eine soziale Netzwerkanalyse der Charaktere der Heftserie 'Perry Rhodan'.
 
 ## Disclaimer
 Aus offensichtlichen Gründen enthält dieses Repository Spoiler für die gesamte Perry-Rhodan Serie. Der Inhalt von

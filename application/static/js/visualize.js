@@ -123,7 +123,7 @@ $(document).ready(async() => {
 
 function downloadGraph(){
 	let filetype = $("#fileType").val();
-	let mode = $("#download_option").is(":checked");
+	let mode = !$("#download_option").is(":checked");
 
 	if(filetype === "svg"){
 		var image = cy.svg({full:mode, bg:"#000000"});
