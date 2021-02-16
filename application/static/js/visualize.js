@@ -5,7 +5,7 @@ $(document).ready(async() => {
 		label: "Die dritte Macht"
 	};
 	// Preselect "Die Dritte Macht" in select2 element
-	selectElement(initial_values, $('#cycle_selector'))
+	selectElement(initial_values, $('#cycle_selector'));
 
 	let data = await getCycleData(initial_values.id);
 	data.container = $("#cy");
@@ -102,6 +102,8 @@ $(document).ready(async() => {
 
 	$("#toggleLayout").change((e) => {
 		use_cola = e.target.checked;
+		let mode = use_cola ? "cola": "circle";
+		cy.graphml({layoutBy: mode});
 		makeLayout().run();
 	}).trigger("change");
 
@@ -125,19 +127,28 @@ function downloadGraph(){
 	let filetype = $("#fileType").val();
 	let mode = !$("#download_option").is(":checked");
 
+	let a = document.createElement("a");
+	a.download = "RhodanGraph." + filetype;
+
 	if(filetype === "svg"){
-		var image = cy.svg({full:mode, bg:"#000000"});
+		let blob = new Blob([cy.svg({full:mode, bg:"#000000"})], {type: "image/svg"});
+		a.href = window.URL.createObjectURL(blob);
 	}
 	else if(filetype === "png"){
-		var image = cy.png({full:mode, bg:"#000000", output: "blob"});
+		let blob = new Blob([cy.png({full:mode, bg:"#000000", output: "blob"})], {type: "image/png"});
+		a.href = window.URL.createObjectURL(blob);
 	}
 	else if(filetype === "jpg"){
-		var image = cy.jpg({full:mode, bg:"#000000", output: "blob"});
+		let blob = new Blob([cy.jpg({full:mode, bg:"#000000", output: "blob"})], {type: "image/jpg"});
+		a.href = window.URL.createObjectURL(blob);
 	}
-	let a = document.createElement("a");
-	let blob = new Blob([image], {type: "image/"+filetype});
-	a.download = "RhodanGraph." + filetype;
-	a.href = window.URL.createObjectURL(blob);
+	else if(filetype === "graphml"){
+		let blob = new Blob([cy.graphml()], {type: "application/xml;charset=utf8"});
+		console.log(blob);
+		a.href = window.URL.createObjectURL(blob);
+	}
+	
+	// a.href = window.URL.createObjectURL(blob);
 	a.click();
 }
 async function formClusters(){
