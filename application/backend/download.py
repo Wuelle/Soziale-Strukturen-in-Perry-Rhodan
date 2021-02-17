@@ -10,6 +10,7 @@ from app.backend.models import Node, Relation, Link, Zyklus
 from app import db
 from urllib.parse import quote, unquote
 import wikitextparser as wtp
+from app import db
 import numpy as np
 import requests
 import secrets
@@ -153,16 +154,16 @@ def getCharacters(title, fields):
 				if re.match(r"\[\[(.*)\]\]", row[0]):
 					link = wtp.parse(row[0]).wikilinks[-1]
 					# Check for if that person does not already exist
-					if not session.query(Link).filter(Link.link == link.title).first():
+					if not db.session.query(Link).filter(Link.link == link.title).first():
 						main_title, alt_titles = get_alternative_links(link.title)
-						session.add(Link(character_id=character.id, link=main_title))
+						db.session.add(Link(character_id=character.id, link=main_title))
 						for alt_title in alt_titles:
 							if not redirectsToFragment(alt_title):
-								session.add(Link(character_id=character.id, link=alt_title))
+								db.session.add(Link(character_id=character.id, link=alt_title))
 								character.name = main_title.replace("&nbsp", " ")
 
 				print(character.name, character.species)
-				session.add(character)
+				db.session.add(character)
 
 def getMainCharacters(book_index):
 	"""
@@ -203,11 +204,11 @@ def adjustRelations(characters, cycle_id):
 		for character_2 in characters[index+1:]:
 			# sort the characters
 			node_1, node_2 = sorted([character_1, character_2])
-			if row := session.query(Relation).filter(Relation.node_1 == node_1, Relation.node_2 == node_2, Relation.cycle == cycle_id).first():
+			if row := db.session.query(Relation).filter(Relation.node_1 == node_1, Relation.node_2 == node_2, Relation.cycle == cycle_id).first():
 				row.weight += 1
 			else:
-				session.add(Relation(node_1=node_1, node_2=node_2, weight=1, cycle=cycle_id))
-	session.commit()
+				db.session.add(Relation(node_1=node_1, node_2=node_2, weight=1, cycle=cycle_id))
+	db.session.commit()
 
 def getSections(title):
 	"""
@@ -239,11 +240,11 @@ def getZyklen():
 	for row in t.data()[1:]:
 		print(wtp.parse(row[1]).wikilinks[0].text)
 		num_books = int(html_filter.sub("", row[6]))
-		if not session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first():
+		if not db.session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first():
 			cycle = Zyklus(name=wtp.parse(row[1]).wikilinks[0].text, num_books=num_books)
-			session.add(cycle)
+			db.session.add(cycle)
 		else:
-			cycle = session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first()
+			cycle = db.session.query(Zyklus).filter(Zyklus.name == wtp.parse(row[1]).wikilinks[0].text).first()
 
 		for book_index_relative in range(num_books):
 			print(book_index + book_index_relative)
@@ -251,7 +252,7 @@ def getZyklen():
 				main_characters = getMainCharacters(book_index + book_index_relative)
 				adjustRelations(main_characters, cycle.id)
 		book_index += num_books
-		session.commit()
+		db.session.commit()
 
 def getThumbnailLinks():
 	"""

@@ -1,9 +1,9 @@
 # Trigger the workflow on push or pull request
-name: Python Linting with flake8
+name: Flake8
 on: [push, pull_request]
 jobs:
   run:
-    name: Lint with flake8
+    name: Flake8
     runs-on: ubuntu-latest
     steps:          
       - uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8
           
-      - name: Lint with flake8
+      - name: Flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
