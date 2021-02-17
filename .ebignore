@@ -1,4 +1,9 @@
 *~
+include/
+socialnetworkanalysis
+bin
+share
+lib
 .gitignore
 __pycache__
 venv

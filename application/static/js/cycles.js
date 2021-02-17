@@ -69,8 +69,8 @@ function updateStats(data){
 
 	updateInfoTable(data.id);
 	updateCycleEVC(data.id);
-	updateCommunityInfo(data.id);
 	updateCloseness();
+	//updateCommunityInfo(data.id);
 };
 
 function updateCloseness(){
@@ -130,8 +130,11 @@ function updateCycleEVC(cycle_id){
 		cycle_evc_ranking.data.datasets.push({
 			label: "Eigenvektorzentralität",
 			data: values
-		})
-		cycle_evc_ranking.update()
+		});
+		cycle_evc_ranking.update();
+
+		// Requires current_ranking_values, must be called after response arrives!
+		updateCommunityInfo(cycle_id);
 	}).fail(() => {flash("Fehler beim Kontaktieren des Servers")});
 }
 
@@ -158,7 +161,7 @@ async function updateCommunityInfo(cycle_id){
 		li.append(color_block);
 		li.append(" " + chars.length + " Mitglieder");
 		li.click(selectGroup);
-		if(index == 0)li.addClass("preselected")
+		if(index == 1)li.addClass("preselected")
 
 		$("#community_list").append(li);
 		index += 1;

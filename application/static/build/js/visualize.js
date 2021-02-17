@@ -2,25 +2,25 @@ console.log("\
 	                                 _               _             \n\
 	                                | |             | |            \n\
 	 _ __   ___ _ __ _ __ _   _ _ __| |__   ___   __| | __ _ _ __  \n\
-	| '_ \\ / _ \\ '__| '__| | | | '__| '_ \\ / _ \\ / _` |/ _` | '_ \ \n\
+	| '_ \\ / _ \\ '__| '__| | | | '__| '_ \\ / _ \\ / _` |/ _` | '_  \\ \n\
 	| |_) |  __/ |  | |  | |_| | |  | | | | (_) | (_| | (_| | | | |\n\
 	| .__/ \\___|_|  |_|   \\__, |_|  |_| |_|\\___/ \\__,_|\\__,_|_| |_|\n\
 	| |                    __/ |                                   \n\
 	|_|                   |___/                                    ");function flash(msg){let div=$("<div></div>").text(msg).addClass("flashed_message");div.delay(10000).fadeOut(500).promise().then((e)=>{$(e).remove()
 if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display","none")});div.hover((e)=>{$(e.target).fadeOut(500).remove();if($("#flashed_messages").children().length==0)$("#flashed_messages").css("display","none")})
 $("#flashed_messages").append(div);$("#flashed_messages").css("display","initial")}
-var layout,bb,use_cola;$(document).ready(async()=>{let initial_values={id:1,label:"Die dritte Macht"};selectElement(initial_values,$('#cycle_selector'))
-let data=await getCycleData(initial_values.id);data.container=$("#cy");data.style=[{selector:"node.withLabel",style:{"text-halign":"right","text-valign":"bottom","label":"data(name)","font-size":"mapData(importance, 0, 1, 3, 10)","color":"#fff"}},{selector:"node",style:{"background-color":"#ddd","width":"mapData(importance, 0, 1, 5, 20)","height":"mapData(importance, 0, 1, 5, 20)"}},{selector:"edge.withLabel",style:{"label":"data(weight)","font-size":"mapData(weight, 0, 100, 3, 10)","text-rotation":"autorotate","color":"#fff"}},{selector:"edge",style:{"width":0.5,"line-color":"#30d5c8","line-opacity":"mapData(weight, 0, 100, 0.2, 1)","curve-style":"bezier"}}]
+var layout,bb,use_cola;$(document).ready(async()=>{let initial_values={id:1,label:"Die dritte Macht"};selectElement(initial_values,$('#cycle_selector'));let data=await getCycleData(initial_values.id);data.container=$("#cy");data.style=[{selector:"node.withLabel",style:{"text-halign":"right","text-valign":"bottom","label":"data(name)","font-size":"mapData(importance, 0, 1, 3, 10)","color":"#fff"}},{selector:"node",style:{"background-color":"#ddd","width":"mapData(importance, 0, 1, 5, 20)","height":"mapData(importance, 0, 1, 5, 20)"}},{selector:"edge.withLabel",style:{"label":"data(weight)","font-size":"mapData(weight, 0, 100, 3, 10)","text-rotation":"autorotate","color":"#fff"}},{selector:"edge",style:{"width":0.5,"line-color":"#30d5c8","line-opacity":"mapData(weight, 0, 100, 0.2, 1)","curve-style":"bezier"}}]
 data.layout={name:"circle"}
 data.wheelSensitivity=0.1;cy=cytoscape(data);cy.panzoom();var layout=makeLayout();layout.run();function makeLayout(opts){if(use_cola){return cy.layout({name:"cola",nodeSpacing:50,edgeLengthVal:50,animate:true,randomize:false,edgeLength:function(e){return 50/e.data("weight");},maxSimulationTime:5000});}
 else{return cy.layout({name:"circle"})}}
 $("#toggleEdgeLabels").change((e)=>{for(edge of cy.edges()){if(e.target.checked){edge.addClass("withLabel")}
 else{edge.removeClass("withLabel")}}}).trigger("change");$("#toggleNodeLabels").change((e)=>{for(node of cy.nodes()){if(e.target.checked){node.addClass("withLabel")}
-else{node.removeClass("withLabel")}}}).trigger("change");$("#toggleLayout").change((e)=>{use_cola=e.target.checked;makeLayout().run();}).trigger("change");$("#cycle_selector").on("select2:select",async(e)=>{$("#communities").empty()
-let data=await getCycleData(e.params.data.id);cy.json({elements:data.elements});makeLayout().run();$("#toggleNodeLabels").trigger("change");$("#toggleEdgeLabels").trigger("change");});});function downloadGraph(){let filetype=$("#fileType").val();let mode=!$("#download_option").is(":checked");if(filetype==="svg"){var image=cy.svg({full:mode,bg:"#000000"});}
-else if(filetype==="png"){var image=cy.png({full:mode,bg:"#000000",output:"blob"});}
-else if(filetype==="jpg"){var image=cy.jpg({full:mode,bg:"#000000",output:"blob"});}
-let a=document.createElement("a");let blob=new Blob([image],{type:"image/"+filetype});a.download="RhodanGraph."+filetype;a.href=window.URL.createObjectURL(blob);a.click();}
+else{node.removeClass("withLabel")}}}).trigger("change");$("#toggleLayout").change((e)=>{use_cola=e.target.checked;let mode=use_cola?"cola":"circle";cy.graphml({layoutBy:mode});makeLayout().run();}).trigger("change");$("#cycle_selector").on("select2:select",async(e)=>{$("#communities").empty()
+let data=await getCycleData(e.params.data.id);cy.json({elements:data.elements});makeLayout().run();$("#toggleNodeLabels").trigger("change");$("#toggleEdgeLabels").trigger("change");});});function downloadGraph(){let filetype=$("#fileType").val();let mode=!$("#download_option").is(":checked");let a=document.createElement("a");a.download="RhodanGraph."+filetype;if(filetype==="svg"){let blob=new Blob([cy.svg({full:mode,bg:"#000000"})],{type:"image/svg"});a.href=window.URL.createObjectURL(blob);}
+else if(filetype==="png"){let blob=new Blob([cy.png({full:mode,bg:"#000000",output:"blob"})],{type:"image/png"});a.href=window.URL.createObjectURL(blob);}
+else if(filetype==="jpg"){let blob=new Blob([cy.jpg({full:mode,bg:"#000000",output:"blob"})],{type:"image/jpg"});a.href=window.URL.createObjectURL(blob);}
+else if(filetype==="graphml"){let blob=new Blob([cy.graphml()],{type:"application/xml;charset=utf8"});console.log(blob);a.href=window.URL.createObjectURL(blob);}
+a.click();}
 async function formClusters(){$("#communities").empty()
 let cycle_id=$("#cycle_selector").s2_value()
 let response=await $.ajax({url:"/api/getClusters",data:{"cycle":cycle_id},method:"GET"}).fail(()=>{flash("Fehler beim Kontaktieren des Servers")});let groups=group(response.data);let colors=generate({num:size_dict(groups),lum:50,sat:100,alpha:1})
